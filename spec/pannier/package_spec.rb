@@ -8,17 +8,16 @@ describe Pannier::Package do
       source ASSET_DIR
     end
   end
+  let(:package) { Pannier::Package.new(:foo, app) }
 
+  it('stores name') do
+    expect(package.name).to eq :foo
+  end
   it('stores parent app') do
-    package = Pannier::Package.new(app)
     expect(package.app).to eq app
   end
   describe('paths') do
-    let(:package) do
-      Pannier::Package.new(app) do
-        source 'stylesheets'
-      end
-    end
+    before(:each) { package.source 'stylesheets' }
     it('sets source path') do
       expect(package.source_path).to eq 'stylesheets'
     end
@@ -27,11 +26,9 @@ describe Pannier::Package do
     end
   end
   describe('source file lookup') do
-    let(:package) do
-      Pannier::Package.new(app) do
-        source 'stylesheets'
-        assets '**/*.css', 'one*'
-      end
+    before(:each) do
+      package.source 'stylesheets'
+      package.assets '**/*.css', 'one*'
     end
     it('globs files, only stores unique paths') do
       expect(package.asset_paths.length).to eq 3

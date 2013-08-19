@@ -13,9 +13,9 @@ module Pannier
       @source_path = path
     end
 
-    def package(&block)
+    def package(name, &block)
       return unless block_given?
-      @packages << Package.new(self, &block)
+      @packages << Package.new(name, self, &block)
     end
 
   end

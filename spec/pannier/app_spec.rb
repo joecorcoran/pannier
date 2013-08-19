@@ -12,7 +12,8 @@ describe Pannier::App do
   describe('package building') do
     let(:app) do
       Pannier::App.new do
-        package do
+        package(:foo)do
+        package(:foo) do
         end
       end
     end

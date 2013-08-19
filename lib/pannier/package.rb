@@ -3,11 +3,10 @@ require 'set'
 module Pannier
   class Package
 
-    attr_reader :app, :asset_paths, :source_path
+    attr_reader :name, :app, :asset_paths, :source_path
 
-    def initialize(app)
-      @app = app
-      @asset_paths = Set.new
+    def initialize(name, app)
+      @name, @app, @asset_paths = name, app, Set.new
       self.instance_eval(&Proc.new) if block_given?
       self
     end
