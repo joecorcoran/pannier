@@ -5,9 +5,9 @@ module Pannier
 
     attr_reader :name, :app, :asset_paths, :source_path
 
-    def initialize(name, app)
+    def initialize(name, app, &block)
       @name, @app, @asset_paths = name, app, Set.new
-      self.instance_eval(&Proc.new) if block_given?
+      self.instance_eval(&block) if block_given?
       self
     end
 

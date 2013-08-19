@@ -3,9 +3,9 @@ module Pannier
 
     attr_reader :source_path, :packages
 
-    def initialize
+    def initialize(&block)
       @packages = []
-      self.instance_eval(&Proc.new) if block_given?
+      self.instance_eval(&block) if block_given?
       self
     end
 
