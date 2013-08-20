@@ -1,40 +1,57 @@
 require 'spec_helper'
 
 describe Pannier::Package do
-  ASSET_DIR = File.join(Dir.getwd, 'spec', 'assets')
-
   let(:app) do
     Pannier::App.new do
-      source ASSET_DIR
+      source File.join(FileHelper.fixture_path, 'source')
+      result File.join(FileHelper.fixture_path, 'processed')
     end
   end
-  let(:package) { Pannier::Package.new(:foo, app) }
+  let(:package) do
+    Pannier::Package.new('foo', app) do
+      source 'stylesheets'
+      result 'stylesheets'
+    end
+  end
 
   it('stores name') do
-    expect(package.name).to eq :foo
+    expect(package.name).to eq 'foo'
   end
   it('stores parent app') do
     expect(package.app).to eq app
   end
-  describe('paths') do
-    before(:each) { package.source 'stylesheets' }
-    it('sets source path') do
-      expect(package.source_path).to eq 'stylesheets'
-    end
-    it('has full path') do
-      expect(package.full_path).to match(File.join(ASSET_DIR, 'stylesheets'))
-    end
+  it('sets source path') do
+    expect(package.source_path).to match(
+      File.join(FileHelper.fixture_path, 'source', 'stylesheets')
+    )
   end
+  it('sets source path') do
+    expect(package.result_path).to match(
+      File.join(FileHelper.fixture_path, 'processed', 'stylesheets')
+    )
+  end
+
   describe('source file lookup') do
     before(:each) do
-      package.source 'stylesheets'
-      package.assets '**/*.css', 'one*'
+      package.assets '**/*.css', 'one*', './two.css'
     end
-    it('globs files, only stores unique paths') do
-      expect(package.asset_paths.length).to eq 3
+    it('globs files, only stores unique assets') do
+      expect(package.asset_set.length).to eq 3
     end
-    it('looks in joined source directory') do
-      expect(package.asset_paths.first).to match package.full_path
+  end
+  describe('processing') do
+    before(:each) do
+      package.assets '**/*.css'
+    end
+    after(:each) do
+      FileHelper.clean_processed_files!
+    end
+    it('copies files to result directory') do
+      package.process do |assets|
+        assets
+      end
+      pattern = File.join(FileHelper.fixture_path, 'processed', 'stylesheets', '**/*.css')
+      expect(Dir[pattern].length).to eq 3
     end
   end
 
