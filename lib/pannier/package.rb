@@ -34,7 +34,7 @@ module Pannier
       @process_proc = proc
     end
 
-    def process!
+    def run!
       processed_assets = @asset_set.to_a
       processed_assets = @process_proc.call(processed_assets) if @process_proc
       processed_assets.each do |asset|
