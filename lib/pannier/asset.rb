@@ -7,15 +7,17 @@ module Pannier
       @source_path, @result_path, @package = source_path, result_path, package
     end
 
-    def source_data
-      @source_data ||= File.read(@source_path)
+    def pipe(&block)
+      self.tmp = yield(tmp)
+      self
     end
 
-    def write_result!
+    def write!
       FileUtils.mkdir_p(File.dirname(@result_path))
       File.open(@result_path, 'w+') do |file|
-        file << source_data
+        file << tmp
       end
+      clean_up!
     end
 
     def eql?(other)
@@ -25,6 +27,31 @@ module Pannier
     def hash
       @hash ||= File.expand_path(source_path).hash
     end
+
+    private
+
+      def tmp
+        setup_tmp!
+        File.read(tmp_path)
+      end
+
+      def tmp=(contents)
+        File.open(tmp_path, 'w') do |file|
+          file << contents
+        end
+      end
+
+      def tmp_path
+        File.join(@package.source_path, "tmp-#{hash.abs.to_s}")
+      end
+
+      def setup_tmp!
+        self.tmp = File.read(@source_path) unless File.exists?(tmp_path)
+      end
+
+      def clean_up!
+        File.delete(tmp_path)
+      end
 
   end
 end

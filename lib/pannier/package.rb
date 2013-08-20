@@ -30,11 +30,15 @@ module Pannier
       end
     end
 
-    def process(&block)
-      return unless block_given?
-      processed_assets = block.call(@asset_set.to_a)
+    def process(&proc)
+      @process_proc = proc
+    end
+
+    def process!
+      processed_assets = @asset_set.to_a
+      processed_assets = @process_proc.call(processed_assets) if @process_proc
       processed_assets.each do |asset|
-        asset.write_result!
+        asset.write!
       end
     end
 

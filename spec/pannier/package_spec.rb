@@ -40,18 +40,27 @@ describe Pannier::Package do
     end
   end
   describe('processing') do
+    let(:style_path) { File.join(FileHelper.fixture_path, 'processed', 'stylesheets') }
     before(:each) do
       package.assets '**/*.css'
     end
     after(:each) do
       FileHelper.clean_processed_files!
     end
-    it('copies files to result directory') do
-      package.process do |assets|
-        assets
-      end
-      pattern = File.join(FileHelper.fixture_path, 'processed', 'stylesheets', '**/*.css')
+    it('copies files to result directory by default') do
+      package.process!
+      pattern = File.join(style_path, '**/*.css')
       expect(Dir[pattern].length).to eq 3
+    end
+    it('runs process proc if provided') do
+      package.process do |assets|
+        assets.map do |a|
+          a.pipe { |contents| "/* comment */\n" << contents }
+        end
+      end
+      package.process!
+      processed_data = File.read(File.join(style_path, 'one.css'))
+      expect(processed_data).to match /\A\/\* comment \*\/\n/
     end
   end
 
