@@ -3,7 +3,7 @@ require 'tempfile'
 module Pannier
   class Asset
 
-    attr_reader :source_path, :result_path
+    attr_reader :source_path, :result_path, :piped_content
 
     def initialize(source_path, result_path, package)
       @source_path, @result_path, @package = source_path, result_path, package

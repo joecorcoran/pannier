@@ -1,18 +1,18 @@
 require 'spec_helper'
 
 describe Pannier::App do
-  it('sets source path') do
-    app = Pannier::App.new do
-      source File.join(FileHelper.fixture_path, 'source')
+  let(:app) do
+    Pannier::App.new do
+      source 'source'
+      result 'processed'
     end
-    expect(app.source_path).to eq File.join(FileHelper.fixture_path, 'source')
   end
 
+  it('sets source path') do
+    expect(app.source_path).to match /\/.+\/source/
+  end
   it('sets result path') do
-    app = Pannier::App.new do
-      result File.join(FileHelper.fixture_path, 'packaged')
-    end
-    expect(app.result_path).to eq File.join(FileHelper.fixture_path, 'packaged')
+    expect(app.result_path).to match /\/.+\/processed/
   end
 
   describe('package building') do

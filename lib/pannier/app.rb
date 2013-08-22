@@ -22,5 +22,9 @@ module Pannier
       @packages << Package.new(name, self, &block)
     end
 
+    def run!
+      @packages.each(&:run!)
+    end
+
   end
 end
