@@ -5,7 +5,7 @@ Feature: Package processing
     processed and written to the production directory
 
   Scenario: Default
-    Given these source files:
+    Given these files exist:
       | location        | name   |
       | fixtures/source | bar.js |
       | fixtures/source | baz.js |
@@ -21,13 +21,13 @@ Feature: Package processing
       end
       """
     When the app has run
-    Then these result files should exist:
+    Then these files should exist:
       | location           | name   |
       | fixtures/processed | bar.js |
       | fixtures/processed | baz.js |
 
   Scenario: Nested package files
-    Given these source files:
+    Given these files exist:
       | location            | name    |
       | fixtures/source/bar | qux.js  |
       | fixtures/source/bar | quux.js |
@@ -45,7 +45,7 @@ Feature: Package processing
       end
       """
     When the app has run
-    Then these result files should exist:
+    Then these files should exist:
       | location               | name    |
       | fixtures/processed/baz | qux.js  |
       | fixtures/processed/baz | quux.js |
