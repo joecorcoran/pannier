@@ -47,7 +47,7 @@ Feature: Package processing
       | fixtures/processed/baz/quux.js |
 
   Scenario: Processing assets through process block
-    Given the file at "fixtures/source/bar/qux.js" contains
+    Given the file at "fixtures/source/qux.js" contains
       """
       /* comment */
 
@@ -59,8 +59,6 @@ Feature: Package processing
         result 'fixtures/processed'
 
         package 'foo' do
-          source 'bar'
-          result 'baz'
           assets '*.js'
           process do |asset|
             asset.pipe { |content| content.gsub!(/o/, '0') }
@@ -69,8 +67,8 @@ Feature: Package processing
       end
       """
     When the app has run
-    Then the file at "fixtures/processed/baz/qux.js" should contain
+    Then the file at "fixtures/processed/qux.js" should contain
       """
       /* c0mment */
-      
+
       """
