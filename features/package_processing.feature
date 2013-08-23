@@ -5,7 +5,7 @@ Feature: Package processing
     processed and written to the production directory
 
   Scenario: Assets in app source directory, unprocessed
-    Given these files exist:
+    Given these files exist
       | fixtures/source/bar.js |
       | fixtures/source/baz.js |
     And the app is set up like
@@ -20,12 +20,12 @@ Feature: Package processing
       end
       """
     When the app has run
-    Then these files should exist:
+    Then these files should exist
       | fixtures/processed/bar.js |
       | fixtures/processed/baz.js |
 
   Scenario: Assets in own nested directory, unprocessed
-    Given these files exist:
+    Given these files exist
       | fixtures/source/bar/qux.js  |
       | fixtures/source/bar/quux.js |
     And the app is set up like
@@ -42,7 +42,7 @@ Feature: Package processing
       end
       """
     When the app has run
-    Then these files should exist:
+    Then these files should exist
       | fixtures/processed/baz/qux.js  |
       | fixtures/processed/baz/quux.js |
 
