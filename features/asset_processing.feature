@@ -1,10 +1,9 @@
-Feature: Package processing
-  In order that my assets are production-ready
+Feature: Asset processing
+  In order that my assets are optimised for production
   As a developer
-  I want all the assets in a package to be taken from their source directories,
-    processed and written to the production directory
+  I want my assets to be processed and copied from source to result directory
 
-  Scenario: Assets in app source directory, unprocessed
+  Scenario: Assets copied from source to result directory
     Given these files exist
       | fixtures/source/bar.js |
       | fixtures/source/baz.js |
@@ -24,7 +23,7 @@ Feature: Package processing
       | fixtures/processed/bar.js |
       | fixtures/processed/baz.js |
 
-  Scenario: Assets in own nested directory, unprocessed
+  Scenario: Assets copied from nested source to nested result directory
     Given these files exist
       | fixtures/source/bar/qux.js  |
       | fixtures/source/bar/quux.js |
@@ -46,11 +45,10 @@ Feature: Package processing
       | fixtures/processed/baz/qux.js  |
       | fixtures/processed/baz/quux.js |
 
-  Scenario: Processing assets through process block
+  Scenario: Assets processed through process block before copying
     Given the file at "fixtures/source/qux.js" contains
       """
       /* comment */
-
       """
     And the app is set up like
       """
@@ -60,8 +58,8 @@ Feature: Package processing
 
         package 'foo' do
           assets '*.js'
-          process do |asset|
-            asset.pipe { |content| content.gsub!(/o/, '0') }
+          process do |content|
+            content.reverse
           end
         end
       end
@@ -69,6 +67,5 @@ Feature: Package processing
     When the app has run
     Then the file at "fixtures/processed/qux.js" should contain
       """
-      /* c0mment */
-
+      /* tnemmoc */
       """

@@ -3,22 +3,18 @@ require 'tempfile'
 module Pannier
   class Asset
 
-    attr_reader :source_path, :result_path, :piped_content
+    attr_reader :source_path, :result_path
+    attr_accessor :content
 
     def initialize(source_path, result_path, package)
       @source_path, @result_path, @package = source_path, result_path, package
-      @piped_content = File.read(@source_path)
-    end
-
-    def pipe(&block)
-      @piped_content = yield(@piped_content)
-      self
+      @content = File.read(@source_path)
     end
 
     def write!
       FileUtils.mkdir_p(File.dirname(@result_path))
       File.open(@result_path, 'w+') do |file|
-        file << @piped_content
+        file << @content
       end
     end
 

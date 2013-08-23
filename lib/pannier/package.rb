@@ -48,9 +48,13 @@ module Pannier
 
     def run!
       processed_assets = @asset_set
-      processed_assets.map! { |asset| @process_proc.call(asset) } if @process_proc
+      if @process_proc
+        processed_assets.each do |asset|
+          asset.content = @process_proc.call(asset.content)
+        end
+      end
       if @concatenator
-        @concatenator.concat!(processed_assets)        
+        @concatenator.concat!(processed_assets.map(&:content))        
       else
         processed_assets.each(&:write!)
       end
