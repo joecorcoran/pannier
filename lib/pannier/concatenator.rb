@@ -1,11 +1,8 @@
 module Pannier
-  class Concatenator < Struct.new(:result_path, :file_name)
+  class Concatenator
 
-    def concat!(contents)
-      FileUtils.mkdir_p(result_path)
-      File.open(File.join(result_path, file_name), 'w+') do |file|
-        file << contents.join("\n")
-      end
+    def call(contents)
+      contents.join("\n")
     end
 
   end

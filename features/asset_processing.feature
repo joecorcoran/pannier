@@ -69,3 +69,62 @@ Feature: Asset processing
       """
       /* tnemmoc */
       """
+
+  Scenario: Assets processed through process block and then concatenated
+    Given the file at "fixtures/source/a.js" contains
+      """
+      /* one */
+      """
+    And the file at "fixtures/source/b.js" contains
+      """
+      /* two */
+      """
+    And the app is set up like
+      """
+      Pannier::App.new do
+        source 'fixtures/source'
+        result 'fixtures/processed'
+
+        package 'main' do
+          assets '*.js'
+          process do |content|
+            content.reverse
+          end
+          concat 'main.js'
+        end
+      end
+      """
+    When the app has run
+    Then the file at "fixtures/processed/main.js" should contain
+      """
+      /* eno */
+      /* owt */
+      """
+
+  Scenario: Assets concatenated by user proc
+    Given the file at "fixtures/source/a.js" contains
+      """
+      /* one */
+      """
+    And the file at "fixtures/source/b.js" contains
+      """
+      /* two */
+      """
+    And the app is set up like
+      """
+      Pannier::App.new do
+        source 'fixtures/source'
+        result 'fixtures/processed'
+
+        package 'main' do
+          assets '*.js'
+          concat 'main.js', proc { |contents| contents.reverse.join("\n") }
+        end
+      end
+      """
+    When the app has run
+    Then the file at "fixtures/processed/main.js" should contain
+      """
+      /* two */
+      /* one */
+      """

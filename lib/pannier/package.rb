@@ -42,22 +42,33 @@ module Pannier
       @process_proc = proc
     end
 
-    def concat(concat_name, concatenator_klass = Concatenator)
-      @concatenator = concatenator_klass.new(full_result_path, concat_name)
+    def concat(concat_name, concatenator = Concatenator.new)
+      @concat_name  = concat_name
+      @concatenator = concatenator
     end
 
     def run!
-      processed_assets = @asset_set
-      if @process_proc
-        processed_assets.each do |asset|
-          asset.content = @process_proc.call(asset.content)
-        end
+      process! 
+      concat! || copy!
+    end
+
+    def process!
+      return unless @process_proc
+      @asset_set.each do |asset|
+        asset.content = @process_proc.call(asset.content)
       end
-      if @concatenator
-        @concatenator.concat!(processed_assets.map(&:content))        
-      else
-        processed_assets.each(&:write!)
+    end
+
+    def concat!
+      return unless @concat_name
+      FileUtils.mkdir_p(full_result_path)
+      File.open(File.join(full_result_path, @concat_name), 'w+') do |file|
+        file << @concatenator.call(@asset_set.sort.map(&:content))
       end
+    end
+
+    def copy!
+      @asset_set.each(&:write_result!)
     end
 
   end
