@@ -1,4 +1,4 @@
-Given(/^the app is set up like$/) do |string|
+Given(/^the app "(.*?)" contains$/) do |file_name, string|
   @app = eval(string)
 end
 
@@ -18,14 +18,18 @@ Then(/^these files should exist$/) do |table|
   expect(file_paths.all? { |f| File.exists?(f) }).to be_true
 end
 
-Given(/^the file at "(.*?)" contains$/) do |file_path, content|
+Given(/^the file "(.*?)" contains$/) do |file_path, content|
   FileUtils.mkdir_p(File.dirname(file_path))
   File.open(file_path, 'w+') do |f|
     f << content
   end
 end
 
-Then(/^the file at "(.*?)" should contain$/) do |file_path, content|
+Given(/^the ruby file "(.*?)" contains$/) do |file_name, string|
+  eval(string)
+end
+
+Then(/^the file "(.*?)" should contain$/) do |file_path, content|
   expect(File.exists?(file_path)).to be_true
   expect(File.read(file_path)).to eq content
 end

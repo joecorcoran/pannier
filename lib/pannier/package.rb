@@ -38,8 +38,9 @@ module Pannier
       end
     end
 
-    def process(&proc)
-      @process_proc = proc
+    def process(*processors, &block)
+      @processors = processors
+      @processors << block if block_given?
     end
 
     def concat(concat_name, concatenator = Concatenator.new)
@@ -53,9 +54,11 @@ module Pannier
     end
 
     def process!
-      return unless @process_proc
-      @asset_set.each do |asset|
-        asset.content = @process_proc.call(asset.content)
+      return unless @processors
+      @processors.each do |processor|
+        @asset_set.each do |asset|
+          asset.content = processor.call(asset.content)
+        end
       end
     end
 

@@ -7,7 +7,7 @@ Feature: Asset processing
     Given these files exist
       | fixtures/source/bar.js |
       | fixtures/source/baz.js |
-    And the app is set up like
+    And the app "example_app.rb" contains
       """
       Pannier::App.new do
         source 'fixtures/source'
@@ -27,7 +27,7 @@ Feature: Asset processing
     Given these files exist
       | fixtures/source/bar/qux.js  |
       | fixtures/source/bar/quux.js |
-    And the app is set up like
+    And the app "example_app.rb" contains
       """
       Pannier::App.new do
         source 'fixtures/source'
@@ -46,11 +46,11 @@ Feature: Asset processing
       | fixtures/processed/baz/quux.js |
 
   Scenario: Assets processed through process block before copying
-    Given the file at "fixtures/source/qux.js" contains
+    Given the file "fixtures/source/qux.js" contains
       """
       /* comment */
       """
-    And the app is set up like
+    And the app "example_app.rb" contains
       """
       Pannier::App.new do
         source 'fixtures/source'
@@ -65,21 +65,52 @@ Feature: Asset processing
       end
       """
     When the app has run
-    Then the file at "fixtures/processed/qux.js" should contain
+    Then the file "fixtures/processed/qux.js" should contain
+      """
+      /* tnemmoc */
+      """
+
+  Scenario: Assets processed through processors before copying
+    Given the file "fixtures/source/qux.js" contains
+      """
+      /* comment */
+      """
+    And the ruby file "reversifier.rb" contains
+      """
+      class Reversifier
+        def call(content)
+          content.reverse
+        end
+      end
+      """
+    And the app "example_app.rb" contains
+      """
+      Pannier::App.new do
+        source 'fixtures/source'
+        result 'fixtures/processed'
+
+        package 'foo' do
+          assets '*.js'
+          process Reversifier.new
+        end
+      end
+      """
+    When the app has run
+    Then the file "fixtures/processed/qux.js" should contain
       """
       /* tnemmoc */
       """
 
   Scenario: Assets processed through process block and then concatenated
-    Given the file at "fixtures/source/a.js" contains
+    Given the file "fixtures/source/a.js" contains
       """
       /* one */
       """
-    And the file at "fixtures/source/b.js" contains
+    And the file "fixtures/source/b.js" contains
       """
       /* two */
       """
-    And the app is set up like
+    And the app "example_app.rb" contains
       """
       Pannier::App.new do
         source 'fixtures/source'
@@ -95,22 +126,22 @@ Feature: Asset processing
       end
       """
     When the app has run
-    Then the file at "fixtures/processed/main.js" should contain
+    Then the file "fixtures/processed/main.js" should contain
       """
       /* eno */
       /* owt */
       """
 
   Scenario: Assets concatenated by user proc
-    Given the file at "fixtures/source/a.js" contains
+    Given the file "fixtures/source/a.js" contains
       """
       /* one */
       """
-    And the file at "fixtures/source/b.js" contains
+    And the file "fixtures/source/b.js" contains
       """
       /* two */
       """
-    And the app is set up like
+    And the app "example_app.rb" contains
       """
       Pannier::App.new do
         source 'fixtures/source'
@@ -123,7 +154,7 @@ Feature: Asset processing
       end
       """
     When the app has run
-    Then the file at "fixtures/processed/main.js" should contain
+    Then the file "fixtures/processed/main.js" should contain
       """
       /* two */
       /* one */
