@@ -1,4 +1,4 @@
-Given(/^the app "(.*?)" contains$/) do |file_name, string|
+Given(/^the app is configured as follows$/) do |string|
   @app = eval(string)
 end
 
@@ -25,7 +25,7 @@ Given(/^the file "(.*?)" contains$/) do |file_path, content|
   end
 end
 
-Given(/^the ruby file "(.*?)" contains$/) do |file_name, string|
+Given(/^a loaded ruby file contains$/) do |string|
   eval(string)
 end
 
