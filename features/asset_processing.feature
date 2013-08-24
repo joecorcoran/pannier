@@ -77,6 +77,12 @@ Feature: Asset processing
       """
     And a loaded ruby file contains
       """ruby
+      class Exclaimifier
+        def call(content)
+          content.gsub(/(\w+)/, '\1!')
+        end
+      end
+
       class Reversifier
         def call(content)
           content.reverse
@@ -91,14 +97,14 @@ Feature: Asset processing
 
         package 'foo' do
           assets '*.js'
-          process Reversifier.new
+          process Exclaimifier.new, Reversifier.new
         end
       end
       """
     When the app has run
     Then the file "fixtures/processed/qux.js" should contain
       """javascript
-      /* tnemmoc */
+      /* !tnemmoc */
       """
 
   Scenario: Assets processed through process block and then concatenated
