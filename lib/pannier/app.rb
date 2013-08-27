@@ -1,10 +1,11 @@
 module Pannier
   class App
 
-    attr_reader :source_path, :result_path, :packages
+    attr_reader :source_path, :result_path, :packages, :manifest
 
     def initialize(&block)
-      @packages = []
+      @packages, @manifest = [], Manifest.new(self)
+      @responder = Responder.new(@manifest)
       self.instance_eval(&block) if block_given?
       self
     end
@@ -20,10 +21,16 @@ module Pannier
     def package(name, &block)
       return unless block_given?
       @packages << Package.new(name, self, &block)
+      @manifest.build!
     end
 
     def run!
       @packages.each(&:run!)
+      @manifest.build!
+    end
+
+    def call(env)
+      @responder.response(Rack::Request.new(env))
     end
 
   end

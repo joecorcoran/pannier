@@ -3,10 +3,10 @@ require 'set'
 module Pannier
   class Package
 
-    attr_reader :name, :app, :asset_set, :source_path, :result_path
+    attr_reader :name, :app, :source_assets, :result_assets, :source_path, :result_path
 
     def initialize(name, app, &block)
-      @name, @app, @asset_set = name, app, Set.new
+      @name, @app, @source_assets, @result_assets = name, app, Set.new, Set.new
       self.instance_eval(&block) if block_given?
       self
     end
@@ -30,11 +30,8 @@ module Pannier
     def assets(*patterns)
       patterns.each do |pattern|
         paths = Dir[File.join(full_source_path, pattern)]
-        new_assets = paths.map do |asset_source_path|
-          asset_result_path = asset_source_path.gsub(full_source_path, full_result_path)
-          Asset.new(asset_source_path, asset_result_path, self)
-        end
-        @asset_set.merge(new_assets)
+        assets = paths.map { |path| Asset.new(path, self) }
+        @source_assets.merge(assets)
       end
     end
 
@@ -56,7 +53,7 @@ module Pannier
     def process!
       return unless @processors
       @processors.each do |processor|
-        @asset_set.each do |asset|
+        @source_assets.each do |asset|
           asset.content = processor.call(asset.content)
         end
       end
@@ -66,12 +63,16 @@ module Pannier
       return unless @concat_name
       FileUtils.mkdir_p(full_result_path)
       File.open(File.join(full_result_path, @concat_name), 'w+') do |file|
-        file << @concatenator.call(@asset_set.sort.map(&:content))
+        file << @concatenator.call(@source_assets.sort.map(&:content))
       end
     end
 
     def copy!
-      @asset_set.each(&:write_result!)
+      assets = @source_assets.map do |asset|
+        asset.copy_to(asset.path.gsub(full_source_path, full_result_path))
+      end
+      @result_assets.merge(assets)
+      @result_assets.each(&:write!)
     end
 
   end

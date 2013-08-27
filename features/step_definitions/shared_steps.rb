@@ -1,9 +1,13 @@
+Given(/^that this feature is pending$/) do
+  pending
+end
+
 Given(/^the app is configured as follows$/) do |string|
   @app = eval(string)
 end
 
 Given(/^these files exist$/) do |table|
-  table.rows.flatten.each do |file_path|
+  table.raw.flatten.each do |file_path|
     FileUtils.mkdir_p(File.dirname(file_path))
     File.new(file_path, 'w+')
   end

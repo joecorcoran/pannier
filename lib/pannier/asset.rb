@@ -1,35 +1,46 @@
-require 'tempfile'
-
 module Pannier
   class Asset
     include Comparable
 
-    attr_reader :source_path, :result_path
-    attr_accessor :content
+    attr_accessor :path
 
-    def initialize(source_path, result_path, package)
-      @source_path, @result_path, @package = source_path, result_path, package
-      @content = File.read(@source_path)
+    def initialize(path, package)
+      @path, @package = path, package
     end
 
-    def write_result!
-      FileUtils.mkdir_p(File.dirname(@result_path))
-      File.open(@result_path, 'w+') do |file|
-        file << @content
-      end
+    def content
+      return unless File.exists?(@path)
+      @content = @content || File.read(@path)
+    end
+
+    def content=(string)
+      @content = string
     end
 
     def eql?(other)
-      File.expand_path(source_path) == File.expand_path(other.source_path)
+      File.expand_path(path) == File.expand_path(other.path)
     end
 
     def hash
-      @hash ||= File.expand_path(source_path).hash
+      File.expand_path(path).hash
     end
 
     def <=>(other)
-      source_path <=> other.source_path
+      path <=> other.path
     end
 
+    def copy_to(to_path)
+      copy = self.dup
+      copy.content = content.dup
+      copy.path = to_path
+      copy
+    end
+
+    def write!
+      FileUtils.mkdir_p(File.dirname(@path))
+      File.open(@path, 'w+') do |file|
+        file << @content
+      end
+    end
   end
 end

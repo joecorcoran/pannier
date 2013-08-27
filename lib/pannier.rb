@@ -2,6 +2,8 @@ require 'rack'
 require 'fileutils'
 
 require 'pannier/version'
+require 'pannier/manifest'
+require 'pannier/responder'
 require 'pannier/app'
 require 'pannier/package'
 require 'pannier/asset'
