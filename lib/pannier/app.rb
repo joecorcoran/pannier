@@ -21,12 +21,12 @@ module Pannier
     def package(name, &block)
       return unless block_given?
       @packages << Package.new(name, self, &block)
-      @manifest.build!
+      @manifest.build_source!
     end
 
     def run!
       @packages.each(&:run!)
-      @manifest.build!
+      @manifest.build_result!
     end
 
     def call(env)

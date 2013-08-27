@@ -5,13 +5,17 @@ module Pannier
       @app, @manifest = app, {}
     end
 
-    def build!
+    def build_source!
       @app.packages.each do |package|
-        @manifest[package.name] = {}
+        @manifest[package.name] ||= {}
         @manifest[package.name][:source] = package.source_assets.map(&:path)
-        unless package.result_assets.empty?
-          @manifest[package.name][:result] = package.result_assets.map(&:path)
-        end
+      end
+    end
+
+    def build_result!
+      @app.packages.each do |package|
+        @manifest[package.name] ||= {}
+        @manifest[package.name][:result] = package.result_assets.map(&:path)
       end
     end
 
