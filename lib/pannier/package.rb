@@ -1,4 +1,5 @@
 require 'set'
+require 'pathname'
 
 module Pannier
   class Package
@@ -30,7 +31,10 @@ module Pannier
     def assets(*patterns)
       patterns.each do |pattern|
         paths = Dir[File.join(full_source_path, pattern)]
-        assets = paths.map { |path| Asset.new(path, self) }
+        assets = paths.map do |path|
+          pathname = Pathname.new(path)
+          Asset.new(pathname.basename, pathname.dirname, self)
+        end
         @source_assets.merge(assets)
       end
     end
@@ -69,7 +73,7 @@ module Pannier
 
     def copy!
       assets = @source_assets.map do |asset|
-        asset.copy_to(asset.path.gsub(full_source_path, full_result_path))
+        asset.copy_to(full_result_path)
       end
       @result_assets.merge(assets)
       @result_assets.each(&:write!)
