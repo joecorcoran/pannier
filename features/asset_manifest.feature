@@ -39,8 +39,8 @@ Feature: Asset manifest
         },
         'admin' => {
           'source' => [
-            %r{fixtures/source/bar.js},
-            %r{fixtures/source/baz.js}
+            %r{fixtures/source/bar.js$},
+            %r{fixtures/source/baz.js$}
           ]
         }
       }
@@ -65,11 +65,11 @@ Feature: Asset manifest
         },
         'admin' => {
           'source' => [
-            %r{fixtures/source/bar.js},
-            %r{fixtures/source/baz.js}
+            %r{fixtures/source/bar.js$},
+            %r{fixtures/source/baz.js$}
           ],
           'result' => [
-            %r{fixtures/processed/admin.js}
+            %r{fixtures/processed/admin.js$}
           ]
         }
       }
@@ -85,10 +85,10 @@ Feature: Asset manifest
       """ruby
       {
         'source' => [
-          %r{fixtures/source/foo.js}
+          %r{fixtures/source/foo.js$}
         ],
         'result' => [
-          %r{fixtures/processed/foo.js}
+          %r{fixtures/processed/foo.js$}
         ]
       }
       """
@@ -102,6 +102,6 @@ Feature: Asset manifest
     And the JSON response body should match
       """ruby
       [
-        %r{fixtures/processed/foo.js}
+        %r{fixtures/processed/foo.js$}
       ]
       """
