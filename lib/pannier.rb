@@ -1,5 +1,6 @@
 require 'rack'
 require 'fileutils'
+require 'pathname'
 
 require 'pannier/version'
 require 'pannier/manifest'

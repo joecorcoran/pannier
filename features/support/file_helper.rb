@@ -1,5 +1,3 @@
-require 'fileutils'
-
 module FileHelper
 
   extend self

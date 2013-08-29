@@ -1,5 +1,4 @@
 require 'set'
-require 'pathname'
 
 module Pannier
   class Package
