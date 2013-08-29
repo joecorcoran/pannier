@@ -8,14 +8,14 @@ describe Pannier::Package do
     end
   end
   let(:package) do
-    Pannier::Package.new('foo', app) do
+    Pannier::Package.new(:foo, app) do
       source 'stylesheets'
       result 'stylesheets'
     end
   end
 
   it('stores name') do
-    expect(package.name).to eq 'foo'
+    expect(package.name).to eq :foo
   end
   it('stores parent app') do
     expect(package.app).to eq app

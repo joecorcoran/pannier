@@ -13,7 +13,7 @@ Feature: Asset processing
         source 'fixtures/source'
         result 'fixtures/processed'
 
-        package 'foo' do
+        package :foo do
           assets '*.js'
         end
       end
@@ -33,7 +33,7 @@ Feature: Asset processing
         source 'fixtures/source'
         result 'fixtures/processed'
 
-        package 'foo' do
+        package :foo do
           source 'bar'
           result 'baz'
           assets '*.js'
@@ -56,7 +56,7 @@ Feature: Asset processing
         source 'fixtures/source'
         result 'fixtures/processed'
 
-        package 'foo' do
+        package :foo do
           assets '*.js'
           process do |content|
             content.reverse
@@ -95,7 +95,7 @@ Feature: Asset processing
         source 'fixtures/source'
         result 'fixtures/processed'
 
-        package 'foo' do
+        package :foo do
           assets '*.js'
           process Exclaimifier.new, Reversifier.new
         end
@@ -122,7 +122,7 @@ Feature: Asset processing
         source 'fixtures/source'
         result 'fixtures/processed'
 
-        package 'main' do
+        package :main do
           assets '*.js'
           process do |content|
             content.reverse
@@ -153,7 +153,7 @@ Feature: Asset processing
         source 'fixtures/source'
         result 'fixtures/processed'
 
-        package 'main' do
+        package :main do
           assets '*.js'
           concat 'main.js', proc { |contents| contents.reverse.join("\n") }
         end

@@ -14,10 +14,10 @@ Feature: Asset manifest
         source 'fixtures/source'
         result 'fixtures/processed'
 
-        package 'main' do
+        package :main do
           assets 'foo.js'
         end
-        package 'admin' do
+        package :admin do
           assets 'bar.js', 'baz.js'
           concat 'admin.js'
         end
