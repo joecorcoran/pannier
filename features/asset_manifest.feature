@@ -25,20 +25,20 @@ Feature: Asset manifest
       """
 
   Scenario: Getting the asset manifest before the app has run
-    When I request "/manifest"
+    When I request "/packages"
     Then the response status should be 200
     And I should see these headers
       | Content-Type | application/json |
     And the JSON response body should match
       """ruby
       {
-        :main => {
-          :source => [
+        'main' => {
+          'source' => [
             %r{fixtures/source/foo.js$}
           ]
         },
-        :admin => {
-          :source => [
+        'admin' => {
+          'source' => [
             %r{fixtures/source/bar.js},
             %r{fixtures/source/baz.js}
           ]
@@ -48,29 +48,60 @@ Feature: Asset manifest
 
   Scenario: Getting the asset manifest after the app has run
     When the app has run
-    And I request "/manifest"
+    And I request "/packages"
     Then the response status should be 200
     And I should see these headers
       | Content-Type | application/json |
     And the JSON response body should match
       """ruby
       {
-        :main => {
-          :source => [
+        'main' => {
+          'source' => [
             %r{fixtures/source/foo.js$}
           ],
-          :result => [
+          'result' => [
             %r{fixtures/processed/foo.js$}
           ]
         },
-        :admin => {
-          :source => [
+        'admin' => {
+          'source' => [
             %r{fixtures/source/bar.js},
             %r{fixtures/source/baz.js}
           ],
-          :result => [
+          'result' => [
             %r{fixtures/processed/admin.js}
           ]
         }
       }
+      """
+
+  Scenario: Getting manifest details for a package
+    When the app has run
+    And I request "/packages/main"
+    Then the response status should be 200
+    And I should see these headers
+      | Content-Type | application/json |
+    And the JSON response body should match
+      """ruby
+      {
+        'source' => [
+          %r{fixtures/source/foo.js}
+        ],
+        'result' => [
+          %r{fixtures/processed/foo.js}
+        ]
+      }
+      """
+
+  Scenario: Getting manifest details for a package state
+    When the app has run
+    And I request "/packages/main/result"
+    Then the response status should be 200
+    And I should see these headers
+      | Content-Type | application/json |
+    And the JSON response body should match
+      """ruby
+      [
+        %r{fixtures/processed/foo.js}
+      ]
       """
