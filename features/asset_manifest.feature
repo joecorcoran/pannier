@@ -6,6 +6,8 @@ Feature: Asset manifest
   Background:
     Given these files exist
       | fixtures/source/foo.js |
+      | fixtures/source/bar.js |
+      | fixtures/source/baz.js |
     And the app is configured as follows
       """ruby
       Pannier::App.new do
@@ -13,7 +15,11 @@ Feature: Asset manifest
         result 'fixtures/processed'
 
         package 'main' do
-          assets '*.js'
+          assets 'foo.js'
+        end
+        package 'admin' do
+          assets 'bar.js', 'baz.js'
+          concat 'admin.js'
         end
       end
       """
@@ -29,6 +35,12 @@ Feature: Asset manifest
         :main => {
           :source => [
             %r{fixtures/source/foo.js$}
+          ]
+        },
+        :admin => {
+          :source => [
+            %r{fixtures/source/bar.js},
+            %r{fixtures/source/baz.js}
           ]
         }
       }
@@ -49,6 +61,15 @@ Feature: Asset manifest
           ],
           :result => [
             %r{fixtures/processed/foo.js$}
+          ]
+        },
+        :admin => {
+          :source => [
+            %r{fixtures/source/bar.js},
+            %r{fixtures/source/baz.js}
+          ],
+          :result => [
+            %r{fixtures/processed/admin.js}
           ]
         }
       }

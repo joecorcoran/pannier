@@ -64,10 +64,10 @@ module Pannier
 
     def concat!
       return unless @concat_name
-      FileUtils.mkdir_p(full_result_path)
-      File.open(File.join(full_result_path, @concat_name), 'w+') do |file|
-        file << @concatenator.call(@source_assets.sort.map(&:content))
-      end
+      asset = Asset.new(@concat_name, full_result_path, self)
+      asset.content = @concatenator.call(@source_assets.sort.map(&:content))
+      @result_assets.add(asset)
+      write!
     end
 
     def copy!
@@ -75,6 +75,10 @@ module Pannier
         asset.copy_to(full_result_path)
       end
       @result_assets.merge(assets)
+      write!
+    end
+
+    def write!
       @result_assets.each(&:write!)
     end
 
