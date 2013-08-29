@@ -17,11 +17,11 @@ module Pannier
     private
 
       def json_response(content)
-        [200, { 'Content-Type' => 'application/json' }, content.to_json]
+        [200, { 'Content-Type' => 'application/json' }, [content.to_json]]
       end
 
       def not_found
-        [404, { 'Content-Type' => 'text/plain' }, 'Not found']
+        [404, { 'Content-Type' => 'text/plain' }, ['Not found']]
       end
 
   end
