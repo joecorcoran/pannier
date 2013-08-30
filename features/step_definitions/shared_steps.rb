@@ -13,8 +13,8 @@ Given(/^these files exist$/) do |table|
   end
 end
 
-When(/^the app has run$/) do
-  @app.run!
+When(/^the packages have been processed$/) do
+  @app.process!
 end
 
 Then(/^these files should exist$/) do |table|

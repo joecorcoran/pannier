@@ -5,7 +5,6 @@ module Pannier
 
     def initialize(&block)
       @packages, @manifest = [], Manifest.new(self)
-      @responder = Responder.new(@manifest)
       self.instance_eval(&block) if block_given?
       self
     end
@@ -24,13 +23,19 @@ module Pannier
       @manifest.build_source!
     end
 
-    def run!
-      @packages.each(&:run!)
+    def file_server
+      @file_server ||= Rack::File.new(@result_path)
+    end
+
+    def process!
+      @packages.each(&:process!)
       @manifest.build_result!
     end
 
     def call(env)
-      @responder.response(Rack::Request.new(env))
+      req = Rack::Request.new(env)
+      return API::Response.new(req, @manifest).response if API.handles?(req)
+      file_server.call(env)
     end
 
   end

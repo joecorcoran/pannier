@@ -1,4 +1,4 @@
-Feature: Asset manifest
+Feature: Requesting the asset manifest
   In order to inspect my asset file paths for use in decoupled front end tests
   As a developer
   I want to request the asset manifest and receive a JSON response
@@ -24,7 +24,7 @@ Feature: Asset manifest
       end
       """
 
-  Scenario: Getting the asset manifest before the app has run
+  Scenario: Getting the asset manifest before the packages have been processed
     When I request "/packages"
     Then the response status should be 200
     And I should see these headers
@@ -46,8 +46,8 @@ Feature: Asset manifest
       }
       """
 
-  Scenario: Getting the asset manifest after the app has run
-    When the app has run
+  Scenario: Getting the asset manifest after the packages have been processed
+    When the packages have been processed
     And I request "/packages"
     Then the response status should be 200
     And I should see these headers
@@ -76,7 +76,7 @@ Feature: Asset manifest
       """
 
   Scenario: Getting manifest details for a package
-    When the app has run
+    When the packages have been processed
     And I request "/packages/main"
     Then the response status should be 200
     And I should see these headers
@@ -94,7 +94,7 @@ Feature: Asset manifest
       """
 
   Scenario: Getting manifest details for a package state
-    When the app has run
+    When the packages have been processed
     And I request "/packages/main/result"
     Then the response status should be 200
     And I should see these headers

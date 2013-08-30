@@ -48,18 +48,13 @@ module Pannier
       @concatenator = concatenator
     end
 
-    def run!
-      process! 
-      concat! || copy!
-    end
-
     def process!
-      return unless @processors
-      @processors.each do |processor|
+      @processors && @processors.each do |processor|
         @source_assets.each do |asset|
           asset.content = processor.call(asset.content)
         end
       end
+      concat! || copy!
     end
 
     def concat!

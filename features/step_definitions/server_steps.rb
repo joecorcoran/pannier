@@ -13,6 +13,10 @@ Then(/^I should see these headers$/) do |table|
   end
 end
 
+Then(/^the response body should be$/) do |string|
+  expect(last_response.body).to eq string
+end
+
 Then(/^the JSON response body should match$/) do |string|
   pattern = eval(string)
   expect(last_response.body).to match_json_expression(pattern)

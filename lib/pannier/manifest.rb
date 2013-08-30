@@ -21,10 +21,10 @@ module Pannier
       end
     end
 
-    def package_details(name, state = nil)
-      name = name.to_sym
-      details = @tree[name]
-      details = @tree[name][state.to_sym] if state
+    def package_details(name = nil, state = nil)
+      details = @tree
+      details = @tree[name.to_sym] if name
+      details = @tree[name.to_sym][state.to_sym] if state
       details
     end
 
