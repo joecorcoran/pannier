@@ -1,7 +1,7 @@
-Feature: Requesting the asset manifest
+Feature: JSON API
   In order to inspect my asset file paths for use in decoupled front end tests
   As a developer
-  I want to request the asset manifest and receive a JSON response
+  I want to makes requests to a JSON API
 
   Background:
     Given these files exist
