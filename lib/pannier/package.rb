@@ -37,7 +37,7 @@ module Pannier
 
     def handler_path
       path = @result_path.nil? ? '/' : @result_path
-      path.prepend('/') unless path[0] == '/'
+      path.insert(0, '/') unless path[0] == '/'
       path
     end
 
