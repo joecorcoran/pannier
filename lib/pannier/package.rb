@@ -6,7 +6,9 @@ module Pannier
     attr_reader :name, :app, :source_assets, :result_assets, :source_path, :result_path
 
     def initialize(name, app, &block)
-      @name, @app, @source_assets, @result_assets = name, app, Set.new, Set.new
+      @name, @app = name, app
+      @source_assets, @result_assets = Set.new, Set.new
+      @middlewares = []
       self.instance_eval(&block) if block_given?
       self
     end
@@ -20,11 +22,23 @@ module Pannier
     end
 
     def full_source_path
-      @full_source_path ||= File.expand_path(File.join(*[@app.source_path, @source_path].compact))
+      File.expand_path(File.join(*[@app.source_path, @source_path].compact))
     end
 
     def full_result_path
-      @full_result_path ||= File.expand_path(File.join(*[@app.result_path, @result_path].compact))
+      File.expand_path(File.join(*[@app.result_path, @result_path].compact))
+    end
+
+    def handler
+      handler = FileHandler.new(@result_assets.map(&:path), full_result_path)
+      return handler if @middlewares.empty?
+      @middlewares.reverse.reduce(handler) { |app, proc| proc.call(app) }
+    end
+
+    def handler_path
+      path = @result_path.nil? ? '/' : @result_path
+      path.prepend('/') unless path[0] == '/'
+      path
     end
 
     def assets(*patterns)
@@ -46,6 +60,10 @@ module Pannier
     def concat(concat_name, concatenator = Concatenator.new)
       @concat_name  = concat_name
       @concatenator = concatenator
+    end
+
+    def use(middleware, *args, &block)
+      @middlewares << proc { |app| middleware.new(app, *args, &block) }
     end
 
     def process!

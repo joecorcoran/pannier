@@ -23,8 +23,15 @@ module Pannier
       @manifest.build_source!
     end
 
-    def file_server
-      @file_server ||= Rack::File.new(@result_path)
+    def handler
+      @handler ||= begin
+        map = @packages.reduce({}) do |hash, pkg|
+          hash[pkg.handler_path] ||= Rack::Cascade.new([])
+          hash[pkg.handler_path].add(pkg.handler)
+          hash
+        end
+        Rack::URLMap.new(map)
+      end
     end
 
     def process!
@@ -35,7 +42,7 @@ module Pannier
     def call(env)
       req = Rack::Request.new(env)
       return API::Response.new(req, @manifest).response if API.handles?(req)
-      file_server.call(env)
+      handler.call(env)
     end
 
   end
