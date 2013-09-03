@@ -30,7 +30,7 @@ Feature: Requesting assets
         end
       end
       """
-    And the packages have been processed
+    And the app has been processed
 
   Scenario: Requesting a CSS result file
     When I request "/styles/foo.css"

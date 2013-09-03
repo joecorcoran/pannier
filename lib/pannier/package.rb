@@ -3,7 +3,8 @@ require 'set'
 module Pannier
   class Package
 
-    attr_reader :name, :app, :source_assets, :result_assets, :source_path, :result_path
+    attr_reader :name, :app, :source_assets, :result_assets, :source_path,
+                :result_path
 
     def initialize(name, app, &block)
       @name, @app = name, app
@@ -39,6 +40,14 @@ module Pannier
       path = @result_path.nil? ? '/' : @result_path
       path.insert(0, '/') unless path[0] == '/'
       path
+    end
+
+    def behaviors(*names)
+      names.each do |name|
+        behavior = @app.behaviors[name]
+        raise MissingBehavior.new(name) if behavior.nil?
+        self.instance_eval(&behavior)
+      end
     end
 
     def assets(*patterns)

@@ -13,7 +13,7 @@ Given(/^these files exist$/) do |table|
   end
 end
 
-When(/^the packages have been processed$/) do
+When(/^the app has been processed$/) do
   @app.process!
 end
 

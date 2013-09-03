@@ -1,10 +1,10 @@
 module Pannier
   class App
 
-    attr_reader :source_path, :result_path, :packages, :manifest
+    attr_reader :source_path, :result_path, :behaviors, :packages, :manifest
 
     def initialize(&block)
-      @packages, @manifest = [], Manifest.new(self)
+      @behaviors, @packages, @manifest = {}, [], Manifest.new(self)
       self.instance_eval(&block) if block_given?
       self
     end
@@ -15,6 +15,11 @@ module Pannier
 
     def result(path)
       @result_path = File.expand_path(path)
+    end
+
+    def behavior(name, &block)
+      return unless block_given?
+      @behaviors[name] = block
     end
 
     def package(name, &block)

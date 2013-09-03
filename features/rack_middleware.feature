@@ -37,7 +37,7 @@ Feature: Rack middleware
         end
       end
       """
-    And the packages have been processed
+    And the app has been processed
 
     When I request "/foo.css" with these headers
       | Accept-Encoding  | gzip  |

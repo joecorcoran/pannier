@@ -18,7 +18,7 @@ Feature: Asset processing
         end
       end
       """
-    When the packages have been processed
+    When the app has been processed
     Then these files should exist
       | fixtures/processed/bar.js |
       | fixtures/processed/baz.js |
@@ -40,7 +40,7 @@ Feature: Asset processing
         end
       end
       """
-    When the packages have been processed
+    When the app has been processed
     Then these files should exist
       | fixtures/processed/baz/qux.js  |
       | fixtures/processed/baz/quux.js |
@@ -64,7 +64,7 @@ Feature: Asset processing
         end
       end
       """
-    When the packages have been processed
+    When the app has been processed
     Then the file "fixtures/processed/qux.js" should contain
       """javascript
       /* tnemmoc */
@@ -101,7 +101,7 @@ Feature: Asset processing
         end
       end
       """
-    When the packages have been processed
+    When the app has been processed
     Then the file "fixtures/processed/qux.js" should contain
       """javascript
       /* !tnemmoc */
@@ -131,7 +131,7 @@ Feature: Asset processing
         end
       end
       """
-    When the packages have been processed
+    When the app has been processed
     Then the file "fixtures/processed/main.js" should contain
       """javascript
       /* eno */
@@ -159,7 +159,7 @@ Feature: Asset processing
         end
       end
       """
-    When the packages have been processed
+    When the app has been processed
     Then the file "fixtures/processed/main.js" should contain
       """javascript
       /* two */
