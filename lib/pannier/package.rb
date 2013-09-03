@@ -22,7 +22,7 @@ module Pannier
       @result_path = path
     end
 
-    def behaviors(*names)
+    def behave(*names)
       names.each do |name|
         behavior = @app.behaviors[name]
         raise MissingBehavior.new(name) if behavior.nil?

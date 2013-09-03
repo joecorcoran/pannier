@@ -21,7 +21,7 @@ Feature: Package behaviors
         end
 
         package :baz do
-          behaviors :bar
+          behave :bar
           assets 'foo.js'
         end
       end
