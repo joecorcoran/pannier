@@ -22,26 +22,6 @@ module Pannier
       @result_path = path
     end
 
-    def full_source_path
-      File.expand_path(File.join(*[@app.source_path, @source_path].compact))
-    end
-
-    def full_result_path
-      File.expand_path(File.join(*[@app.result_path, @result_path].compact))
-    end
-
-    def handler
-      handler = FileHandler.new(@result_assets.map(&:path), full_result_path)
-      return handler if @middlewares.empty?
-      @middlewares.reverse.reduce(handler) { |app, proc| proc.call(app) }
-    end
-
-    def handler_path
-      path = @result_path.nil? ? '/' : @result_path
-      path.insert(0, '/') unless path[0] == '/'
-      path
-    end
-
     def behaviors(*names)
       names.each do |name|
         behavior = @app.behaviors[name]
@@ -73,6 +53,26 @@ module Pannier
 
     def use(middleware, *args, &block)
       @middlewares << proc { |app| middleware.new(app, *args, &block) }
+    end
+
+    def full_source_path
+      File.expand_path(File.join(*[@app.source_path, @source_path].compact))
+    end
+
+    def full_result_path
+      File.expand_path(File.join(*[@app.result_path, @result_path].compact))
+    end
+
+    def handler
+      handler = FileHandler.new(@result_assets.map(&:path), full_result_path)
+      return handler if @middlewares.empty?
+      @middlewares.reverse.reduce(handler) { |app, proc| proc.call(app) }
+    end
+
+    def handler_path
+      path = @result_path.nil? ? '/' : @result_path
+      path.insert(0, '/') unless path[0] == '/'
+      path
     end
 
     def process!
