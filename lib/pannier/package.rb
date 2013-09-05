@@ -2,57 +2,23 @@ require 'set'
 
 module Pannier
   class Package
+    extend DSL
 
     attr_reader :name, :app, :source_assets, :result_assets, :source_path,
-                :result_path
+                :result_path, :middlewares, :processors
 
-    def initialize(name, app, &block)
+    def initialize(name, app)
       @name, @app = name, app
       @source_assets, @result_assets = Set.new, Set.new
-      @middlewares = []
-      self.instance_eval(&block) if block_given?
-      self
+      @middlewares, @processors = [], []
     end
 
-    def source(path)
+    def set_source(path)
       @source_path = path
     end
 
-    def result(path)
+    def set_result(path)
       @result_path = path
-    end
-
-    def behave(*names)
-      names.each do |name|
-        behavior = @app.behaviors[name]
-        raise MissingBehavior.new(name) if behavior.nil?
-        self.instance_eval(&behavior)
-      end
-    end
-
-    def assets(*patterns)
-      patterns.each do |pattern|
-        paths = Dir[File.join(full_source_path, pattern)]
-        assets = paths.map do |path|
-          pathname = Pathname.new(path)
-          Asset.new(pathname.basename, pathname.dirname, self)
-        end
-        @source_assets.merge(assets)
-      end
-    end
-
-    def process(*processors, &block)
-      @processors = processors
-      @processors << block if block_given?
-    end
-
-    def concat(concat_name, concatenator = Concatenator.new)
-      @concat_name  = concat_name
-      @concatenator = concatenator
-    end
-
-    def use(middleware, *args, &block)
-      @middlewares << proc { |app| middleware.new(app, *args, &block) }
     end
 
     def full_source_path
@@ -61,6 +27,27 @@ module Pannier
 
     def full_result_path
       File.expand_path(File.join(*[@app.result_path, @result_path].compact))
+    end
+
+    def add_assets(*paths)
+      assets = paths.map do |path|
+        pathname = Pathname.new(path)
+        Asset.new(pathname.basename, pathname.dirname, self)
+      end
+      @source_assets.merge(assets)
+    end
+
+    def add_processors(*processors)
+      @processors += processors
+    end
+
+    def add_middleware(middleware, *args, &block)
+      @middlewares << proc { |app| middleware.new(app, *args, &block) }
+    end
+
+    def set_concatenator(concat_name, concatenator = Concatenator.new)
+      @concat_name  = concat_name
+      @concatenator = concatenator
     end
 
     def handler
@@ -104,5 +91,44 @@ module Pannier
       @result_assets.each(&:write!)
     end
 
+    dsl do
+
+      def source(path)
+        set_source(path)
+      end
+
+      def result(path)
+        set_result(path)
+      end
+
+      def behave(*names)
+        names.each do |name|
+          behavior = self.app.behaviors[name]
+          raise MissingBehavior.new(name) if behavior.nil?
+          self.instance_eval(&behavior)
+        end
+      end
+
+      def assets(*patterns)
+        patterns.each do |pattern|
+          paths = Dir[File.join(full_source_path, pattern)]
+          add_assets(*paths)
+        end
+      end
+
+      def process(*processors, &block)
+        processors << block if block_given?
+        add_processors(*processors)
+      end
+
+      def concat(*args)
+        set_concatenator(*args)
+      end
+
+      def use(*args, &block)
+        add_middleware(*args, &block) 
+      end
+
+    end
   end
 end

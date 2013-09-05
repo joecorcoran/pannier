@@ -10,7 +10,7 @@ Feature: JSON API
       | fixtures/source/baz.js |
     And the app is configured as follows
       """ruby
-      Pannier::App.new do
+      Pannier.build do
         source 'fixtures/source'
         result 'fixtures/processed'
 

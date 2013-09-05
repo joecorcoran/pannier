@@ -23,7 +23,7 @@ Feature: Rack middleware
       """
     And the app is configured as follows
       """ruby
-      Pannier::App.new do
+      Pannier.build do
         source 'fixtures/source'
         result 'fixtures/processed'
 
@@ -41,6 +41,7 @@ Feature: Rack middleware
 
     When I request "/foo.css" with these headers
       | Accept-Encoding  | gzip  |
+    Then the response status should be 200
     Then I should see these headers
       | Content-Encoding | gzip  |
     And I should not see these headers

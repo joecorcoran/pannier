@@ -1,31 +1,23 @@
 module Pannier
   class App
+    extend DSL
 
-    attr_reader :source_path, :result_path, :behaviors, :packages, :manifest
+    attr_reader :source_path, :result_path, :behaviors, :packages
 
-    def initialize(&block)
-      @behaviors, @packages, @manifest = {}, [], Manifest.new(self)
-      self.instance_eval(&block) if block_given?
-      self
+    def initialize
+      @behaviors, @packages = {}, []
     end
 
-    def source(path)
+    def set_source(path)
       @source_path = File.expand_path(path)
     end
 
-    def result(path)
+    def set_result(path)
       @result_path = File.expand_path(path)
     end
 
-    def behavior(name, &block)
-      return unless block_given?
-      @behaviors[name] = block
-    end
-
-    def package(name, &block)
-      return unless block_given?
-      @packages << Package.new(name, self, &block)
-      @manifest.build_source!
+    def add_package(package)
+      @packages << package
     end
 
     def handler
@@ -41,13 +33,38 @@ module Pannier
 
     def process!
       @packages.each(&:process!)
-      @manifest.build_result!
     end
 
     def call(env)
       req = Rack::Request.new(env)
-      return API::Response.new(req, @manifest).response if API.handles?(req)
+      return API::Response.new(req, self).response if API.handles?(req)
       handler.call(env)
+    end
+
+    dsl do
+
+      def source(path)
+        set_source(path)
+      end
+
+      def result(path)
+        set_result(path)
+      end
+
+      def behavior(name, &block)
+        add_behavior(name, &block)
+      end
+
+      def package(name, &block)
+        add_package(Package.build(name, self, &block))
+      end
+
+      private
+
+        def add_behavior(name, &block)
+          self.behaviors[name] = block
+        end
+
     end
 
   end

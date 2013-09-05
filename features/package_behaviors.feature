@@ -10,7 +10,7 @@ Feature: Package behaviors
       """
     And the app is configured as follows
       """ruby
-      Pannier::App.new do
+      Pannier.build do
         source 'fixtures/source'
         result 'fixtures/result'
 

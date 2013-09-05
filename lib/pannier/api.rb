@@ -9,10 +9,11 @@ module Pannier
 
     class Response
 
-      def initialize(request, manifest)
-        @request, @manifest = request, manifest
+      def initialize(request, app)
+        @request, @app = request, app
+        manifest = Manifest.new(app).build!
         pkg = @request.path.match(REQUEST_PATTERN)
-        @content = @manifest.package_details(pkg['name'], pkg['state'])
+        @content = manifest.package_details(pkg['name'], pkg['state'])
       end
 
       def headers

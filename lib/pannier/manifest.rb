@@ -7,17 +7,26 @@ module Pannier
       @app, @tree = app, {}
     end
 
+    def build!
+      build_source! && build_result!
+      self
+    end
+
     def build_source!
       @app.packages.each do |package|
         @tree[package.name] ||= {}
-        @tree[package.name][:source] = package.source_assets.map(&:path)
+        unless package.source_assets.empty?
+          @tree[package.name][:source] = package.source_assets.map(&:path)
+        end
       end
     end
 
     def build_result!
       @app.packages.each do |package|
         @tree[package.name] ||= {}
-        @tree[package.name][:result] = package.result_assets.map(&:path)
+        unless package.result_assets.empty?
+          @tree[package.name][:result] = package.result_assets.map(&:path)
+        end
       end
     end
 
