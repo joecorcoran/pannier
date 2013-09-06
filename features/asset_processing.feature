@@ -85,15 +85,15 @@ Feature: Asset processing
       """
     And a loaded ruby file contains
       """ruby
-      require 'digest'
+      class Suffixer
+        def initialize(suffix)
+          @suffix = suffix
+        end
 
-      class Fingerprinter
         def call(content, basename)
           ext = File.extname(basename)
           base = File.basename(basename, ext)
-          fingerprint = Digest::MD5.hexdigest(content)
-          
-          [content, "#{base}-#{fingerprint}#{ext}"]
+          [content, "#{base}-#{@suffix}#{ext}"]
         end
       end
       """
@@ -105,12 +105,12 @@ Feature: Asset processing
 
         package :foo do
           assets '*.js'
-          process Exclaimifier.new, Fingerprinter.new
+          process Exclaimifier.new, Suffixer.new('abcde')
         end
       end
       """
     When the app has been processed
-    Then the file "fixtures/processed/qux-e89c3d100935aca81f5e2cf1571dd521.js" should contain
+    Then the file "fixtures/processed/qux-abcde.js" should contain
       """javascript
       /* comment! */
       """
