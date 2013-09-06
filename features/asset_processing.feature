@@ -58,8 +58,8 @@ Feature: Asset processing
 
         package :foo do
           assets '*.js'
-          process do |content|
-            content.reverse
+          process do |content, basename|
+            [content.reverse, basename]
           end
         end
       end
@@ -78,14 +78,22 @@ Feature: Asset processing
     And a loaded ruby file contains
       """ruby
       class Exclaimifier
-        def call(content)
-          content.gsub(/(\w+)/, '\1!')
+        def call(content, basename)
+          [content.gsub(/(\w+)/, '\1!'), basename]
         end
       end
+      """
+    And a loaded ruby file contains
+      """ruby
+      require 'digest'
 
-      class Reversifier
-        def call(content)
-          content.reverse
+      class Fingerprinter
+        def call(content, basename)
+          ext = File.extname(basename)
+          base = File.basename(basename, ext)
+          fingerprint = Digest::MD5.hexdigest(content)
+          
+          [content, "#{base}-#{fingerprint}#{ext}"]
         end
       end
       """
@@ -97,14 +105,14 @@ Feature: Asset processing
 
         package :foo do
           assets '*.js'
-          process Exclaimifier.new, Reversifier.new
+          process Exclaimifier.new, Fingerprinter.new
         end
       end
       """
     When the app has been processed
-    Then the file "fixtures/processed/qux.js" should contain
+    Then the file "fixtures/processed/qux-e89c3d100935aca81f5e2cf1571dd521.js" should contain
       """javascript
-      /* !tnemmoc */
+      /* comment! */
       """
 
   Scenario: Assets processed through process block and then concatenated
@@ -124,8 +132,8 @@ Feature: Asset processing
 
         package :main do
           assets '*.js'
-          process do |content|
-            content.reverse
+          process do |content, basename|
+            [content.reverse, basename]
           end
           concat 'main.js'
         end

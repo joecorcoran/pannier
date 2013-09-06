@@ -2,23 +2,20 @@ module Pannier
   class Asset
     include Comparable
 
-    attr_accessor :basename, :dirname
+    attr_accessor :basename, :dirname, :content
 
     def initialize(basename, dirname, package)
       @basename, @dirname, @package = basename, dirname, package
+      @content = original_content
     end
 
     def path
       File.join(@dirname, @basename)
     end
 
-    def content
+    def original_content
       return unless File.exists?(path)
-      @content = @content || File.read(path)
-    end
-
-    def content=(string)
-      @content = string
+      @original_content ||= File.read(path)
     end
 
     def eql?(other)
@@ -40,10 +37,15 @@ module Pannier
       copy
     end
 
+    def process!(processor)
+      processed = processor.call(content, basename)
+      self.content, self.basename = processed
+    end
+
     def write!
       FileUtils.mkdir_p(@dirname)
       File.open(path, 'w+') do |file|
-        file << @content
+        file << content
       end
     end
   end

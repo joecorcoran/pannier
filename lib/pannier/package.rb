@@ -65,7 +65,7 @@ module Pannier
     def process!
       @processors && @processors.each do |processor|
         @source_assets.each do |asset|
-          asset.content = processor.call(asset.content)
+          asset.process!(processor)
         end
       end
       concat! || copy!
