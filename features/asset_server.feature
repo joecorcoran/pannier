@@ -1,4 +1,4 @@
-Feature: Requesting assets
+Feature: Serving assets
   In order that I can separate my assets from my application
   As a developer
   I want to deploy a separate app from which I can request my assets
