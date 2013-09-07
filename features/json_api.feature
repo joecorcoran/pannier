@@ -1,7 +1,7 @@
 Feature: JSON API
   In order to inspect my asset file paths for use in decoupled front end tests
   As a developer
-  I want to makes requests to a JSON API
+  I want to make requests to a JSON API and receive asset path information
 
   Background:
     Given these files exist
