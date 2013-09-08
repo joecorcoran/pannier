@@ -13,7 +13,7 @@ module Pannier
 
     def write(tmpl_name, package_name)
       tmpl = @templates[tmpl_name]
-      paths  = @app[package_name].result_assets.map do |asset|
+      paths  = @app[package_name].result_assets.sort.map do |asset|
         asset.absolute_path_from(@app.result_path)
       end
       paths.map { |path| tmpl.call(path) }.join("\n")
