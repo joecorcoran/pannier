@@ -4,6 +4,7 @@ require 'pathname'
 
 require 'pannier/api'
 require 'pannier/asset'
+require 'pannier/asset_writer'
 require 'pannier/concatenator'
 require 'pannier/dsl'
 require 'pannier/errors'

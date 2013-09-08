@@ -20,6 +20,10 @@ module Pannier
       @packages << package
     end
 
+    def [](package_name)
+      @packages.find { |pkg| pkg.name == package_name }
+    end
+
     def handler
       @handler ||= begin
         map = @packages.reduce({}) do |hash, pkg|

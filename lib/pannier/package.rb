@@ -76,7 +76,7 @@ module Pannier
       asset = Asset.new(@concat_name, full_result_path, self)
       asset.content = @concatenator.call(@source_assets.sort.map(&:content))
       @result_assets.add(asset)
-      write!
+      write_files!
     end
 
     def copy!
@@ -84,11 +84,11 @@ module Pannier
         asset.copy_to(full_result_path)
       end
       @result_assets.merge(assets)
-      write!
+      write_files!
     end
 
-    def write!
-      @result_assets.each(&:write!)
+    def write_files!
+      @result_assets.each(&:write_file!)
     end
 
     dsl do

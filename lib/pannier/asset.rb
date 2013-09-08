@@ -13,6 +13,12 @@ module Pannier
       File.join(@dirname, @basename)
     end
 
+    def absolute_path_from(base)
+      asset_pathname, base_pathname = Pathname.new(path), Pathname.new(base)
+      relative_pathname = asset_pathname.relative_path_from(base_pathname)
+      '/' + relative_pathname.to_s
+    end
+
     def original_content
       return unless File.exists?(path)
       @original_content ||= File.read(path)
@@ -42,7 +48,7 @@ module Pannier
       self.content, self.basename = processed
     end
 
-    def write!
+    def write_file!
       FileUtils.mkdir_p(@dirname)
       File.open(path, 'w+') do |file|
         file << content

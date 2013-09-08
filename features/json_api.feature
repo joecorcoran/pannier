@@ -61,6 +61,9 @@ Feature: JSON API
           ],
           'result' => [
             %r{fixtures/processed/foo.js$}
+          ],
+          'app' => [
+            '/foo.js'
           ]
         },
         'admin' => {
@@ -70,6 +73,9 @@ Feature: JSON API
           ],
           'result' => [
             %r{fixtures/processed/admin.js$}
+          ],
+          'app' => [
+            '/admin.js'
           ]
         }
       }
@@ -89,6 +95,9 @@ Feature: JSON API
         ],
         'result' => [
           %r{fixtures/processed/foo.js$}
+        ],
+        'app' => [
+          '/foo.js'
         ]
       }
       """
