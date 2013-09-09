@@ -13,15 +13,17 @@ module Pannier
 
     def write(tmpl_name, package_name)
       tmpl = @templates[tmpl_name]
-      paths  = @app[package_name].result_assets.sort.map do |asset|
-        asset.absolute_path_from(@app.result_path)
+      results  = @app[package_name].result_assets.sort.map do |asset|
+        path = asset.absolute_path_from(@app.result_path)
+        tmpl.call(path)
       end
-      paths.map { |path| tmpl.call(path) }.join("\n")
+      results.join("\n")
     end
 
   end
 
   module Templates
+    
     class Javascript
       def call(path)
         "<script type=\"text/javascript\" src=\"#{path}\"></script>"
@@ -33,5 +35,6 @@ module Pannier
         "<link rel=\"stylesheet\" type=\"text/css\" href=\"#{path}\" />"
       end
     end
+
   end
 end
