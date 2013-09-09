@@ -9,7 +9,7 @@ module Pannier
 
     def initialize(name, app)
       @name, @app = name, app
-      @source_assets, @result_assets = Set.new, Set.new
+      @source_assets, @result_assets = SortedSet.new, SortedSet.new
       @middlewares, @processors = [], []
     end
 
@@ -74,7 +74,7 @@ module Pannier
     def concat!
       return unless @concat_name
       asset = Asset.new(@concat_name, full_result_path, self)
-      asset.content = @concatenator.call(@source_assets.sort.map(&:content))
+      asset.content = @concatenator.call(@source_assets.map(&:content))
       @result_assets.add(asset)
       write_files!
     end
