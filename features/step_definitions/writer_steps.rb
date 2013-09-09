@@ -1,7 +1,3 @@
-When(/^an asset writer for the app exists$/) do
-  @writer = Pannier::AssetWriter.new(@app)
-end
-
 When(/^I use the writer as follows$/) do |code|
   @html = eval(code)
 end

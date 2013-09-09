@@ -19,10 +19,9 @@ Feature: Writing assets
       end
       """
     And the app has been processed
-    And an asset writer for the app exists
     When I use the writer as follows
       """ruby
-      @writer.write(:js, :scripts, :defer => 'defer')
+      @app.writer.write(:js, :scripts, :defer => 'defer')
       """
     Then the following HTML should be written to the page
      """html
@@ -46,10 +45,9 @@ Feature: Writing assets
       end
       """
     And the app has been processed
-    And an asset writer for the app exists
     When I use the writer as follows
       """ruby
-      @writer.write(:css, :styles, :media => 'screen')
+      @app.writer.write(:css, :styles, :media => 'screen')
       """
     Then the following HTML should be written to the page
       """html

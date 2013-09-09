@@ -11,7 +11,7 @@ module Pannier
 
       def initialize(request, app)
         @request, @app = request, app
-        manifest = Manifest.new(app).build!
+        manifest = Manifest.new(app).build!(request.env)
         pkg = @request.path.match(REQUEST_PATTERN)
         @content = manifest.package_details(pkg['name'], pkg['state'])
       end

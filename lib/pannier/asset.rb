@@ -13,12 +13,6 @@ module Pannier
       File.join(@dirname, @basename)
     end
 
-    def absolute_path_from(base)
-      asset_pathname, base_pathname = Pathname.new(path), Pathname.new(base)
-      relative_pathname = asset_pathname.relative_path_from(base_pathname)
-      '/' + relative_pathname.to_s
-    end
-
     def original_content
       return unless File.exists?(path)
       @original_content ||= File.read(path)
@@ -34,6 +28,14 @@ module Pannier
 
     def <=>(other)
       path <=> other.path
+    end
+
+    def env_path(env, base)
+      prefix = env['SCRIPT_NAME'].to_s
+      prefix = '/' if prefix.empty?
+      asset_path, base_path = Pathname.new(path), Pathname.new(base)
+      relative_path = asset_path.relative_path_from(base_path)
+      prefix + relative_path.to_s
     end
 
     def copy_to(to_dirname)
