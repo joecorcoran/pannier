@@ -3,37 +3,21 @@ module Pannier
 
     def initialize(app)
       @app, @templates = app, {}
-      add_template(:js, Templates::Javascript.new)
-      add_template(:css, Templates::CSS.new)
+      add_template(:js, Template::Javascript.new)
+      add_template(:css, Template::CSS.new)
     end
 
     def add_template(tmpl_name, tmpl)
       @templates[tmpl_name] = tmpl
     end
 
-    def write(tmpl_name, package_name)
+    def write(tmpl_name, package_name, attrs = {})
       tmpl = @templates[tmpl_name]
       results  = @app[package_name].result_assets.map do |asset|
         path = asset.absolute_path_from(@app.result_path)
-        tmpl.call(path)
+        tmpl.call(path, attrs)
       end
       results.join("\n")
-    end
-
-  end
-
-  module Templates
-
-    class Javascript
-      def call(path)
-        "<script type=\"text/javascript\" src=\"#{path}\"></script>"
-      end
-    end
-
-    class CSS
-      def call(path)
-        "<link rel=\"stylesheet\" type=\"text/css\" href=\"#{path}\" />"
-      end
     end
 
   end

@@ -11,6 +11,7 @@ require 'pannier/errors'
 require 'pannier/file_handler'
 require 'pannier/manifest'
 require 'pannier/package'
+require 'pannier/template'
 require 'pannier/version'
 
 require 'pannier/app'
