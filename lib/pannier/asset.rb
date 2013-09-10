@@ -30,12 +30,10 @@ module Pannier
       path <=> other.path
     end
 
-    def env_path(env, base)
-      prefix = env['SCRIPT_NAME'].to_s
-      prefix = '/' if prefix.empty?
-      asset_path, base_path = Pathname.new(path), Pathname.new(base)
+    def serve_from(root_path, base_path)
+      asset_path, base_path = Pathname.new(path), Pathname.new(base_path)
       relative_path = asset_path.relative_path_from(base_path)
-      prefix + relative_path.to_s
+      File.join(root_path, relative_path.to_s)
     end
 
     def copy_to(to_dirname)

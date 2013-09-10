@@ -19,20 +19,21 @@ Feature: Writing assets
       end
       """
     And the app has been processed
-    When I use the writer as follows
+    And an asset writer for the app has been instantiated
+    When I use the asset writer as follows
       """ruby
-      @app.writer.write(:js, :scripts, :defer => 'defer')
+      @writer.write(:js, :scripts, :defer => 'defer')
       """
     Then the following HTML should be written to the page
-     """html
-     <script type="text/javascript" src="/one.js" defer="defer"></script>
-     <script type="text/javascript" src="/two.js" defer="defer"></script>
-     """
+      """html
+      <script type="text/javascript" src="/one.js" defer="defer"></script>
+      <script type="text/javascript" src="/two.js" defer="defer"></script>
+      """
 
   Scenario: Writing CSS assets
     Given these files exist
-      | fixtures/source/one.css |
-      | fixtures/source/two.css |
+      | fixtures/source/a.css |
+      | fixtures/source/b.css |
     And the app is configured as follows
       """ruby
       Pannier.build do
@@ -45,12 +46,39 @@ Feature: Writing assets
       end
       """
     And the app has been processed
-    When I use the writer as follows
+    And an asset writer for the app has been instantiated
+    When I use the asset writer as follows
       """ruby
-      @app.writer.write(:css, :styles, :media => 'screen')
+      @writer.write(:css, :styles, :media => 'screen')
       """
     Then the following HTML should be written to the page
       """html
-      <link rel="stylesheet" type="text/css" href="/one.css" media="screen" />
-      <link rel="stylesheet" type="text/css" href="/two.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="/a.css" media="screen" />
+      <link rel="stylesheet" type="text/css" href="/b.css" media="screen" />
       """
+
+  Scenario: Writing assets from a mounted app
+    Given these files exist
+      | fixtures/source/foo.css |
+    And the app is configured as follows
+      """ruby
+      Pannier.build do
+        root   '/assets'
+        source 'fixtures/source'
+        result 'fixtures/result'
+
+        package :styles do
+          assets 'foo.css'
+        end
+      end
+      """
+    And the app has been processed
+    And an asset writer for the app has been instantiated
+    When I use the asset writer as follows
+      """ruby
+      @writer.write(:css, :styles)
+      """
+    Then the following HTML should be written to the page
+      """html
+      <link rel="stylesheet" type="text/css" href="/assets/foo.css" />
+      """  

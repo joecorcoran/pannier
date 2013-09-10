@@ -8,6 +8,10 @@ require 'json_expressions'
 require 'json_expressions/rspec/matchers'
 require_relative './file_helper'
 
-World(Rack::Test::Methods, JsonExpressions::RSpec::Matchers)
+module TestApp
+  def app
+    @app
+  end
+end
 
-def app; @app; end
+World(Rack::Test::Methods, JsonExpressions::RSpec::Matchers, TestApp)

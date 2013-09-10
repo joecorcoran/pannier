@@ -2,10 +2,14 @@ module Pannier
   class App
     extend DSL
 
-    attr_reader :source_path, :result_path, :behaviors, :packages
+    attr_reader :root, :source_path, :result_path, :behaviors, :packages
 
     def initialize
-      @behaviors, @packages = {}, []
+      @behaviors, @packages, @root = {}, [], '/'
+    end
+
+    def set_root(path)
+      @root = path
     end
 
     def set_source(path)
@@ -52,6 +56,10 @@ module Pannier
     end
 
     dsl do
+
+      def root(path)
+        set_root(path)
+      end
 
       def source(path)
         set_source(path)

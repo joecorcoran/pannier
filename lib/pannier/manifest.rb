@@ -7,7 +7,7 @@ module Pannier
       @app, @tree = app, {}
     end
 
-    def build!(env)
+    def build!
       @app.packages.each do |package|
         @tree[package.name] ||= {}
         unless package.source_assets.empty?
@@ -16,7 +16,7 @@ module Pannier
         unless package.result_assets.empty?
           @tree[package.name][:result] = package.result_assets.map(&:path)
           @tree[package.name][:app] = package.result_assets.map do |asset|
-            asset.env_path(env, @app.result_path)
+            asset.serve_from(@app.root, @app.result_path)
           end
         end
       end
