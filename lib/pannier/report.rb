@@ -1,5 +1,5 @@
 module Pannier
-  class Manifest
+  class Report
 
     attr_reader :tree
 

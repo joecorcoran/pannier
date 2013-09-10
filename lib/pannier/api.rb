@@ -11,9 +11,9 @@ module Pannier
 
       def initialize(request, app)
         @request, @app = request, app
-        manifest = Manifest.new(app).build!
+        report = Report.new(app).build!
         pkg = @request.path.match(REQUEST_PATTERN)
-        @content = manifest.package_details(pkg['name'], pkg['state'])
+        @content = report.package_details(pkg['name'], pkg['state'])
       end
 
       def headers

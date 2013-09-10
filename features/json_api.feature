@@ -24,7 +24,7 @@ Feature: JSON API
       end
       """
 
-  Scenario: Getting the asset manifest before the app has been processed
+  Scenario: Getting the asset report before the app has been processed
     When I request "/packages"
     Then the response status should be 200
     And I should see these headers
@@ -46,7 +46,7 @@ Feature: JSON API
       }
       """
 
-  Scenario: Getting the asset manifest after the app has been processed
+  Scenario: Getting the asset report after the app has been processed
     When the app has been processed
     And I request "/packages"
     Then the response status should be 200
@@ -81,7 +81,7 @@ Feature: JSON API
       }
       """
 
-  Scenario: Getting manifest details for a package
+  Scenario: Getting report details for a package
     When the app has been processed
     And I request "/packages/main"
     Then the response status should be 200
@@ -102,7 +102,7 @@ Feature: JSON API
       }
       """
 
-  Scenario: Getting manifest details for a package state
+  Scenario: Getting report details for a package state
     When the app has been processed
     And I request "/packages/main/result"
     Then the response status should be 200
