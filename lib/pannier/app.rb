@@ -39,12 +39,6 @@ module Pannier
       end
     end
 
-    def writer(env = nil)
-      @writer ||= AssetWriter.new(self)
-      @writer.set_env(env) if env
-      @writer
-    end
-
     def process!
       @packages.each(&:process!)
     end
