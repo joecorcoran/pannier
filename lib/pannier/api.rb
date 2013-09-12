@@ -1,3 +1,6 @@
+require 'multi_json'
+require 'pannier/report'
+
 module Pannier
   module API
 

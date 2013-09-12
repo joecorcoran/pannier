@@ -1,3 +1,5 @@
+require 'pannier/template'
+
 module Pannier
   class AssetWriter
 

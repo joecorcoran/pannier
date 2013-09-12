@@ -1,3 +1,7 @@
+require 'pannier/api'
+require 'pannier/dsl'
+require 'pannier/package'
+
 module Pannier
   class App
     extend DSL

@@ -1,3 +1,6 @@
+require 'fileutils'
+require 'pathname'
+
 module Pannier
   class Asset
     include Comparable
