@@ -15,8 +15,8 @@ Feature: Package behaviors
         result 'fixtures/result'
 
         behavior :bar do
-          modify do |content, name|
-            [content.reverse, name]
+          modify do |content, basename|
+            [content.reverse, basename]
           end
         end
 
