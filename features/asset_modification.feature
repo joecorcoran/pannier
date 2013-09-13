@@ -1,9 +1,9 @@
-Feature: Asset processing
+Feature: Asset modification
   In order that my assets are optimised for production
   As a developer
-  I want my assets to be processed
+  I want to modify the content and filenames of my assets
 
-  Scenario: Assets processed by process block
+  Scenario: Assets modified by modify block
     Given the file "fixtures/source/qux.js" contains
       """javascript
       /* comment */
@@ -16,7 +16,7 @@ Feature: Asset processing
 
         package :foo do
           assets '*.js'
-          process do |content, basename|
+          modify do |content, basename|
             [content.reverse, basename]
           end
         end
@@ -28,7 +28,7 @@ Feature: Asset processing
       /* tnemmoc */
       """
 
-  Scenario: Assets processed by processors
+  Scenario: Assets modified by modifier
     Given the file "fixtures/source/qux.js" contains
       """javascript
       /* comment */
@@ -63,7 +63,7 @@ Feature: Asset processing
 
         package :foo do
           assets '*.js'
-          process Exclaimifier.new, Suffixer.new('abcde')
+          modify Exclaimifier.new, Suffixer.new('abcde')
         end
       end
       """

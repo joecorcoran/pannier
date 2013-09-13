@@ -15,7 +15,7 @@ Feature: Package behaviors
         result 'fixtures/result'
 
         behavior :bar do
-          process do |content, name|
+          modify do |content, name|
             [content.reverse, name]
           end
         end

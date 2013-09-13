@@ -43,17 +43,16 @@ module Pannier
       @source_assets.merge(assets)
     end
 
-    def add_processors(*processors)
-      @processors += processors
+    def add_modifiers(*modifiers)
+      @processors += modifiers.map { |m| [:modify!, m] }
+    end
+
+    def add_concatenator(concat_name, concatenator = Concatenator.new)
+      @processors << [:concat!, concat_name, concatenator]
     end
 
     def add_middleware(middleware, *args, &block)
       @middlewares << proc { |app| middleware.new(app, *args, &block) }
-    end
-
-    def set_concatenator(concat_name, concatenator = Concatenator.new)
-      @concat_name  = concat_name
-      @concatenator = concatenator
     end
 
     def handler
@@ -69,28 +68,30 @@ module Pannier
     end
 
     def process!
-      @processors && @processors.each do |processor|
-        @source_assets.each do |asset|
-          asset.process!(processor)
-        end
+      copy!
+      !@processors.empty? && @processors.each do |instructions|
+        send(*instructions)
       end
-      concat! || copy!
+      write_files!
     end
 
-    def concat!
-      return unless @concat_name
-      asset = Asset.new(@concat_name, full_result_path, self)
-      asset.content = @concatenator.call(@source_assets.map(&:content))
-      @result_assets.add(asset)
-      write_files!
+    def modify!(modifier)
+      @result_assets.each do |asset|
+        asset.modify!(modifier)
+      end
+    end
+
+    def concat!(concat_name, concatenator)
+      asset = Asset.new(concat_name, full_result_path, self)
+      asset.content = concatenator.call(@result_assets.map(&:content))
+      @result_assets.replace([asset])
     end
 
     def copy!
       assets = @source_assets.map do |asset|
         asset.copy_to(full_result_path)
       end
-      @result_assets.merge(assets)
-      write_files!
+      @result_assets.replace(assets)
     end
 
     def write_files!
@@ -122,13 +123,13 @@ module Pannier
         end
       end
 
-      def process(*processors, &block)
-        processors << block if block_given?
-        add_processors(*processors)
+      def modify(*modifiers, &block)
+        modifiers << block if block_given?
+        add_modifiers(*modifiers)
       end
 
       def concat(*args)
-        set_concatenator(*args)
+        add_concatenator(*args)
       end
 
       def use(*args, &block)

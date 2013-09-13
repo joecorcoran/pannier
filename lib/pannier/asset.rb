@@ -46,9 +46,9 @@ module Pannier
       copy
     end
 
-    def process!(processor)
-      processed = processor.call(content, basename)
-      self.content, self.basename = processed
+    def modify!(modifier)
+      modified = modifier.call(content, basename)
+      self.content, self.basename = modified
     end
 
     def write_file!
