@@ -10,29 +10,29 @@ module Pannier
   class Package
     extend DSL
 
-    attr_reader :name, :app, :source_assets, :result_assets, :source_path,
-                :result_path, :middlewares, :processors
+    attr_reader :name, :app, :input_assets, :output_assets, :input_path,
+                :output_path, :middlewares, :processors
 
     def initialize(name, app)
       @name, @app = name, app
-      @source_assets, @result_assets = SortedSet.new, SortedSet.new
+      @input_assets, @output_assets = SortedSet.new, SortedSet.new
       @middlewares, @processors = [], []
     end
 
-    def set_source(path)
-      @source_path = path
+    def set_input(path)
+      @input_path = path
     end
 
-    def set_result(path)
-      @result_path = path
+    def set_output(path)
+      @output_path = path
     end
 
-    def full_source_path
-      File.expand_path(File.join(*[@app.source_path, @source_path].compact))
+    def full_input_path
+      File.expand_path(File.join(*[@app.input_path, @input_path].compact))
     end
 
-    def full_result_path
-      File.expand_path(File.join(*[@app.result_path, @result_path].compact))
+    def full_output_path
+      File.expand_path(File.join(*[@app.output_path, @output_path].compact))
     end
 
     def add_assets(*paths)
@@ -40,7 +40,7 @@ module Pannier
         pathname = Pathname.new(path)
         Asset.new(pathname.basename, pathname.dirname, self)
       end
-      @source_assets.merge(assets)
+      @input_assets.merge(assets)
     end
 
     def add_modifiers(*modifiers)
@@ -56,13 +56,13 @@ module Pannier
     end
 
     def handler
-      handler = FileHandler.new(@result_assets.map(&:path), full_result_path)
+      handler = FileHandler.new(@output_assets.map(&:path), full_output_path)
       return handler if @middlewares.empty?
       @middlewares.reverse.reduce(handler) { |app, proc| proc.call(app) }
     end
 
     def handler_path
-      path = @result_path.nil? ? '/' : @result_path
+      path = @output_path.nil? ? '/' : @output_path
       path.insert(0, '/') unless path[0] == '/'
       path
     end
@@ -76,36 +76,36 @@ module Pannier
     end
 
     def modify!(modifier)
-      @result_assets.each do |asset|
+      @output_assets.each do |asset|
         asset.modify!(modifier)
       end
     end
 
     def concat!(concat_name, concatenator)
-      asset = Asset.new(concat_name, full_result_path, self)
-      asset.content = concatenator.call(@result_assets.map(&:content))
-      @result_assets.replace([asset])
+      asset = Asset.new(concat_name, full_output_path, self)
+      asset.content = concatenator.call(@output_assets.map(&:content))
+      @output_assets.replace([asset])
     end
 
     def copy!
-      assets = @source_assets.map do |asset|
-        asset.copy_to(full_result_path)
+      assets = @input_assets.map do |asset|
+        asset.copy_to(full_output_path)
       end
-      @result_assets.replace(assets)
+      @output_assets.replace(assets)
     end
 
     def write_files!
-      @result_assets.each(&:write_file!)
+      @output_assets.each(&:write_file!)
     end
 
     dsl do
 
-      def source(path)
-        set_source(path)
+      def input(path)
+        set_input(path)
       end
 
-      def result(path)
-        set_result(path)
+      def output(path)
+        set_output(path)
       end
 
       def behave(*names)
@@ -118,7 +118,7 @@ module Pannier
 
       def assets(*patterns)
         patterns.each do |pattern|
-          paths = Dir[File.join(full_source_path, pattern)]
+          paths = Dir[File.join(full_input_path, pattern)]
           add_assets(*paths)
         end
       end

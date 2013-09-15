@@ -1,17 +1,17 @@
 Feature: Asset copying
-  In order that my source assets and result assets are separated
+  In order that my input assets and output assets are kept separate
   As a developer
-  I want to copy my source assets from one directory to the other
+  I want to copy my assets from one directory to the other
 
-  Scenario: Assets copied from source to result directory
+  Scenario: Assets copied from input  to output directory
     Given these files exist
-      | fixtures/source/bar.js |
-      | fixtures/source/baz.js |
+      | fixtures/input/bar.js |
+      | fixtures/input/baz.js |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        source 'fixtures/source'
-        result 'fixtures/processed'
+        input  'fixtures/input'
+        output 'fixtures/output'
 
         package :foo do
           assets '*.js'
@@ -20,27 +20,27 @@ Feature: Asset copying
       """
     When the app has been processed
     Then these files should exist
-      | fixtures/processed/bar.js |
-      | fixtures/processed/baz.js |
+      | fixtures/output/bar.js |
+      | fixtures/output/baz.js |
 
-  Scenario: Assets copied from nested source to nested result directory
+  Scenario: Assets copied from nested input  to nested output directory
     Given these files exist
-      | fixtures/source/bar/qux.js  |
-      | fixtures/source/bar/quux.js |
+      | fixtures/input/bar/qux.js  |
+      | fixtures/input/bar/quux.js |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        source 'fixtures/source'
-        result 'fixtures/processed'
+        input  'fixtures/input'
+        output 'fixtures/output'
 
         package :foo do
-          source 'bar'
-          result 'baz'
+          input  'bar'
+          output 'baz'
           assets '*.js'
         end
       end
       """
     When the app has been processed
     Then these files should exist
-      | fixtures/processed/baz/qux.js  |
-      | fixtures/processed/baz/quux.js |
+      | fixtures/output/baz/qux.js  |
+      | fixtures/output/baz/quux.js |

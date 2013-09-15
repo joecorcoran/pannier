@@ -10,23 +10,23 @@ describe Pannier::Package do
   it('has parent app') do
     expect(package.app).to eq app
   end
-  it('sets source path') do
-    package.set_source('stylesheets')
-    expect(package.source_path).to eq 'stylesheets'
+  it('sets input path') do
+    package.set_input('stylesheets')
+    expect(package.input_path).to eq 'stylesheets'
   end
-  it('builds full source path') do
-    app.stubs(:source_path => '/foo/bar/source')
-    package.set_source('stylesheets')
-    expect(package.full_source_path).to eq '/foo/bar/source/stylesheets'
+  it('builds full input path') do
+    app.stubs(:input_path => '/foo/bar/input')
+    package.set_input('stylesheets')
+    expect(package.full_input_path).to eq '/foo/bar/input/stylesheets'
   end
-  it('sets result path') do
-    package.set_result('stylesheets')
-    expect(package.result_path).to eq 'stylesheets'
+  it('sets output path') do
+    package.set_output('stylesheets')
+    expect(package.output_path).to eq 'stylesheets'
   end
-  it('builds full result path') do
-    app.stubs(:result_path => '/foo/bar/processed')
-    package.set_result('stylesheets')
-    expect(package.full_result_path).to eq '/foo/bar/processed/stylesheets'
+  it('builds full output path') do
+    app.stubs(:output_path => '/foo/bar/output')
+    package.set_output('stylesheets')
+    expect(package.full_output_path).to eq '/foo/bar/output/stylesheets'
   end
 
 end

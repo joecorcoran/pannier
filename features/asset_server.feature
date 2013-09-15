@@ -4,35 +4,35 @@ Feature: Serving assets
   I want to deploy a separate app from which I can request my assets
 
   Background:
-    Given the file "fixtures/source/styles/foo.css" contains
+    Given the file "fixtures/input/styles/foo.css" contains
       """css
       html { color: red; }
       """
-    And the file "fixtures/source/scripts/bar.js" contains
+    And the file "fixtures/input/scripts/bar.js" contains
       """javascript
       var a = 1;
       """
     And the app is configured as follows
       """ruby
       Pannier.build do
-        source 'fixtures/source'
-        result 'fixtures/result'
+        input  'fixtures/input'
+        output 'fixtures/output'
 
         package :styles do
-          source 'styles'
-          result 'styles'
+          input  'styles'
+          output 'styles'
           assets '*.css'
         end
         package :scripts do
-          source 'scripts'
-          result 'scripts'
+          input  'scripts'
+          output 'scripts'
           assets '*.js'
         end
       end
       """
     And the app has been processed
 
-  Scenario: Requesting a CSS result file
+  Scenario: Requesting a CSS output file
     When I request "/styles/foo.css"
     Then the response status should be 200
     And I should see these headers
@@ -43,7 +43,7 @@ Feature: Serving assets
       html { color: red; }
       """
 
-  Scenario: Requesting a JavaScript result file
+  Scenario: Requesting a JavaScript output file
     When I request "/scripts/bar.js"
     Then the response status should be 200
     And I should see these headers

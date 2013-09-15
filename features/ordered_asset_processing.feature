@@ -4,13 +4,13 @@ Feature: Ordered asset processing
   I want all processing to happen in the declared order
 
   Scenario: Assets are modified after concatenation
-    Given the file "fixtures/source/bar.css" contains
+    Given the file "fixtures/input/bar.css" contains
       """css
       html {
         font-size: 24px;
       }
       """
-    And the file "fixtures/source/baz.css" contains
+    And the file "fixtures/input/baz.css" contains
       """css
       body {
         background: green;
@@ -19,8 +19,8 @@ Feature: Ordered asset processing
     And the app is configured as follows
       """ruby
       Pannier.build do
-        source 'fixtures/source'
-        result 'fixtures/processed'
+        input  'fixtures/input'
+        output 'fixtures/output'
 
         package :styles do
           assets '*.css'
@@ -35,7 +35,7 @@ Feature: Ordered asset processing
       end
       """
     When the app has been processed
-    Then the file "fixtures/processed/styles.css" should contain
+    Then the file "fixtures/output/styles.css" should contain
       """css
       /* Stylesheet Corp. LLC 2013 */
       /* bar.css */

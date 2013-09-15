@@ -15,11 +15,11 @@ module Pannier
 
     def write(tmpl_name, package_name, attrs = {})
       tmpl = @templates[tmpl_name]
-      results  = @app[package_name].result_assets.map do |asset|
-        path = asset.serve_from(@app.root, @app.result_path)
+      outputs  = @app[package_name].output_assets.map do |asset|
+        path = asset.serve_from(@app.root, @app.output_path)
         tmpl.call(path, attrs)
       end
-      results.join("\n")
+      outputs.join("\n")
     end
 
   end

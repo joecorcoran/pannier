@@ -5,14 +5,14 @@ Feature: JSON API
 
   Background:
     Given these files exist
-      | fixtures/source/foo.js |
-      | fixtures/source/bar.js |
-      | fixtures/source/baz.js |
+      | fixtures/input/foo.js |
+      | fixtures/input/bar.js |
+      | fixtures/input/baz.js |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        source 'fixtures/source'
-        result 'fixtures/processed'
+        input  'fixtures/input'
+        output 'fixtures/output'
 
         package :main do
           assets 'foo.js'
@@ -33,14 +33,14 @@ Feature: JSON API
       """ruby
       {
         'main' => {
-          'source' => [
-            %r{fixtures/source/foo.js$}
+          'input' => [
+            %r{fixtures/input/foo.js$}
           ]
         },
         'admin' => {
-          'source' => [
-            %r{fixtures/source/bar.js$},
-            %r{fixtures/source/baz.js$}
+          'input' => [
+            %r{fixtures/input/bar.js$},
+            %r{fixtures/input/baz.js$}
           ]
         }
       }
@@ -56,23 +56,23 @@ Feature: JSON API
       """ruby
       {
         'main' => {
-          'source' => [
-            %r{fixtures/source/foo.js$}
+          'input' => [
+            %r{fixtures/input/foo.js$}
           ],
-          'result' => [
-            %r{fixtures/processed/foo.js$}
+          'output' => [
+            %r{fixtures/output/foo.js$}
           ],
           'app' => [
             '/foo.js'
           ]
         },
         'admin' => {
-          'source' => [
-            %r{fixtures/source/bar.js$},
-            %r{fixtures/source/baz.js$}
+          'input' => [
+            %r{fixtures/input/bar.js$},
+            %r{fixtures/input/baz.js$}
           ],
-          'result' => [
-            %r{fixtures/processed/admin.js$}
+          'output' => [
+            %r{fixtures/output/admin.js$}
           ],
           'app' => [
             '/admin.js'
@@ -90,11 +90,11 @@ Feature: JSON API
     And the JSON response body should match
       """ruby
       {
-        'source' => [
-          %r{fixtures/source/foo.js$}
+        'input' => [
+          %r{fixtures/input/foo.js$}
         ],
-        'result' => [
-          %r{fixtures/processed/foo.js$}
+        'output' => [
+          %r{fixtures/output/foo.js$}
         ],
         'app' => [
           '/foo.js'
@@ -104,13 +104,13 @@ Feature: JSON API
 
   Scenario: Getting report details for a package state
     When the app has been processed
-    And I request "/packages/main/result"
+    And I request "/packages/main/output"
     Then the response status should be 200
     And I should see these headers
       | Content-Type | application/json |
     And the JSON response body should match
       """ruby
       [
-        %r{fixtures/processed/foo.js$}
+        %r{fixtures/output/foo.js$}
       ]
       """

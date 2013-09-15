@@ -10,7 +10,7 @@ module FileHelper
     FileUtils.mkdir_p(fixture_path)
   end
 
-  def remove_fixtures!(path = 'processed')
+  def remove_fixtures!
     FileUtils.rm_r(fixture_path, :secure => true)
   end
 
