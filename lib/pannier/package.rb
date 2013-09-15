@@ -136,6 +136,13 @@ module Pannier
         add_middleware(*args, &block) 
       end
 
+      def host(expression, &block)
+        expression = Regexp.new(expression)
+        if self.app.host_env =~ expression
+          self.instance_eval(&block)
+        end
+      end
+
     end
   end
 end

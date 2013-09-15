@@ -6,9 +6,11 @@ module Pannier
   class App
     extend DSL
 
-    attr_reader :root, :input_path, :output_path, :behaviors, :packages
+    attr_reader :host_env, :root, :input_path, :output_path,
+                :behaviors, :packages
 
-    def initialize
+    def initialize(host_env = nil)
+      @host_env = host_env
       @behaviors, @packages, @root = {}, [], '/'
     end
 

@@ -4,7 +4,7 @@ require 'pannier/asset_writer'
 require 'pannier/version'
 
 module Pannier
-  def self.build(&block)
-    App.build(&block)
+  def self.build(host_env = nil, &block)
+    App.build(host_env, &block)
   end
 end

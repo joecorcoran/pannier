@@ -37,3 +37,8 @@ Then(/^the file "(.*?)" should contain$/) do |file_path, content|
   expect(File.exists?(file_path)).to be_true
   expect(File.read(file_path)).to eq content
 end
+
+Then(/^the file "(.*?)" should not include$/) do |file_path, content|
+  expect(File.exists?(file_path)).to be_true
+  expect(File.read(file_path)).not_to match content
+end
