@@ -38,7 +38,7 @@ module Pannier
     def add_assets(*paths)
       assets = paths.map do |path|
         pathname = Pathname.new(path)
-        Asset.new(pathname.basename, pathname.dirname, self)
+        Asset.new(pathname.basename.to_s, pathname.dirname.to_s, self)
       end
       @input_assets.merge(assets)
     end
