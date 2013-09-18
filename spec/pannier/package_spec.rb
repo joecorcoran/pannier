@@ -28,30 +28,45 @@ describe Pannier::Package do
     package.set_output('stylesheets')
     expect(package.full_output_path).to eq '/foo/bar/output/stylesheets'
   end
+
   describe('#add_assets') do
-    it('turns paths into asset objects') do
-      package.add_assets('foo.js')
-      expect(package.input_assets.first).to be_a Pannier::Asset
-    end
-    it('constructs assets with basename, dirname and self') do
-      Pannier::Asset.expects(:new).with('bar.js', 'foo', package)
-      package.add_assets('foo/bar.js')
-    end
-    it('only stores unique assets') do
-      package.add_assets('foo.js', 'bar.js', 'foo.js')
+    it('adds assets to input_assets') do
+      assets = [
+        Pannier::Asset.new('foo.js', '.', package),
+        Pannier::Asset.new('bar.js', '.', package)
+      ]
+      package.add_assets(assets)
       expect(package.input_assets.length).to eq 2
     end
+    it('discards assets with same path') do
+      assets = [
+        Pannier::Asset.new('foo.js', '.', package),
+        Pannier::Asset.new('foo.js', '.', package)
+      ]
+      package.add_assets(assets)
+      expect(package.input_assets.length).to eq 1
+    end
   end
+
+  describe('#add_assets_from_paths') do
+    it('constructs assets before adding') do
+      Pannier::Asset.expects(:new).with('bar.js', 'foo', package).once
+      package.expects(:add_assets).once
+      package.add_assets_from_paths(['foo/bar.js'])
+    end
+  end
+
   describe('#add_modifiers') do
     it('adds processor instructions to modify assets') do
       modifier_1, modifier_2 = proc {}, proc {}
-      package.add_modifiers(modifier_1, modifier_2)
+      package.add_modifiers([modifier_1, modifier_2])
       expect(package.processors).to eq [
         [:modify!, modifier_1],
         [:modify!, modifier_2]
       ]
     end
   end
+
   describe('#add_concatenator') do
     it('adds processor instruction to concat with given basename') do
       package.add_concatenator('main.css')
@@ -67,6 +82,7 @@ describe Pannier::Package do
       expect(package.processors.first.last).to be concatenator
     end
   end
+
   describe('#add_middleware') do
     it('adds middleware proc') do
       mw_klass = mock('Class:Middleware')
@@ -78,6 +94,76 @@ describe Pannier::Package do
       mw_klass.expects(:new).with(app, 1, 2)
       package.add_middleware(mw_klass, 1, 2) {}
       package.middlewares.first.call(app)
+    end
+  end
+
+  describe('processing') do
+    let(:asset) { Pannier::Asset.new('foo.css', '.', package) }
+    before(:each) do
+      app.stubs(:output_path => '/foo/bar/output')
+      package.add_assets([asset])
+    end
+
+    describe('#process!') do
+      it('copies and writes files when processors have not been added') do
+        default_sequence = sequence('default sequence')
+        package.expects(:copy!).in_sequence(default_sequence)
+        package.expects(:write_files!).in_sequence(default_sequence)
+        package.process!
+      end
+      it('sends processor methods to self when processors are added') do
+        package.add_modifiers([proc {}, proc {}])
+        processor_sequence = sequence('processor sequence')
+        package.expects(:copy!).in_sequence(processor_sequence)
+        package.expects(:modify!).in_sequence(processor_sequence).twice
+        package.expects(:write_files!).in_sequence(processor_sequence)
+        package.process!
+      end
+    end 
+
+    describe('#modify!') do
+      it('sends #modify with modifier to each output asset') do
+        modifier = mock('Modifier')
+        package.copy!
+        package.output_assets.each { |a| a.expects(:modify!).with(modifier) }
+        package.modify!(modifier)
+      end
+    end
+    
+    describe('#concat!') do
+      let(:concatenator) { proc {} }
+      before(:each) do
+        package.add_assets([Pannier::Asset.new('bar.css', '.', package)])
+        package.copy!
+      end
+      it('replaces all output assets with a single asset') do
+        package.concat!('main.css', concatenator)
+        expect(package.output_assets.length).to be 1
+      end
+      it('calls concatenator') do
+        contents = package.output_assets.map(&:content)
+        concatenator.expects(:call).with(contents).once
+        package.concat!('main.css', concatenator)
+      end
+      it('names output asset') do
+        package.concat!('main.css', concatenator)
+        expect(package.output_assets.first.basename).to eq 'main.css'
+      end
+    end
+    
+    describe('#copy!') do
+      it('sends #copy_to with output path to each input asset') do
+        asset.expects(:copy_to).with('/foo/bar/output').once
+        package.copy!
+      end
+    end
+    
+    describe('#write_files!') do
+      it('sends #write_file! to each output asset') do
+        package.copy!
+        package.output_assets.each { |a| a.expects(:write_file!).once }
+        package.write_files!
+      end
     end
   end
 

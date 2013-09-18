@@ -35,15 +35,19 @@ module Pannier
       File.expand_path(File.join(*[@app.output_path, @output_path].compact))
     end
 
-    def add_assets(*paths)
+    def add_assets_from_paths(paths)
       assets = paths.map do |path|
         pathname = Pathname.new(path)
         Asset.new(pathname.basename.to_s, pathname.dirname.to_s, self)
       end
+      add_assets(assets)
+    end
+
+    def add_assets(assets)
       @input_assets.merge(assets)
     end
 
-    def add_modifiers(*modifiers)
+    def add_modifiers(modifiers)
       @processors += modifiers.map { |m| [:modify!, m] }
     end
 
@@ -119,13 +123,13 @@ module Pannier
       def assets(*patterns)
         patterns.each do |pattern|
           paths = Dir[File.join(full_input_path, pattern)]
-          add_assets(*paths)
+          add_assets_from_paths(paths)
         end
       end
 
       def modify(*modifiers, &block)
         modifiers << block if block_given?
-        add_modifiers(*modifiers)
+        add_modifiers(modifiers)
       end
 
       def concat(*args)

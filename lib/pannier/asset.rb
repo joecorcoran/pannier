@@ -41,7 +41,7 @@ module Pannier
 
     def copy_to(to_dirname)
       copy = self.dup
-      copy.content = content.dup
+      copy.content = content.dup if content
       copy.dirname = to_dirname
       copy
     end
