@@ -1,4 +1,4 @@
-Feature: Ordered asset processing
+Feature: Ordered processing
   In order that I can continue to modify assets after concatenation
   As a developer
   I want all processing to happen in the declared order
