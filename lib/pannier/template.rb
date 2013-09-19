@@ -1,12 +1,19 @@
+require 'erb'
+
 module Pannier
   module Template
 
     module Helpers
       def attr_string(hash)
         pairs = hash.reduce([]) do |arr, pair|
-          arr << "#{pair[0].to_s}=\"#{pair[1]}\""
+          key, value = escape(pair[0].to_s), escape(pair[1].to_s)
+          arr << "#{key}=\"#{value}\""
         end
-        pairs.join(' ')
+        pairs.sort.join(' ')
+      end
+
+      def escape(string)
+        ERB::Util.html_escape(string)
       end
     end
 

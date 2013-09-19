@@ -26,8 +26,8 @@ Feature: Writing assets
       """
     Then the following HTML should be written to the page
       """html
-      <script type="text/javascript" src="/one.js" defer="defer"></script>
-      <script type="text/javascript" src="/two.js" defer="defer"></script>
+      <script defer="defer" src="/one.js" type="text/javascript"></script>
+      <script defer="defer" src="/two.js" type="text/javascript"></script>
       """
 
   Scenario: Writing CSS assets
@@ -53,8 +53,8 @@ Feature: Writing assets
       """
     Then the following HTML should be written to the page
       """html
-      <link rel="stylesheet" type="text/css" href="/a.css" media="screen" />
-      <link rel="stylesheet" type="text/css" href="/b.css" media="screen" />
+      <link href="/a.css" media="screen" rel="stylesheet" type="text/css" />
+      <link href="/b.css" media="screen" rel="stylesheet" type="text/css" />
       """
 
   Scenario: Writing assets from a mounted app
@@ -80,5 +80,5 @@ Feature: Writing assets
       """
     Then the following HTML should be written to the page
       """html
-      <link rel="stylesheet" type="text/css" href="/assets/foo.css" />
+      <link href="/assets/foo.css" rel="stylesheet" type="text/css" />
       """  
