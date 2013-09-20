@@ -16,7 +16,7 @@ module Pannier
         unless package.output_assets.empty?
           @tree[package.name][:output] = package.output_assets.map(&:path)
           @tree[package.name][:app] = package.output_assets.map do |asset|
-            asset.serve_from(@app.root, @app.output_path)
+            asset.serve_from(@app)
           end
         end
       end

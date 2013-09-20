@@ -33,10 +33,10 @@ module Pannier
       path <=> other.path
     end
 
-    def serve_from(root_path, base_path)
-      asset_path, base_path = Pathname.new(path), Pathname.new(base_path)
-      relative_path = asset_path.relative_path_from(base_path)
-      File.join(root_path, relative_path.to_s)
+    def serve_from(app)
+      asset_path, output_path = Pathname.new(path), Pathname.new(app.output_path)
+      relative_path = asset_path.relative_path_from(output_path)
+      File.join(app.root, relative_path.to_s)
     end
 
     def copy_to(to_dirname)
