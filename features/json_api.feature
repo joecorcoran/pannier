@@ -31,7 +31,7 @@ Feature: HTTP JSON API
     And I should see these headers
       | Content-Type | application/json |
     And the JSON response body should be
-      """ruby
+      """json
       {
         "main": [
           "http://example.org/foo.js"
@@ -48,7 +48,7 @@ Feature: HTTP JSON API
     And I should see these headers
       | Content-Type | application/json |
     And the JSON response body should be
-      """ruby
+      """json
       [
         "http://example.org/foo.js"
       ]
