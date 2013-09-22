@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mocha',            '~> 0.14.0'
   s.add_development_dependency 'cucumber',         '~> 1.3.6'
   s.add_development_dependency 'rack-test',        '~> 0.6.2'
-  s.add_development_dependency 'json_expressions', '~> 0.8.2'
 
   s.files        = Dir['{lib}/**/*.rb'] + ['README.md', 'LICENSE.txt']
   s.require_path = 'lib'

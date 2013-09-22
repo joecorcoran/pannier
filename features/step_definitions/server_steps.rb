@@ -31,7 +31,8 @@ Then(/^the response body should be$/) do |string|
   expect(last_response.body).to eq string
 end
 
-Then(/^the JSON response body should match$/) do |string|
-  pattern = eval(string)
-  expect(last_response.body).to match_json_expression(pattern)
+Then(/^the JSON response body should be$/) do |string|
+  expected = MultiJson.load(string)
+  actual   = MultiJson.load(last_response.body)
+  expect(actual).to eq expected 
 end

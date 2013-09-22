@@ -3,31 +3,25 @@ module Pannier
 
     attr_reader :tree
 
-    def initialize(app)
-      @app, @tree = app, {}
+    def initialize(app, base_url)
+      @app, @base_url, @tree = app, base_url, {}
+      build!
     end
 
     def build!
       @app.packages.each do |package|
-        @tree[package.name] ||= {}
-        unless package.input_assets.empty?
-          @tree[package.name][:input] = package.input_assets.map(&:path)
-        end
-        unless package.output_assets.empty?
-          @tree[package.name][:output] = package.output_assets.map(&:path)
-          @tree[package.name][:app] = package.output_assets.map do |asset|
-            asset.serve_from(@app)
-          end
+        @tree[package.name] ||= []
+        next if package.output_assets.empty?
+        @tree[package.name] = package.output_assets.map do |asset|
+          @base_url + asset.serve_from(@app)
         end
       end
       self
     end
 
-    def package_details(name = nil, state = nil)
-      details = @tree
-      details = @tree[name.to_sym] if name
-      details = @tree[name.to_sym][state.to_sym] if state
-      details
+    def lookup(package_name)
+      return @tree if package_name.nil?
+      @tree[package_name.to_sym]
     end
 
   end
