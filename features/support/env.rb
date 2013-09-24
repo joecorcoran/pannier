@@ -4,6 +4,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', 'fixtures'))
 require 'bundler/setup'
 require 'pannier'
 require 'aruba/cucumber'
+require 'aruba/jruby'
 require 'rack/test'
 require_relative './file_helper'
 

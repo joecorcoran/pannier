@@ -4,6 +4,7 @@ end
 
 Before do
   @dirs = [FileHelper.fixture_path]
+  @aruba_timeout_seconds = 10
 end
 
 After do
