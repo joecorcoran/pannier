@@ -1,10 +1,10 @@
 module Pannier
   class CLI
-    def initialize(args, output = $stdout)
-      @args, @output = args, output
+    def initialize(args, stdin = $stdin, stdout = $stdout, stderr = $stderr, kernel = Kernel)
+      @args, @stdin, @stdout, @stderr, @kernel = args, stdin, stdout, stderr, kernel
     end
 
-    def run!
+    def execute!
       command, command_args = (@args.shift || 'help').to_sym, @args
       public_send(command, *command_args)
     end
@@ -13,17 +13,17 @@ module Pannier
       config_path = File.expand_path(path)
       unless File.exists?(config_path)
         output(format(no_config_msg(config_path)) + format(help_msg))
-        abort
+        @kernel.exit(1) and return
       end
 
       app = Pannier.build_from(path, host_env)
       app.process!
-      exit
+      @kernel.exit(0)
     end
 
     def help
       output(format(help_msg))
-      exit
+      @kernel.exit(0)
     end
 
     def method_missing(command, *args)
@@ -33,7 +33,7 @@ module Pannier
       Pannier has no command named "#{command}".
       text
       output(format(msg) + format(help_msg))
-      exit(127)
+      @kernel.exit(127)
     end
 
     private
@@ -65,7 +65,7 @@ module Pannier
       end
 
       def output(message)
-        @output.puts(message)
+        @stdout.puts(message)
       end
     
       def format(text)

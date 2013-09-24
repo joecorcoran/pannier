@@ -1,10 +1,7 @@
 Before do
   FileHelper.create_fixtures!
-end
-
-Before do
   @dirs = [FileHelper.fixture_path]
-  @aruba_timeout_seconds = 10
+  @aruba_timeout_seconds = (RUBY_PLATFORM == 'java') ? 60 : 10
 end
 
 After do
