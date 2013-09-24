@@ -1,4 +1,5 @@
 require 'delegate'
+require 'pannier/errors'
 
 module Pannier
   module DSL
@@ -7,7 +8,11 @@ module Pannier
       base = self.new(*args)
       delegator_klass = self.const_get('DSLDelegator')
       delegator = delegator_klass.new(base)
-      delegator.instance_eval(&block)
+      begin
+        delegator.instance_eval(&block)
+      rescue NoMethodError => error
+        raise DSLNoMethodError.new(base.class.name, error.name)
+      end
       base
     end
 

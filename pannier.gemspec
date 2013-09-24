@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec',            '~> 2.14.1'
   s.add_development_dependency 'mocha',            '~> 0.14.0'
   s.add_development_dependency 'cucumber',         '~> 1.3.6'
+  s.add_development_dependency 'aruba',            '~> 0.5.3'
   s.add_development_dependency 'rack-test',        '~> 0.6.2'
 
   s.files        = Dir['{lib}/**/*.rb'] + ['README.md', 'LICENSE.txt']
