@@ -4,4 +4,4 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'pannier'
 require 'pannier/cli'
 
-Pannier::CLI.new(ARGV.dup).execute!
+Pannier::CLI.new(ARGV.dup).run!
