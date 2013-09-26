@@ -1,8 +1,5 @@
 Before do
   FileHelper.create_fixtures!
-end
-
-Before do
   @dirs = [FileHelper.fixture_path]
   @aruba_timeout_seconds = 10
 end
