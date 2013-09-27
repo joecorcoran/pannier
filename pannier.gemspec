@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
 
   s.files        = Dir['{lib}/**/*.rb'] + ['README.md', 'LICENSE.txt']
   s.require_path = 'lib'
+  s.executables << 'pannier'
 end
