@@ -11,20 +11,20 @@ module Pannier
         @app = app
       end
 
-      def handle?(request)
-        request.path =~ PATH_PATTERN
+      def handle?(env)
+        env['PATH_INFO'] =~ PATH_PATTERN
       end
 
-      def report_body(request)
-        matches = request.path.match(PATH_PATTERN)
+      def report_body(env)
+        matches = env['PATH_INFO'].match(PATH_PATTERN)
+        request = Rack::Request.new(env)
         report  = Report.new(@app, request.base_url)
         report.lookup(matches['package_name'])
       end
 
       def call(env)
-        request = Rack::Request.new(env)
-        return error('Not an API request') unless handle?(request)
-        body = report_body(request)
+        return error('Not an API request') unless handle?(env)
+        body = report_body(env)
         body.nil? ? not_found : ok(body)
       end
 
