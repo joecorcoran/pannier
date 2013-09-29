@@ -8,8 +8,14 @@ Gem::Specification.new do |s|
   s.authors     = ['Joe Corcoran']
   s.email       = ['joecorcoran@gmail.com']
   s.homepage    = 'http://github.com/joecorcoran/pannier'
-  s.summary     = 'Organize your assets'
-  s.description = 'A simple, portable Ruby web application asset manager'
+  s.summary     = 'A simple, portable asset processing tool for Ruby web apps'
+  s.license     = 'MIT'
+  s.description = <<-txt
+Pannier is a Ruby tool for the processing of web assets like CSS
+and JavaScript files, both programatically and from the command line. It can
+be used as a standalone asset organizer or mounted within any Rack-compatible
+application.
+txt
 
   s.add_dependency             'rack',             '~> 1.5.2'
   s.add_dependency             'multi_json',       '~> 1.7.9'
@@ -21,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'aruba',            '~> 0.5.3'
   s.add_development_dependency 'rack-test',        '~> 0.6.2'
 
-  s.files        = Dir['{lib}/**/*.rb'] + ['README.md', 'LICENSE.txt']
+  s.files        = Dir['lib/**/*.rb'] + ['README.md', 'LICENSE.txt']
   s.require_path = 'lib'
   s.executables << 'pannier'
 end
