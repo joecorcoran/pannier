@@ -3,41 +3,46 @@ require 'pannier/report'
 
 module Pannier
   module API
+    class Handler
 
-    REQUEST_PATTERN = /^\/packages(\/(?<package_name>\w+))?/
+      PATH_PATTERN = /^\/packages(\/(?<package_name>\w+))?/
 
-    def self.handles?(request)
-      request.path =~ REQUEST_PATTERN
-    end
-
-    class Response
-
-      def initialize(request, app)
-        @request, @app = request, app
-        report = Report.new(app, request.base_url)
-        matches = @request.path.match(REQUEST_PATTERN)
-        @content = report.lookup(matches['package_name'])
+      def initialize(app)
+        @app = app
       end
 
-      def headers
-        { 'Content-Type' => 'application/json' }
+      def handle?(request)
+        request.path =~ PATH_PATTERN
       end
 
-      def body
-        MultiJson.dump(@content)
+      def report_body(request)
+        matches = request.path.match(PATH_PATTERN)
+        report  = Report.new(@app, request.base_url)
+        report.lookup(matches['package_name'])
       end
 
-      def success
-        [200, headers, [body]]
+      def call(env)
+        request = Rack::Request.new(env)
+        return not_found('Not an API request') unless handle?(request)
+        body = report_body(request)
+        body.nil? ? not_found : success(body)
       end
 
-      def not_found(message = 'Not found')
-        [404, headers, [message]]
-      end
+      private
 
-      def response
-        @content.nil? ? not_found : success
-      end
+        def headers
+          {
+            'Content-Type' => 'application/json'
+          }
+        end
+
+        def success(body)
+          [200, headers, [MultiJson.dump(body)]]
+        end
+
+        def not_found(message = 'Not found')
+          [404, headers, [message]]
+        end
 
     end
   end

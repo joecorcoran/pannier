@@ -34,6 +34,10 @@ module Pannier
       @packages.find { |pkg| pkg.name == package_name }
     end
 
+    def process!
+      @packages.each(&:process!)
+    end
+
     def handler_map
       @packages.reduce({}) do |hash, pkg|
         hash[pkg.handler_path] ||= Rack::Cascade.new([])
@@ -43,16 +47,13 @@ module Pannier
     end
 
     def handler
-      Rack::URLMap.new(handler_map)
-    end
-
-    def process!
-      @packages.each(&:process!)
+      Rack::Cascade.new([
+        API::Handler.new(self),
+        Rack::URLMap.new(handler_map)
+      ])
     end
 
     def call(env)
-      req = Rack::Request.new(env)
-      return API::Response.new(req, self).response if API.handles?(req)
       handler.call(env)
     end
 
