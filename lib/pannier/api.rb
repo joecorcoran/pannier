@@ -23,9 +23,9 @@ module Pannier
 
       def call(env)
         request = Rack::Request.new(env)
-        return not_found('Not an API request') unless handle?(request)
+        return error('Not an API request') unless handle?(request)
         body = report_body(request)
-        body.nil? ? not_found : success(body)
+        body.nil? ? not_found : ok(body)
       end
 
       private
@@ -36,12 +36,24 @@ module Pannier
           }
         end
 
-        def success(body)
+        def ok(body)
           [200, headers, [MultiJson.dump(body)]]
         end
 
         def not_found(message = 'Not found')
-          [404, headers, [message]]
+          body = {
+            'status'  => 404,
+            'message' => message
+          }
+          [404, headers, [MultiJson.dump(body)]]
+        end
+
+        def error(message = 'Error')
+          body = {
+            'status'  => 500,
+            'message' => message
+          }
+          [500, headers, [MultiJson.dump(body)]]
         end
 
     end

@@ -47,10 +47,13 @@ module Pannier
     end
 
     def handler
-      Rack::Cascade.new([
-        API::Handler.new(self),
-        Rack::URLMap.new(handler_map)
-      ])
+      Rack::Cascade.new(
+        [
+          API::Handler.new(self),
+          Rack::URLMap.new(handler_map)
+        ],
+        [500]
+      )
     end
 
     def call(env)

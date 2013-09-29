@@ -54,6 +54,7 @@ Feature: HTTP JSON API
       ]
       """
 
+  @404
   Scenario: Requesting a package that does not exist
     When I request "/packages/quux"
     Then the response status should be 404
