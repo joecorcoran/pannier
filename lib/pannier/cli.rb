@@ -1,7 +1,7 @@
 module Pannier
   class CLI
-    def initialize(args, output = $stdout)
-      @args, @output = args, output
+    def initialize(args, stdin = $stdin, stdout = $stdout, stderr = $stderr)
+      @args, @stdin, @stdout, @stderr = args, stdin, stdout, stderr
     end
 
     def run!
@@ -12,7 +12,10 @@ module Pannier
     def process(host_env = nil, path = 'Pannierfile')
       config_path = File.expand_path(path)
       unless File.exists?(config_path)
-        output(format(no_config_msg(config_path)) + format(help_msg))
+        err(<<-txt)
+
+        Pannier config file not found at #{config_path}.
+        txt
         abort
       end
 
@@ -22,57 +25,56 @@ module Pannier
     end
 
     def help
-      output(format(help_msg))
+      out(help_msg)
       exit
     end
 
     def method_missing(command, *args)
-      msg = <<-text
+      err(<<-txt)
 
       You ran `pannier #{command}#{(' ' + args.join(' ')) unless args.empty?}`.
       Pannier has no command named "#{command}".
-      text
-      output(format(msg) + format(help_msg))
+      txt
       exit(127)
     end
 
     private
 
-      def no_config_msg(config_path)
-        <<-text
-
-        Pannier config file not found at #{config_path}.
-        text
-      end
-
       def help_msg
-        <<-text
+        <<-txt
 
         Usage instructions:
         
-        pannier process [host_env] [path]   # Process assets
-                                            # [host_env]
-                                            #   Optional, default is nil
-                                            #   The host application environment in which to process
-                                            #   your assets, e.g. development or production.
-                                            # [path]
-                                            #   Optional, default is ./Pannierfile
-                                            #   The path to your config file.
-        
-        pannier help                        # Display usage instructions
+        pannier process [host_env] [path]  # Process assets
+                                           #
+                                           # [host_env]  (Default is nil)
+                                           #             The host application environment
+                                           #             e.g. development or production.
+                                           #
+                                           # [path]      (Default is ./Pannierfile)
+                                           #             The path to your config file.
+                                           #
+        pannier help                       # Display usage instructions
 
-        text
+        txt
       end
 
-      def output(message)
-        @output.puts(message)
+      def out(*msgs)
+        msg = msgs.map { |m| format_output(m) }.join
+        @stdout.puts(msg)
+      end
+
+      def err(*msgs)
+        msg = msgs.map { |m| format_output(m) }.join
+        msg += format_output(help_msg)
+        @stderr.puts(msg)
       end
     
-      def format(text)
+      def format_output(txt)
         spaces = '^[ \t]'
-        indent = text.scan(/#{spaces}*(?=\S)/).min
+        indent = txt.scan(/#{spaces}*(?=\S)/).min
         indent_size = indent ? indent.size : 0
-        text.gsub(/#{spaces}{#{indent_size}}/, '')
+        txt.gsub(/#{spaces}{#{indent_size}}/, '')
       end
   end
 end
