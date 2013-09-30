@@ -1,11 +1,4 @@
 require './app'
 
-assets = Pannier.build_from('./Pannierfile', ENV['RACK_ENV'])
-assets.process!
-
-map assets.root do
-  run assets
-end
-
-set :assets, assets
+set :assets, Pannier.rackup!(self)
 run Sinatra::Application

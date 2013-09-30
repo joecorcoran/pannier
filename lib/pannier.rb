@@ -13,4 +13,11 @@ module Pannier
     block = eval("proc { #{config} }", TOPLEVEL_BINDING, path, 0)
     App.build(host_env, &block)
   end
+
+  def self.rackup!(ru, path = './Pannierfile')
+    app = build_from(path, ENV['RACK_ENV'])
+    app.process!
+    ru.map(app.root) { run(app) }
+    app
+  end
 end
