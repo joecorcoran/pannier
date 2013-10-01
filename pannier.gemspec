@@ -19,6 +19,7 @@ txt
 
   s.add_dependency             'rack',             '~> 1.5.2'
   s.add_dependency             'multi_json',       '~> 1.7.9'
+  s.add_dependency             'slop',             '~> 3.4.6'
 
   s.add_development_dependency 'rake',             '~> 10.1.0'
   s.add_development_dependency 'rspec',            '~> 2.14.1'

@@ -7,15 +7,15 @@ Feature: Command line interface
     When I run `pannier`
     Then the output should contain:
       """
-      Usage instructions:
+      Available commands
       """
     And the exit status should be 0
 
   Scenario: Viewing usage instructions
-    When I run `pannier help`
+    When I run `pannier usage`
     Then the output should contain:
       """
-      Usage instructions:
+      Available commands
       """
     And the exit status should be 0
 
@@ -42,7 +42,7 @@ Feature: Command line interface
         host('production')  { output 'prd' }
       end
       """
-    When I run `pannier process production`
+    When I run `pannier process --environment production`
     Then these files should exist
       | fixtures/output/prd/foo.js |
     And the exit status should be 0
@@ -53,9 +53,10 @@ Feature: Command line interface
       input  'fixtures/input'
       output 'fixtures/output'
       """
-    When I run `pannier process env some/path/.asset_config`
+    When I run `pannier process --config some/path/.asset_config`
     Then the exit status should be 0
 
+  @pro
   Scenario: Missing config file
     When I run `pannier process`
     Then the output should match /^Pannier config file not found at.+Pannierfile\.$/

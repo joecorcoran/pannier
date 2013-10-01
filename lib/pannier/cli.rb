@@ -1,3 +1,5 @@
+require 'slop'
+
 module Pannier
   class CLI
     def initialize(args, stdin = $stdin, stdout = $stdout, stderr = $stderr)
@@ -5,33 +7,32 @@ module Pannier
     end
 
     def run!
-      command, command_args = (@args.shift || 'help').to_sym, @args
-      public_send(command, *command_args)
+      command, opts = (@args.shift || 'usage').to_sym, @args
+      public_send(command, *opts)
     end
 
-    def process(host_env = nil, path = 'Pannierfile')
-      config_path = File.expand_path(path)
-      unless File.exists?(config_path)
-        err(<<-txt)
-
-        Pannier config file not found at #{config_path}.
-        txt
-        abort
+    def process(*opts)
+      opts = Slop.parse(opts, :help => true) do
+        banner 'Usage: pannier process [options]'
+        on :c, :config,      'Config file',      :argument => :optional, :default => 'Pannierfile'
+        on :e, :environment, 'Host environment', :argument => :optional
       end
 
-      app = Pannier.build_from(path, host_env)
+      config_path = File.expand_path(opts[:config])
+      err(no_config_msg(config_path)) && abort unless File.exists?(config_path)
+
+      app = Pannier.build_from(config_path, opts[:environment])
       app.process!
       exit
     end
 
-    def help
-      out(help_msg)
+    def usage
+      out(usage_msg)
       exit
     end
 
     def method_missing(command, *args)
       err(<<-txt)
-
       You ran `pannier #{command}#{(' ' + args.join(' ')) unless args.empty?}`.
       Pannier has no command named "#{command}".
       txt
@@ -40,22 +41,17 @@ module Pannier
 
     private
 
-      def help_msg
+      def no_config_msg(path)
         <<-txt
+        Pannier config file not found at #{path}.
+        txt
+      end
 
-        Usage instructions:
-        
-        pannier process [host_env] [path]  # Process assets
-                                           #
-                                           # [host_env]  (Default is nil)
-                                           #             The host application environment
-                                           #             e.g. development or production.
-                                           #
-                                           # [path]      (Default is ./Pannierfile)
-                                           #             The path to your config file.
-                                           #
-        pannier help                       # Display usage instructions
-
+      def usage_msg
+        <<-txt
+        Available commands (run any command with --help for details):
+            pannier process        Process assets
+            pannier usage          Show this list of commands
         txt
       end
 
@@ -66,7 +62,7 @@ module Pannier
 
       def err(*msgs)
         msg = msgs.map { |m| format_output(m) }.join
-        msg += format_output(help_msg)
+        msg += format_output(usage_msg)
         @stderr.puts(msg)
       end
     
