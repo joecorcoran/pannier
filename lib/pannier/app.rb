@@ -38,6 +38,11 @@ module Pannier
       @packages.each(&:process!)
     end
 
+    def process_owners!(*paths)
+      pkgs = @packages.select { |pkg| pkg.owns_any?(*paths) }
+      pkgs.each(&:process!)
+    end
+
     def handler_map
       @packages.reduce({}) do |hash, pkg|
         hash[pkg.handler_path] ||= Rack::Cascade.new([])

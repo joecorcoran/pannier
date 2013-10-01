@@ -23,6 +23,7 @@ describe Pannier::App do
     app.add_package(package)
     expect(app.packages.first).to be package
   end
+
   describe('#[]') do
     let(:package) { mock('Package', :name => :foo) }
     before(:each) { app.add_package(package) }
@@ -33,6 +34,7 @@ describe Pannier::App do
       expect(app[:bar]).to be_nil
     end
   end
+
   describe('#process!') do
     let(:package_1) { mock('Package') }
     let(:package_2) { mock('Package') }
@@ -40,12 +42,31 @@ describe Pannier::App do
       app.add_package(package_1)
       app.add_package(package_2)
     end
-    it('calls process on each package') do
+    it('calls process! on each package') do
       package_1.expects(:process!).once
       package_2.expects(:process!).once
       app.process!
     end
   end
+
+  describe('#process_owners!') do
+    let(:package_1) do
+      pkg = mock('Package')
+      pkg.stubs(:owns_any?).with('/foo/bar.js').returns(true)
+      pkg
+    end
+    let(:package_2) { mock('Package', :owns_any? => false) }
+    before(:each) do
+      app.add_package(package_1)
+      app.add_package(package_2)
+    end
+    it('calls process! on any package which owns any given path') do
+      package_1.expects(:process!).once
+      package_2.expects(:process!).never
+      app.process_owners!('/foo/bar.js')
+    end
+  end
+
   describe('handler') do
     let(:packages) do
       [
@@ -55,6 +76,7 @@ describe Pannier::App do
       ]
     end
     before(:each) { packages.each { |p| app.add_package(p) } }
+
     describe('#handler_map') do
       it('has unique keys') do
         expect(app.handler_map.keys).to eq ['/foo', '/bar']
@@ -63,6 +85,7 @@ describe Pannier::App do
         expect(app.handler_map['/foo'].apps.length).to eq 2
       end
     end
+
     describe('#handler') do
       it('instantiates url map with #handler_map') do
         map = mock('Hash')

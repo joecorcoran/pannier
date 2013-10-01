@@ -71,6 +71,10 @@ module Pannier
       path
     end
 
+    def owns_any?(*paths)
+      @input_assets.any? { |a| paths.include?(a.path) }
+    end
+
     def process!
       copy!
       !@processors.empty? && @processors.each do |instructions|

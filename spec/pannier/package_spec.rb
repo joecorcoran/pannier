@@ -97,6 +97,19 @@ describe Pannier::Package do
     end
   end
 
+  describe('#owns_any?') do
+    before do
+      asset = Pannier::Asset.new('baz.js', '/foo/bar', package)
+      package.add_assets([asset])
+    end
+    it('returns true if package has asset which matches given input paths') do
+      expect(package.owns_any?('/foo/bar/baz.js')).to be_true
+    end
+    it('returns false if has no assets which match given input paths') do
+      expect(package.owns_any?('/qux/quux.js', '/bibimbap.js')).to be_false
+    end
+  end
+
   describe('processing') do
     let(:asset) { Pannier::Asset.new('foo.css', '.', package) }
     before(:each) do
