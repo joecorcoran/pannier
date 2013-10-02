@@ -22,8 +22,8 @@ Feature: Command line interface
   Scenario: Process command with default arguments
     Given the file "fixtures/Pannierfile" contains
       """ruby
-      input  'fixtures/input'
-      output 'fixtures/output'
+      input  'input'
+      output 'output'
       """
     When I run `pannier process`
     Then the exit status should be 0
@@ -52,8 +52,8 @@ Feature: Command line interface
   Scenario: Process command with specified config path
     Given the file "fixtures/some/path/.asset_config" contains
       """ruby
-      input  'fixtures/input'
-      output 'fixtures/output'
+      input  'input'
+      output 'output'
       """
     When I run `pannier process --config some/path/.asset_config`
     Then the exit status should be 0
