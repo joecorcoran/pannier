@@ -18,8 +18,15 @@ When(/^the app has been processed$/) do
 end
 
 Then(/^these files should exist$/) do |table|
-  file_paths = table.rows.flatten
-  expect(file_paths.all? { |f| File.exists?(f) }).to be_true
+  table.raw.flatten.each do |file_path|
+    expect(File.exists?(file_path)).to be_true
+  end
+end
+
+Then(/^these files should not exist$/) do |table|
+  table.raw.flatten.each do |file_path|
+    expect(File.exists?(file_path)).to be_false
+  end
 end
 
 Given(/^the file "(.*?)" contains$/) do |file_path, content|

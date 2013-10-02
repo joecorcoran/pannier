@@ -28,13 +28,14 @@ Feature: Command line interface
     When I run `pannier process`
     Then the exit status should be 0
 
+  @host
   Scenario: Process command with specified host environment
     Given these files exist
       | fixtures/input/foo.js |
     And the file "fixtures/Pannierfile" contains
       """ruby
-      input  'fixtures/input'
-      output 'fixtures/output'
+      input  'input'
+      output 'output'
 
       package :foo do
         assets 'foo.js'
@@ -45,6 +46,8 @@ Feature: Command line interface
     When I run `pannier process --environment production`
     Then these files should exist
       | fixtures/output/prd/foo.js |
+    And these files should not exist
+      | fixtures/output/dev/foo.js |
     And the exit status should be 0
 
   Scenario: Process command with specified config path
