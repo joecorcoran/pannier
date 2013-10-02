@@ -27,7 +27,6 @@ module Pannier
       if opts.assets?
         paths = opts[:assets].map { |path| File.expand_path(path) }
         app.process_owners!(*paths)
-        #raise app[:foo].input_assets.first.path.inspect
       else
         app.process!
       end
