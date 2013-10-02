@@ -16,13 +16,21 @@ module Pannier
         banner 'Usage: pannier process [options]'
         on :c, :config,      'Config file',      :argument => :optional, :default => 'Pannierfile'
         on :e, :environment, 'Host environment', :argument => :optional
+        on :a, :assets,      'Asset paths',      :argument => :optional, :as => Array
       end
 
       config_path = File.expand_path(opts[:config])
       err(no_config_msg(config_path)) && abort unless File.exists?(config_path)
 
       app = Pannier.build_from(config_path, opts[:environment])
-      app.process!
+
+      if opts.assets?
+        paths = opts[:assets].map { |path| File.expand_path(path) }
+        app.process_owners!(*paths)
+        #raise app[:foo].input_assets.first.path.inspect
+      else
+        app.process!
+      end
       exit
     end
 
