@@ -17,20 +17,11 @@ module Pannier
 
     def write(tmpl_name, package_name, attrs = {})
       tmpl = @templates[tmpl_name]
-      outputs = assets_from(package_name).map do |asset|
+      to_write = @app[package_name].assets.map do |asset|
         tmpl.call(asset.serve_from(@app), attrs)
       end
-      outputs.join("\n")
+      to_write.join("\n")
     end
-
-    private
-
-      def assets_from(package_name)
-        input_env = Regexp.new(@input_env)
-        @app[package_name].send(
-          @app.host_env =~ input_env ? :input_assets : :output_assets
-        )
-      end
 
   end
 end

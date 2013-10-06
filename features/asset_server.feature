@@ -12,7 +12,9 @@ Feature: Serving assets
       """javascript
       var a = 1;
       """
-    And the app is configured as follows
+
+  Scenario: Requesting a CSS file
+    Given the app is configured as follows
       """ruby
       Pannier.build do
         input  'fixtures/input'
@@ -23,16 +25,9 @@ Feature: Serving assets
           output 'styles'
           assets '*.css'
         end
-        package :scripts do
-          input  'scripts'
-          output 'scripts'
-          assets '*.js'
-        end
       end
       """
     And the app has been processed
-
-  Scenario: Requesting a CSS output file
     When I request "/styles/foo.css"
     Then the response status should be 200
     And I should see these headers
@@ -43,7 +38,21 @@ Feature: Serving assets
       html { color: red; }
       """
 
-  Scenario: Requesting a JavaScript output file
+  Scenario: Requesting a JavaScript file
+    Given the app is configured as follows
+      """ruby
+      Pannier.build do
+        input  'fixtures/input'
+        output 'fixtures/output'
+
+        package :scripts do
+          input  'scripts'
+          output 'scripts'
+          assets '*.js'
+        end
+      end
+      """
+    And the app has been processed
     When I request "/scripts/bar.js"
     Then the response status should be 200
     And I should see these headers
@@ -52,4 +61,28 @@ Feature: Serving assets
     And the response body should be
       """javascript
       var a = 1;
+      """
+
+  Scenario: Requesting a CSS file in development mode
+    Given the app is configured as follows
+      """ruby
+      Pannier.build('development') do
+        input  'fixtures/input'
+        output 'fixtures/output'
+
+        package :styles do
+          input  'styles'
+          output 'styles-out'
+          assets '*.css'
+        end
+      end
+      """
+    When I request "/styles/foo.css"
+    Then the response status should be 200
+    And I should see these headers
+      | Content-Type   | text/css |
+      | Content-Length | 20       |
+    And the response body should be
+      """css
+      html { color: red; }
       """

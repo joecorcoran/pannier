@@ -81,4 +81,31 @@ Feature: Writing assets
     Then the following HTML should be written to the page
       """html
       <link href="/assets/foo.css" rel="stylesheet" type="text/css" />
-      """  
+      """
+
+    Scenario: Writing assets in development mode
+      Given these files exist
+        | fixtures/input/a.css |
+        | fixtures/input/b.css |
+      And the app is configured as follows
+        """ruby
+        Pannier.build('development') do
+          input  'fixtures/input'
+          output 'fixtures/output'
+
+          package :foo do
+            assets '*.css'
+            host('production') { concat 'foo.min.css' }
+          end
+        end
+        """
+      And an asset writer for the app has been instantiated
+      When I use the asset writer as follows
+        """ruby
+        @writer.write(:css, :foo)
+        """
+      Then the following HTML should be written to the page
+        """html
+        <link href="/a.css" rel="stylesheet" type="text/css" />
+        <link href="/b.css" rel="stylesheet" type="text/css" />
+        """

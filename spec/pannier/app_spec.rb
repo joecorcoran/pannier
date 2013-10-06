@@ -3,8 +3,9 @@ require 'spec_helper'
 describe Pannier::App do
   let(:app) { Pannier::App.new }
 
-  it('stores host environment name') do
-    expect(Pannier::App.new('foo').host_env).to eq 'foo'
+  it('creates environment') do
+    Pannier::Environment.expects(:new).with('foo').once
+    Pannier::App.new('foo')
   end
   it('sets root') do
     app.set_root('foo')
@@ -18,17 +19,30 @@ describe Pannier::App do
     app.set_output('output')
     expect(app.output_path).to match /\/.+\/output/
   end
-  it('adds packages') do
-    package = mock('Package')
-    app.add_package(package)
-    expect(app.packages.first).to be package
+  it('delegates path to output path') do
+    app.set_output('output')
+    expect(app.path).to match /\/.+\/output/
+  end
+
+  describe '#add_package' do
+    it('adds packages') do
+      package = mock('Package')
+      app.add_package(package)
+      expect(app.packages.first).to eq package
+    end
+    it('adds package in development mode') do
+      app.env.stubs(:development_mode? => true)
+      package = mock('Package')
+      app.add_package(package)
+      expect(app.packages.first).to be_a Pannier::Package::Development
+    end
   end
 
   describe('#[]') do
     let(:package) { mock('Package', :name => :foo) }
     before(:each) { app.add_package(package) }
     it('finds packages by name') do
-      expect(app[:foo]).to be package
+      expect(app[:foo]).to eq package
     end
     it('returns nil when no package is found') do
       expect(app[:bar]).to be_nil
@@ -93,6 +107,15 @@ describe Pannier::App do
         Rack::URLMap.expects(:new).with(map).once
         app.handler
       end
+    end
+  end
+
+  context('in development mode') do
+    before { app.env.stubs(:development_mode? => true) }
+
+    it('sets path to output path by default') do
+      app.set_input('input')
+      expect(app.path).to match /\/.+\/input/
     end
   end
 

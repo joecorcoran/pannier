@@ -1,4 +1,6 @@
+require 'delegate'
 require 'set'
+
 require 'pathname'
 require 'pannier/asset'
 require 'pannier/concatenator'
@@ -27,12 +29,20 @@ module Pannier
       @output_path = path
     end
 
+    def path
+      output_path
+    end
+
     def full_input_path
       File.expand_path(File.join(*[@app.input_path, @input_path].compact))
     end
 
     def full_output_path
       File.expand_path(File.join(*[@app.output_path, @output_path].compact))
+    end
+
+    def full_path
+      full_output_path
     end
 
     def add_assets_from_paths(paths)
@@ -45,6 +55,10 @@ module Pannier
 
     def add_assets(assets)
       @input_assets.merge(assets)
+    end
+
+    def assets
+      output_assets
     end
 
     def add_modifiers(modifiers)
@@ -60,15 +74,11 @@ module Pannier
     end
 
     def handler
-      handler = FileHandler.new(@output_assets.map(&:path), full_output_path)
-      return handler if @middlewares.empty?
-      @middlewares.reverse.reduce(handler) { |app, proc| proc.call(app) }
+      handler_with_middlewares(assets.map(&:path), full_path)
     end
 
     def handler_path
-      path = @output_path.nil? ? '/' : @output_path
-      path.insert(0, '/') unless path[0] == '/'
-      path
+      build_handler_path(path)
     end
 
     def owns_any?(*paths)
@@ -106,8 +116,19 @@ module Pannier
       @output_assets.each(&:write_file!)
     end
 
-    dsl do
+    def build_handler_path(handler_path)
+      hp = handler_path || '/'
+      hp.insert(0, '/') unless hp[0] == '/'
+      hp
+    end
 
+    def handler_with_middlewares(paths, full_path)
+      handler = FileHandler.new(paths, full_path)
+      return handler if @middlewares.empty?
+      @middlewares.reverse.reduce(handler) { |app, proc| proc.call(app) }
+    end
+
+    dsl do
       def input(path)
         set_input(path)
       end
@@ -145,12 +166,30 @@ module Pannier
       end
 
       def host(expression, &block)
-        expression = Regexp.new(expression)
-        if self.app.host_env =~ expression
-          self.instance_eval(&block)
-        end
+        self.instance_eval(&block) if self.app.env.is?(expression)
+      end
+    end
+
+    class Development < SimpleDelegator
+      def assets
+        input_assets
       end
 
+      def path
+        input_path
+      end
+
+      def full_path
+        full_input_path
+      end
+
+      def handler_path
+        build_handler_path(path)
+      end
+
+      def handler
+        handler_with_middlewares(assets.map(&:path), full_path)
+      end
     end
   end
 end

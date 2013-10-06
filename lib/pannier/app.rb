@@ -1,16 +1,17 @@
 require 'pannier/api'
 require 'pannier/dsl'
+require 'pannier/environment'
 require 'pannier/package'
 
 module Pannier
   class App
     extend DSL
 
-    attr_reader :host_env, :root, :input_path, :output_path,
+    attr_reader :env, :root, :input_path, :output_path,
                 :behaviors, :packages
 
-    def initialize(host_env = nil)
-      @host_env = host_env
+    def initialize(env_name = nil)
+      @env = Environment.new(env_name)
       @behaviors, @packages, @root = {}, [], '/'
     end
 
@@ -26,7 +27,12 @@ module Pannier
       @output_path = File.expand_path(path)
     end
 
+    def path
+      @env.development_mode? ? @input_path : @output_path
+    end
+
     def add_package(package)
+      package = Package::Development.new(package) if @env.development_mode?
       @packages << package
     end
 

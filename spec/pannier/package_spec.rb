@@ -28,6 +28,53 @@ describe Pannier::Package do
     package.set_output('stylesheets')
     expect(package.full_output_path).to eq '/foo/bar/output/stylesheets'
   end
+  
+  context('default mode (non-development)') do
+    it('delegates assets to output assets') do
+      package.expects(:output_assets).once
+      package.assets
+    end
+    it('delegates path to output path') do
+      package.expects(:output_path).once
+      package.path
+    end
+    it('delegates full_path to full output path') do
+      package.expects(:full_output_path).once
+      package.full_path
+    end
+    it('builds handler path from output path') do
+      package.stubs(:output_path => 'qux')
+      expect(package.handler_path).to eq '/qux'
+    end
+    it('builder handler with full output path') do
+      package.expects(:full_output_path).once
+      package.handler
+    end
+  end
+
+  context('development mode') do
+    let(:dev_package) { Pannier::Package::Development.new(package) }
+    it('delegates assets to input assets') do
+      dev_package.expects(:input_assets).once
+      dev_package.assets
+    end
+    it('delegates path to input path') do
+      dev_package.expects(:input_path).once
+      dev_package.path
+    end
+    it('delegates full_path to full input path') do
+      dev_package.expects(:full_input_path).once
+      dev_package.full_path
+    end
+    it('builds handler path from input path') do
+      dev_package.stubs(:input_path => 'quux')
+      expect(dev_package.handler_path).to eq '/quux'
+    end
+    it('builder handler with full input path') do
+      dev_package.expects(:full_input_path).once
+      dev_package.handler
+    end
+  end
 
   describe('#add_assets') do
     it('adds assets to input_assets') do

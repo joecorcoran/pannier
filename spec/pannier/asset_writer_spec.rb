@@ -21,21 +21,22 @@ describe Pannier::AssetWriter do
 
   describe('#write') do
     let(:assets) { [stub_everything, stub_everything] }
+    let(:package) { Pannier::Package.new(:bar, app) }
     it('calls template once for each output asset in package') do
-      package = mock('Package', :name => :bar, :output_assets => assets)
+      package.stubs(:output_assets => assets)
       app.add_package(package)
       
       asset_writer.templates[:js].expects(:call).twice
       asset_writer.write(:js, :bar)
     end
 
-    it('uses input assets when app host_env is "development"') do
-      package = mock('Package', :name => :baz, :input_assets => assets)
+    it('uses input assets when env is in development mode') do
+      package.stubs(:input_assets => assets)
+      app.env.stubs(:development_mode? => true)
       app.add_package(package)
-      app.stubs(:host_env => 'development')
 
       asset_writer.templates[:js].expects(:call).twice
-      asset_writer.write(:js, :baz)
+      asset_writer.write(:js, :bar)
     end
   end
 
