@@ -14,7 +14,7 @@ describe Pannier::API::Handler do
   end
 
   it 'responds with 200 when request is for single package' do
-    package = mock('Pannier::Package', :name => :foo, :output_assets => [])
+    package = mock('Pannier::Package', :name => :foo, :assets => [])
     asset_app.stubs(:packages => [package])
     get '/packages/foo'
     expect(last_response.status).to eq 200
