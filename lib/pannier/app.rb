@@ -1,6 +1,7 @@
 require 'pannier/api'
 require 'pannier/dsl'
 require 'pannier/environment'
+require 'pannier/manifest_writer'
 require 'pannier/package'
 
 module Pannier
@@ -10,7 +11,7 @@ module Pannier
     attr_reader :env, :root, :input_path, :output_path,
                 :behaviors, :packages
 
-    def initialize(env_name = nil)
+    def initialize(env_name = 'development')
       @env = Environment.new(env_name)
       @behaviors, @packages, @root = {}, [], '/'
     end
@@ -42,11 +43,16 @@ module Pannier
 
     def process!
       @packages.each(&:process!)
+      manifest_writer.write!(path) unless @env.development_mode?
     end
 
     def process_owners!(*paths)
       pkgs = @packages.select { |pkg| pkg.owns_any?(*paths) }
       pkgs.each(&:process!)
+    end
+
+    def manifest_writer
+      @manifest_writer ||= ManifestWriter.new(self, @env)
     end
 
     def handler_map

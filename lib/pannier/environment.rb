@@ -1,6 +1,8 @@
 module Pannier
   class Environment
 
+    attr_reader :name
+
     def initialize(name)
       @name = name
       @development_mode = (name == 'development')

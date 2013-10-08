@@ -23,16 +23,16 @@ describe Pannier::AssetWriter do
     let(:assets) { [stub_everything, stub_everything] }
     let(:package) { Pannier::Package.new(:bar, app) }
     it('calls template once for each output asset in package') do
-      package.stubs(:output_assets => assets)
+      package.stubs(:input_assets => assets)
       app.add_package(package)
       
       asset_writer.templates[:js].expects(:call).twice
       asset_writer.write(:js, :bar)
     end
 
-    it('uses input assets when env is in development mode') do
-      package.stubs(:input_assets => assets)
-      app.env.stubs(:development_mode? => true)
+    it('uses input assets when env is in a non-development mode') do
+      package.stubs(:output_assets => assets)
+      app.env.stubs(:development_mode? => false)
       app.add_package(package)
 
       asset_writer.templates[:js].expects(:call).twice

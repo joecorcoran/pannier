@@ -10,7 +10,7 @@ Feature: Package behaviors
       """
     And the app is configured as follows
       """ruby
-      Pannier.build do
+      Pannier.build('production') do
         input  'input'
         output 'output'
 

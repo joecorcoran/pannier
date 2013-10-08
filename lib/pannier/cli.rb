@@ -15,7 +15,7 @@ module Pannier
       opts = Slop.parse(opts, :help => true) do
         banner 'Usage: pannier process [options]'
         on :c, :config,      'Config file',      :argument => :optional, :default => '.assets.rb'
-        on :e, :environment, 'Host environment', :argument => :optional
+        on :e, :environment, 'Host environment', :argument => :optional, :default => 'development'
         on :a, :assets,      'Asset paths',      :argument => :optional, :as => Array
       end
 

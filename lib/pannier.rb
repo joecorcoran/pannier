@@ -4,11 +4,11 @@ require 'pannier/asset_writer'
 require 'pannier/version'
 
 module Pannier
-  def self.build(env_name = nil, &block)
+  def self.build(env_name = 'development', &block)
     App.build(env_name, &block)
   end
 
-  def self.build_from(path, env_name = nil)
+  def self.build_from(path, env_name)
     config = File.read(path)
     block = eval("proc { #{config} }", TOPLEVEL_BINDING, path, 0)
     App.build(env_name, &block)

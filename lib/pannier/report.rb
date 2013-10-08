@@ -3,7 +3,7 @@ module Pannier
 
     attr_reader :tree
 
-    def initialize(app, base_url)
+    def initialize(app, base_url = '')
       @app, @base_url, @tree = app, base_url, {}
       build!
     end

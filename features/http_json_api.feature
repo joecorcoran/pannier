@@ -19,7 +19,6 @@ Feature: HTTP JSON API
         end
         package :admin do
           assets 'bar.js', 'baz.js'
-          concat 'admin.js'
         end
       end
       """
@@ -37,7 +36,8 @@ Feature: HTTP JSON API
           "http://example.org/foo.js"
         ],
         "admin": [
-          "http://example.org/admin.js"
+          "http://example.org/bar.js",
+          "http://example.org/baz.js"
         ]
       }
       """
