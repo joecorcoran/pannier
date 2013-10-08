@@ -14,7 +14,7 @@ module Pannier
     App.build(env_name, &block)
   end
 
-  def self.rackup!(ru, path = './Pannierfile')
+  def self.rackup!(ru, path = './.assets.rb')
     app = build_from(path, ENV['RACK_ENV'])
     app.process!
     ru.map(app.root) { run(app) }

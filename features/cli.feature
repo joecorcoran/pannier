@@ -20,7 +20,7 @@ Feature: Command line interface
     And the exit status should be 0
 
   Scenario: Process command with default arguments
-    Given the file "fixtures/Pannierfile" contains
+    Given the file "fixtures/.assets.rb" contains
       """ruby
       input  'input'
       output 'output'
@@ -31,7 +31,7 @@ Feature: Command line interface
   Scenario: Process command with specified host environment
     Given these files exist
       | fixtures/input/foo.js |
-    And the file "fixtures/Pannierfile" contains
+    And the file "fixtures/.assets.rb" contains
       """ruby
       input  'input'
       output 'output'
@@ -65,7 +65,7 @@ Feature: Command line interface
         | fixtures/input/c.css |
         | fixtures/input/d.css |
         | fixtures/input/e.css |
-      And the file "fixtures/Pannierfile" contains
+      And the file "fixtures/.assets.rb" contains
         """ruby
         input  'input'
         output 'output'
@@ -86,7 +86,7 @@ Feature: Command line interface
 
   Scenario: Missing config file
     When I run `pannier process`
-    Then the output should match /^Pannier config file not found at .+Pannierfile\.$/
+    Then the output should match /^Pannier config file not found at .+\.assets.rb\.$/
     And the exit status should be 1
 
   Scenario: Incorrect command
