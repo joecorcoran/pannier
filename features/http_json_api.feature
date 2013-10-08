@@ -5,14 +5,14 @@ Feature: HTTP JSON API
 
   Background:
     Given these files exist
-      | fixtures/input/foo.js |
-      | fixtures/input/bar.js |
-      | fixtures/input/baz.js |
+      | input/foo.js |
+      | input/bar.js |
+      | input/baz.js |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :main do
           assets 'foo.js'

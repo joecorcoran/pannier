@@ -14,4 +14,4 @@ module TestApp
   end
 end
 
-World(Rack::Test::Methods, TestApp)
+World(Rack::Test::Methods, FileHelper, TestApp)

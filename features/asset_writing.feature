@@ -5,13 +5,13 @@ Feature: Writing assets
 
   Scenario: Writing JavaScript assets
     Given these files exist
-      | fixtures/input/one.js |
-      | fixtures/input/two.js |
+      | input/one.js |
+      | input/two.js |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :scripts do
           assets '*.js'
@@ -32,13 +32,13 @@ Feature: Writing assets
 
   Scenario: Writing CSS assets
     Given these files exist
-      | fixtures/input/a.css |
-      | fixtures/input/b.css |
+      | input/a.css |
+      | input/b.css |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :styles do
           assets '*.css'
@@ -59,13 +59,13 @@ Feature: Writing assets
 
   Scenario: Writing assets from a mounted app
     Given these files exist
-      | fixtures/input/foo.css |
+      | input/foo.css |
     And the app is configured as follows
       """ruby
       Pannier.build do
         root   '/assets'
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :styles do
           assets 'foo.css'
@@ -85,13 +85,13 @@ Feature: Writing assets
 
     Scenario: Writing assets in development mode
       Given these files exist
-        | fixtures/input/a.css |
-        | fixtures/input/b.css |
+        | input/a.css |
+        | input/b.css |
       And the app is configured as follows
         """ruby
         Pannier.build('development') do
-          input  'fixtures/input'
-          output 'fixtures/output'
+          input  'input'
+          output 'output'
 
           package :foo do
             assets '*.css'

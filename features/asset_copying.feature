@@ -5,13 +5,13 @@ Feature: Asset copying
 
   Scenario: Assets copied from input  to output directory
     Given these files exist
-      | fixtures/input/bar.js |
-      | fixtures/input/baz.js |
+      | input/bar.js |
+      | input/baz.js |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :foo do
           assets '*.js'
@@ -20,18 +20,18 @@ Feature: Asset copying
       """
     When the app has been processed
     Then these files should exist
-      | fixtures/output/bar.js |
-      | fixtures/output/baz.js |
+      | output/bar.js |
+      | output/baz.js |
 
   Scenario: Assets copied from nested input  to nested output directory
     Given these files exist
-      | fixtures/input/bar/qux.js  |
-      | fixtures/input/bar/quux.js |
+      | input/bar/qux.js  |
+      | input/bar/quux.js |
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :foo do
           input  'bar'
@@ -42,5 +42,5 @@ Feature: Asset copying
       """
     When the app has been processed
     Then these files should exist
-      | fixtures/output/baz/qux.js  |
-      | fixtures/output/baz/quux.js |
+      | output/baz/qux.js  |
+      | output/baz/quux.js |

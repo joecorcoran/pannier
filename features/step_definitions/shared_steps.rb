@@ -1,15 +1,15 @@
-Given(/^that this feature is pending$/) do
-  pending
-end
-
 Given(/^the app is configured as follows$/) do |string|
-  @app = eval(string)
+  in_fixtures do
+    @app = eval(string)
+  end
 end
 
 Given(/^these files exist$/) do |table|
-  table.raw.flatten.each do |file_path|
-    FileUtils.mkdir_p(File.dirname(file_path))
-    File.new(file_path, 'w+')
+  in_fixtures do
+    table.raw.flatten.each do |file_path|
+      FileUtils.mkdir_p(File.dirname(file_path))
+      File.new(file_path, 'w+')
+    end
   end
 end
 
@@ -18,21 +18,27 @@ When(/^the app has been processed$/) do
 end
 
 Then(/^these files should exist$/) do |table|
-  table.raw.flatten.each do |file_path|
-    expect(File.exists?(file_path)).to be_true
+  in_fixtures do
+    table.raw.flatten.each do |file_path|
+      expect(File.exists?(file_path)).to be_true
+    end
   end
 end
 
 Then(/^these files should not exist$/) do |table|
-  table.raw.flatten.each do |file_path|
-    expect(File.exists?(file_path)).to be_false
+  in_fixtures do
+    table.raw.flatten.each do |file_path|
+      expect(File.exists?(file_path)).to be_false
+    end
   end
 end
 
 Given(/^the file "(.*?)" contains$/) do |file_path, content|
-  FileUtils.mkdir_p(File.dirname(file_path))
-  File.open(file_path, 'w+') do |f|
-    f << content
+  in_fixtures do
+    FileUtils.mkdir_p(File.dirname(file_path))
+    File.open(file_path, 'w+') do |f|
+      f << content
+    end
   end
 end
 
@@ -41,11 +47,15 @@ Given(/^a loaded ruby file contains$/) do |string|
 end
 
 Then(/^the file "(.*?)" should contain$/) do |file_path, content|
-  expect(File.exists?(file_path)).to be_true
-  expect(File.read(file_path)).to eq content
+  in_fixtures do
+    expect(File.exists?(file_path)).to be_true
+    expect(File.read(file_path)).to eq content
+  end
 end
 
 Then(/^the file "(.*?)" should not include$/) do |file_path, content|
-  expect(File.exists?(file_path)).to be_true
-  expect(File.read(file_path)).not_to match content
+  in_fixtures do
+    expect(File.exists?(file_path)).to be_true
+    expect(File.read(file_path)).not_to match content
+  end
 end

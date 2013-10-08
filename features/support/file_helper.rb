@@ -14,4 +14,8 @@ module FileHelper
     FileUtils.rm_r(fixture_path, :secure => true)
   end
 
+  def in_fixtures(&block)
+    Dir.chdir(fixture_path, &block)
+  end
+
 end

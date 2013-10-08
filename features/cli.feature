@@ -20,7 +20,7 @@ Feature: Command line interface
     And the exit status should be 0
 
   Scenario: Process command with default arguments
-    Given the file "fixtures/.assets.rb" contains
+    Given the file ".assets.rb" contains
       """ruby
       input  'input'
       output 'output'
@@ -30,8 +30,8 @@ Feature: Command line interface
 
   Scenario: Process command with specified host environment
     Given these files exist
-      | fixtures/input/foo.js |
-    And the file "fixtures/.assets.rb" contains
+      | input/foo.js |
+    And the file ".assets.rb" contains
       """ruby
       input  'input'
       output 'output'
@@ -44,13 +44,13 @@ Feature: Command line interface
       """
     When I run `pannier process --environment production`
     Then these files should exist
-      | fixtures/output/prd/foo.js |
+      | output/prd/foo.js |
     And these files should not exist
-      | fixtures/output/dev/foo.js |
+      | output/dev/foo.js |
     And the exit status should be 0
 
   Scenario: Process command with specified config path
-    Given the file "fixtures/some/path/.asset_config" contains
+    Given the file "some/path/.asset_config" contains
       """ruby
       input  'input'
       output 'output'
@@ -58,31 +58,31 @@ Feature: Command line interface
     When I run `pannier process --config some/path/.asset_config`
     Then the exit status should be 0
 
-    Scenario: Process only packages which own specified assets
-      Given these files exist
-        | fixtures/input/a.css |
-        | fixtures/input/b.css |
-        | fixtures/input/c.css |
-        | fixtures/input/d.css |
-        | fixtures/input/e.css |
-      And the file "fixtures/.assets.rb" contains
-        """ruby
-        input  'input'
-        output 'output'
+  Scenario: Process only packages which own specified assets
+    Given these files exist
+      | input/a.css |
+      | input/b.css |
+      | input/c.css |
+      | input/d.css |
+      | input/e.css |
+    And the file ".assets.rb" contains
+      """ruby
+      input  'input'
+      output 'output'
 
-        package(:foo) { assets 'a.css', 'b.css' }
-        package(:bar) { assets 'c.css', 'd.css' }
-        package(:baz) { assets 'e.css'          }
-        """
-      When I run `pannier process --assets input/b.css,input/e.css`
-      Then these files should exist
-        | fixtures/output/a.css |
-        | fixtures/output/b.css |
-        | fixtures/output/e.css |
-      And these files should not exist
-        | fixtures/output/c.css |
-        | fixtures/output/d.css |
-      And the exit status should be 0
+      package(:foo) { assets 'a.css', 'b.css' }
+      package(:bar) { assets 'c.css', 'd.css' }
+      package(:baz) { assets 'e.css'          }
+      """
+    When I run `pannier process --assets input/b.css,input/e.css`
+    Then these files should exist
+      | output/a.css |
+      | output/b.css |
+      | output/e.css |
+    And these files should not exist
+      | output/c.css |
+      | output/d.css |
+    And the exit status should be 0
 
   Scenario: Missing config file
     When I run `pannier process`

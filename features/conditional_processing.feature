@@ -5,13 +5,13 @@ Feature: Conditional processing per host environment
 
   Scenario: Assets are processed based on host environment
     Given these files exist
-      | fixtures/input/bar.js |
-      | fixtures/input/baz.js |
+      | input/bar.js |
+      | input/baz.js |
     And the app is configured as follows
       """ruby
       Pannier.build('production') do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :foo do
           host 'development' do
@@ -26,7 +26,7 @@ Feature: Conditional processing per host environment
       end
       """
       And the app has been processed
-      Then the file "fixtures/output/foo.js" should not include
+      Then the file "output/foo.js" should not include
         """javascript
         /* development */
         """

@@ -4,15 +4,15 @@ Feature: Package behaviors
   I want to define behaviors and mix them into packages
 
   Scenario: Defining a behavior and using it in multiple packages
-    Given the file "fixtures/input/foo.js" contains
+    Given the file "input/foo.js" contains
       """javascript
       /* comment */
       """
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         behavior :bar do
           modify do |content, basename|

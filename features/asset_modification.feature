@@ -4,15 +4,15 @@ Feature: Asset modification
   I want to modify the content and filenames of my assets
 
   Scenario: Assets modified by modify block
-    Given the file "fixtures/input/qux.js" contains
+    Given the file "input/qux.js" contains
       """javascript
       /* comment */
       """
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :foo do
           assets '*.js'
@@ -23,13 +23,13 @@ Feature: Asset modification
       end
       """
     When the app has been processed
-    Then the file "fixtures/output/qux.js" should contain
+    Then the file "output/qux.js" should contain
       """javascript
       /* tnemmoc */
       """
 
   Scenario: Assets modified by modifier
-    Given the file "fixtures/input/qux.js" contains
+    Given the file "input/qux.js" contains
       """javascript
       /* comment */
       """
@@ -58,8 +58,8 @@ Feature: Asset modification
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :foo do
           assets '*.js'
@@ -68,7 +68,7 @@ Feature: Asset modification
       end
       """
     When the app has been processed
-    Then the file "fixtures/output/qux-abcde.js" should contain
+    Then the file "output/qux-abcde.js" should contain
       """javascript
       /* comment! */
       """

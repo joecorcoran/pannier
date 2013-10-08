@@ -5,8 +5,8 @@ Feature: Rack middleware
 
   Scenario: Middleware is set per package
     Given these files exist
-      | fixtures/input/foo.css |
-      | fixtures/input/bar.js  |
+      | input/foo.css |
+      | input/bar.js  |
     And a loaded ruby file contains
       """ruby
       class Speaker
@@ -24,8 +24,8 @@ Feature: Rack middleware
     And the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :styles do
           assets 'foo.css'

@@ -4,11 +4,11 @@ Feature: Serving assets
   I want to deploy a separate app from which I can request my assets
 
   Background:
-    Given the file "fixtures/input/styles/foo.css" contains
+    Given the file "input/styles/foo.css" contains
       """css
       html { color: red; }
       """
-    And the file "fixtures/input/scripts/bar.js" contains
+    And the file "input/scripts/bar.js" contains
       """javascript
       var a = 1;
       """
@@ -17,8 +17,8 @@ Feature: Serving assets
     Given the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :styles do
           input  'styles'
@@ -42,8 +42,8 @@ Feature: Serving assets
     Given the app is configured as follows
       """ruby
       Pannier.build do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :scripts do
           input  'scripts'
@@ -67,8 +67,8 @@ Feature: Serving assets
     Given the app is configured as follows
       """ruby
       Pannier.build('development') do
-        input  'fixtures/input'
-        output 'fixtures/output'
+        input  'input'
+        output 'output'
 
         package :styles do
           input  'styles'
