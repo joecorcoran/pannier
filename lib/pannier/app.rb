@@ -41,6 +41,15 @@ module Pannier
       @packages.find { |pkg| pkg.name == package_name }
     end
 
+    def prime!(manifest)
+      manifest.each do |name, paths|
+        if (pkg = self[name])
+          assets = pkg.build_assets_from_paths(paths)
+          pkg.add_output_assets(assets)
+        end
+      end
+    end
+
     def process!
       @packages.each(&:process!)
       manifest_writer.write!(path) unless @env.development_mode?

@@ -76,13 +76,13 @@ describe Pannier::Package do
     end
   end
 
-  describe('#add_assets') do
+  describe('#add_input_assets') do
     it('adds assets to input_assets') do
       assets = [
         Pannier::Asset.new('foo.js', '.', package),
         Pannier::Asset.new('bar.js', '.', package)
       ]
-      package.add_assets(assets)
+      package.add_input_assets(assets)
       expect(package.input_assets.length).to eq 2
     end
     it('discards assets with same path') do
@@ -90,16 +90,34 @@ describe Pannier::Package do
         Pannier::Asset.new('foo.js', '.', package),
         Pannier::Asset.new('foo.js', '.', package)
       ]
-      package.add_assets(assets)
+      package.add_input_assets(assets)
       expect(package.input_assets.length).to eq 1
     end
   end
 
-  describe('#add_assets_from_paths') do
+  describe('#add_output_assets') do
+    it('adds assets to output_assets') do
+      assets = [
+        Pannier::Asset.new('foo.js', '.', package),
+        Pannier::Asset.new('bar.js', '.', package)
+      ]
+      package.add_output_assets(assets)
+      expect(package.output_assets.length).to eq 2
+    end
+    it('discards assets with same path') do
+      assets = [
+        Pannier::Asset.new('foo.js', '.', package),
+        Pannier::Asset.new('foo.js', '.', package)
+      ]
+      package.add_output_assets(assets)
+      expect(package.output_assets.length).to eq 1
+    end
+  end
+
+  describe('#build_assets_from_paths') do
     it('constructs assets before adding') do
       Pannier::Asset.expects(:new).with('bar.js', 'foo', package).once
-      package.expects(:add_assets).once
-      package.add_assets_from_paths(['foo/bar.js'])
+      package.build_assets_from_paths(['foo/bar.js'])
     end
   end
 
@@ -147,7 +165,7 @@ describe Pannier::Package do
   describe('#owns_any?') do
     before do
       asset = Pannier::Asset.new('baz.js', '/foo/bar', package)
-      package.add_assets([asset])
+      package.add_input_assets([asset])
     end
     it('returns true if package has asset which matches given input paths') do
       expect(package.owns_any?('/foo/bar/baz.js')).to be_true
@@ -161,7 +179,7 @@ describe Pannier::Package do
     let(:asset) { Pannier::Asset.new('foo.css', '.', package) }
     before(:each) do
       app.stubs(:output_path => '/foo/bar/output')
-      package.add_assets([asset])
+      package.add_input_assets([asset])
     end
 
     describe('#process!') do
@@ -193,7 +211,7 @@ describe Pannier::Package do
     describe('#concat!') do
       let(:concatenator) { proc {} }
       before(:each) do
-        package.add_assets([Pannier::Asset.new('bar.css', '.', package)])
+        package.add_input_assets([Pannier::Asset.new('bar.css', '.', package)])
         package.copy!
       end
       it('replaces all output assets with a single asset') do

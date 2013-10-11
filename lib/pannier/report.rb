@@ -12,9 +12,7 @@ module Pannier
       @app.packages.each do |package|
         @tree[package.name] ||= []
         next if package.assets.empty?
-        @tree[package.name] = package.assets.map do |asset|
-          @base_url + asset.serve_from(@app)
-        end
+        @tree[package.name] = package.assets.map(&:path)
       end
       self
     end

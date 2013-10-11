@@ -40,12 +40,25 @@ describe Pannier::App do
 
   describe('#[]') do
     let(:package) { mock('Package', :name => :foo) }
-    before(:each) { app.add_package(package) }
+    before        { app.add_package(package) }
     it('finds packages by name') do
       expect(app[:foo]).to eq package
     end
     it('returns nil when no package is found') do
       expect(app[:bar]).to be_nil
+    end
+  end
+
+  describe('#prime!') do
+    let(:package) { mock('Package', :name => :qux) }
+    let(:paths)   { ['/output/bar.css', '/output/baz.css'] }
+    before do
+      app.add_package(package)
+    end
+    it('builds assets for each package in manifest') do
+      package.expects(:build_assets_from_paths).with(paths).once
+      package.expects(:add_output_assets).once
+      app.prime!({ :qux => paths })
     end
   end
 

@@ -45,16 +45,19 @@ module Pannier
       full_output_path
     end
 
-    def add_assets_from_paths(paths)
-      assets = paths.map do |path|
+    def build_assets_from_paths(paths)
+      paths.map do |path|
         pathname = Pathname.new(path)
         Asset.new(pathname.basename.to_s, pathname.dirname.to_s, self)
       end
-      add_assets(assets)
     end
 
-    def add_assets(assets)
+    def add_input_assets(assets)
       @input_assets.merge(assets)
+    end
+
+    def add_output_assets(assets)
+      @output_assets.merge(assets)
     end
 
     def assets
@@ -148,7 +151,8 @@ module Pannier
       def assets(*patterns)
         patterns.each do |pattern|
           paths = Dir[File.join(full_input_path, pattern)]
-          add_assets_from_paths(paths)
+          assets = build_assets_from_paths(paths)
+          add_input_assets(assets)
         end
       end
 
