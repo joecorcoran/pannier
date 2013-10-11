@@ -14,4 +14,4 @@ namespace(:cucumber) do
 end
 
 
-task :default => %w{spec cucumber:features cucumber:wip}
+task :default => %w{spec cucumber:features}
