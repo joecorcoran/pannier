@@ -1,3 +1,4 @@
+@wip
 Feature: HTTP JSON API
   In order to inspect my asset file paths
   As a developer
