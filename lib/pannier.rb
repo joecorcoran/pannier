@@ -15,25 +15,31 @@ module Pannier
     App.build(env_name, &block)
   end
 
-  def self.rackup!(ru, path = './.assets.rb')
-    app = build_from(path, ENV['RACK_ENV'])
-    if manifest_exists?(app)
-      manifest = load_manifest(app)
+  def self.load(path, env_name = 'development')
+    app = build_from(path, env_name)
+    if manifest_exists?(app, env_name)
+      manifest = load_manifest(app, env_name)
       app.prime!(manifest)
     end
+    app
+  end
+
+  def self.rackup!(ru, path = './.assets.rb')
+    app = load(path, ENV['RACK_ENV'])
     ru.map(app.root) { run(app) }
     app
   end
 
   private
 
-    def self.load_manifest(app)
-      path = File.join(app.output_path, ".assets.#{ENV['RACK_ENV']}.json")
+    def self.load_manifest(app, env_name)
+      path = File.join(app.output_path, ".assets.#{env_name}.json")
       json = File.read(path)
       MultiJson.load(json, :symbolize_keys => true)
     end
 
-    def self.manifest_exists?(app)
-      File.exists?(File.join(app.output_path, ".assets.#{ENV['RACK_ENV']}.json"))
+    def self.manifest_exists?(app, env_name)
+      path = File.join(app.output_path, ".assets.#{env_name}.json")
+      File.exists?(path)
     end
 end

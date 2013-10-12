@@ -4,6 +4,12 @@ Given(/^the app is configured as follows$/) do |string|
   end
 end
 
+Given(/^the app is loaded in a (.+) environment$/) do |env_name|
+  in_fixtures do
+    @app = Pannier.load('.assets.rb', env_name)
+  end
+end
+
 Given(/^these files exist$/) do |table|
   in_fixtures do
     table.raw.flatten.each do |file_path|
@@ -57,5 +63,14 @@ Then(/^the file "(.*?)" should not include$/) do |file_path, content|
   in_fixtures do
     expect(File.exists?(file_path)).to be_true
     expect(File.read(file_path)).not_to match content
+  end
+end
+
+Then(/^the JSON file "(.*?)" should match$/) do |file_path, content|
+  in_fixtures do
+    expect(File.exists?(file_path)).to be_true
+    json = File.read(file_path)
+    expected = eval(content)
+    expect(MultiJson.load(json)).to match_json_expression(expected)
   end
 end
