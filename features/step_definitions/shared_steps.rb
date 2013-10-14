@@ -4,6 +4,12 @@ Given(/^the app is configured as follows$/) do |string|
   end
 end
 
+Given(/^the app is loaded$/) do
+  in_fixtures do
+    @app = Pannier.load('.assets.rb', 'development')
+  end
+end
+
 Given(/^the app is loaded in a (.+) environment$/) do |env_name|
   in_fixtures do
     @app = Pannier.load('.assets.rb', env_name)

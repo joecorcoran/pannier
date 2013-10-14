@@ -1,7 +1,7 @@
 Feature: Serving assets
-  In order that I can separate my assets from my application
+  In order that I can use my assets
   As a developer
-  I want to deploy a separate app from which I can request my assets
+  I want to a Rack server that can serve assets
 
   Background:
     Given the file "input/styles/foo.css" contains
@@ -13,22 +13,20 @@ Feature: Serving assets
       var a = 1;
       """
 
-  Scenario: Requesting a CSS file
-    Given the app is configured as follows
+  Scenario: Requesting a CSS file in production
+    Given the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :styles do
-          input  'styles'
-          output 'styles'
-          assets '*.css'
-        end
+      package :styles do
+        input  'styles'
+        assets '*.css'
       end
       """
+    And the app is loaded in a production environment
     And the app has been processed
-    When I request "/styles/foo.css"
+    When I request "/foo.css"
     Then the response status should be 200
     And I should see these headers
       | Content-Type   | text/css |
@@ -38,22 +36,20 @@ Feature: Serving assets
       html { color: red; }
       """
 
-  Scenario: Requesting a JavaScript file
-    Given the app is configured as follows
+  Scenario: Requesting a JavaScript file in production
+    Given the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :scripts do
-          input  'scripts'
-          output 'scripts'
-          assets '*.js'
-        end
+      package :scripts do
+        input  'scripts'
+        assets '*.js'
       end
       """
+    And the app is loaded in a production environment
     And the app has been processed
-    When I request "/scripts/bar.js"
+    When I request "/bar.js"
     Then the response status should be 200
     And I should see these headers
       | Content-Type   | application/javascript |
@@ -63,20 +59,18 @@ Feature: Serving assets
       var a = 1;
       """
 
-  Scenario: Requesting a CSS file in development mode
-    Given the app is configured as follows
+  Scenario: Requesting a file in development mode
+    Given the file ".assets.rb" contains
       """ruby
-      Pannier.build('development') do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :styles do
-          input  'styles'
-          output 'styles-out'
-          assets '*.css'
-        end
+      package :styles do
+        input  'styles'
+        assets '*.css'
       end
       """
+    And the app is loaded
     When I request "/styles/foo.css"
     Then the response status should be 200
     And I should see these headers

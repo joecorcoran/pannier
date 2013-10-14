@@ -8,21 +8,20 @@ Feature: Asset modification
       """javascript
       /* comment */
       """
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :foo do
-          assets '*.js'
-          modify do |content, basename|
-            [content.reverse, basename]
-          end
+      package :foo do
+        assets '*.js'
+        modify do |content, basename|
+          [content.reverse, basename]
         end
       end
       """
-    When the app has been processed
+    When the app is loaded
+    And the app has been processed
     Then the file "output/qux.js" should contain
       """javascript
       /* tnemmoc */
@@ -55,19 +54,18 @@ Feature: Asset modification
         end
       end
       """
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :foo do
-          assets '*.js'
-          modify Exclaimifier.new, Suffixer.new('abcde')
-        end
+      package :foo do
+        assets '*.js'
+        modify Exclaimifier.new, Suffixer.new('abcde')
       end
       """
-    When the app has been processed
+    When the app is loaded
+    And the app has been processed
     Then the file "output/qux-abcde.js" should contain
       """javascript
       /* comment! */

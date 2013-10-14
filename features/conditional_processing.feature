@@ -7,26 +7,21 @@ Feature: Conditional processing per host environment
     Given these files exist
       | input/bar.js |
       | input/baz.js |
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build('production') do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :foo do
-          host 'development' do
-            modify do |_, basename|
-              ['/* development */', basename]
-            end
-          end
-          host 'production' do
-            concat 'foo.js'
-          end
+      package :foo do
+        host 'production' do
+          concat 'foo.js'
         end
       end
       """
+      And the app is loaded in a production environment
       And the app has been processed
-      Then the file "output/foo.js" should not include
-        """javascript
-        /* development */
-        """
+      Then these files should exist
+        | output/foo.js |
+      And these files should not exist
+        | output/bar.js |
+        | output/baz.js |

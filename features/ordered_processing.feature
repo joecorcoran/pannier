@@ -16,25 +16,24 @@ Feature: Ordered processing
         background: green;
       }
       """
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :styles do
-          assets '*.css'
-          modify do |content, basename|
-            ["/* #{basename} */\n#{content}", basename]
-          end
-          concat 'styles.css'
-          modify do |content, basename|
-            ["/* Stylesheet Corp. LLC 2013 */\n#{content}", basename]
-          end
+      package :styles do
+        assets '*.css'
+        modify do |content, basename|
+          ["/* #{basename} */\n#{content}", basename]
+        end
+        concat 'styles.css'
+        modify do |content, basename|
+          ["/* Stylesheet Corp. LLC 2013 */\n#{content}", basename]
         end
       end
       """
-    When the app has been processed
+    When the app is loaded
+    And the app has been processed
     Then the file "output/styles.css" should contain
       """css
       /* Stylesheet Corp. LLC 2013 */

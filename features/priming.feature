@@ -15,7 +15,7 @@ Feature: App priming
         assets 'foo.js'
       end
       """
-    When I run `pannier process -e production`
+    And I run `pannier process -e production`
     And the app is loaded in a production environment
-    And I request "/foo.js"
+    When I request "/foo.js"
     Then the response status should be 200

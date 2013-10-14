@@ -7,40 +7,38 @@ Feature: Asset copying
     Given these files exist
       | input/bar.js |
       | input/baz.js |
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :foo do
-          assets '*.js'
-        end
+      package :foo do
+        assets '*.js'
       end
       """
-    When the app has been processed
+    When the app is loaded
+    And the app has been processed
     Then these files should exist
       | output/bar.js |
       | output/baz.js |
 
-  Scenario: Assets copied from nested input  to nested output directory
+  Scenario: Assets copied from nested input directory to nested output directory
     Given these files exist
       | input/bar/qux.js  |
       | input/bar/quux.js |
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :foo do
-          input  'bar'
-          output 'baz'
-          assets '*.js'
-        end
+      package :foo do
+        input  'bar'
+        output 'baz'
+        assets '*.js'
       end
       """
-    When the app has been processed
+    When the app is loaded
+    And the app has been processed
     Then these files should exist
       | output/baz/qux.js  |
       | output/baz/quux.js |

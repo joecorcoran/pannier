@@ -12,19 +12,18 @@ Feature: Asset concatenation
       """javascript
       /* two */
       """
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :main do
-          assets '*.js'
-          concat 'main.js'
-        end
+      package :main do
+        assets '*.js'
+        concat 'main.js'
       end
       """
-    When the app has been processed
+    When the app is loaded
+    And the app has been processed
     Then the file "output/main.js" should contain
       """javascript
       /* one */
@@ -53,19 +52,18 @@ Feature: Asset concatenation
         end
       end
       """
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :main do
-          assets '*.js'
-          concat 'main.js', ConcatWithBanner.new('Made by Computer Corp. LLC')
-        end
+      package :main do
+        assets '*.js'
+        concat 'main.js', ConcatWithBanner.new('Made by Computer Corp. LLC')
       end
       """
-    When the app has been processed
+    When the app is loaded
+    And the app has been processed
     Then the file "output/main.js" should contain
       """javascript
       /* Made by Computer Corp. LLC */

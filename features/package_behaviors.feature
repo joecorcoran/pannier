@@ -8,27 +8,25 @@ Feature: Package behaviors
       """javascript
       /* comment */
       """
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build('production') do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        behavior :bar do
-          modify do |content, basename|
-            [content.reverse, basename]
-          end
-        end
-
-        package :baz do
-          behave :bar
-          assets 'foo.js'
+      behavior :bar do
+        modify do |content, basename|
+          [content.reverse, basename]
         end
       end
+
+      package :baz do
+        behave :bar
+        assets 'foo.js'
+      end
       """
+    And the app is loaded in a production environment
     And the app has been processed
-    When I request "/foo.js"
-    Then the response body should be
+    Then the file "output/foo.js" should contain
       """javascript
       /* tnemmoc */
       """

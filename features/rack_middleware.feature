@@ -21,22 +21,21 @@ Feature: Rack middleware
         end
       end
       """
-    And the app is configured as follows
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :styles do
-          assets 'foo.css'
-          use Rack::Deflater
-        end
-        package :scripts do
-          assets 'bar.js'
-          use Speaker, 'hello'
-        end
+      package :styles do
+        assets 'foo.css'
+        use Rack::Deflater
+      end
+      package :scripts do
+        assets 'bar.js'
+        use Speaker, 'hello'
       end
       """
+    And the app is loaded
     And the app has been processed
 
     When I request "/foo.css" with these headers

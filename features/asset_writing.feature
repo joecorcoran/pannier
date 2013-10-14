@@ -3,21 +3,21 @@ Feature: Writing assets
   As a developer
   I want to write the HTML that will include my assets on the page
 
-  Scenario: Writing JavaScript assets
+  Scenario: Writing JavaScript assets in production
     Given these files exist
-      | input/one.js |
-      | input/two.js |
-    And the app is configured as follows
+      | input/scripts/one.js |
+      | input/scripts/two.js |
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :scripts do
-          assets '*.js'
-        end
+      package :scripts do
+        input  'scripts'
+        assets '*.js'
       end
       """
+    And the app is loaded in a production environment
     And the app has been processed
     And an asset writer for the app has been instantiated
     When I use the asset writer as follows
@@ -30,21 +30,21 @@ Feature: Writing assets
       <script defer="defer" src="/two.js" type="text/javascript"></script>
       """
 
-  Scenario: Writing CSS assets
+  Scenario: Writing CSS assets in production
     Given these files exist
-      | input/a.css |
-      | input/b.css |
-    And the app is configured as follows
+      | input/styles/a.css |
+      | input/styles/b.css |
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        input  'input'
-        output 'output'
+      input  'input'
+      output 'output'
 
-        package :styles do
-          assets '*.css'
-        end
+      package :styles do
+        input  'styles'
+        assets '*.css'
       end
       """
+    And the app is loaded in a production environment
     And the app has been processed
     And an asset writer for the app has been instantiated
     When I use the asset writer as follows
@@ -57,21 +57,22 @@ Feature: Writing assets
       <link href="/b.css" media="screen" rel="stylesheet" type="text/css" />
       """
 
-  Scenario: Writing assets from a mounted app
+  Scenario: Writing assets from a mounted app in production
     Given these files exist
-      | input/foo.css |
-    And the app is configured as follows
+      | input/styles/foo.css |
+    And the file ".assets.rb" contains
       """ruby
-      Pannier.build do
-        root   '/assets'
-        input  'input'
-        output 'output'
+      root   '/assets'
+      
+      input  'input'
+      output 'output'
 
-        package :styles do
-          assets 'foo.css'
-        end
+      package :styles do
+        input  'styles'
+        assets 'foo.css'
       end
       """
+    And the app is loaded in a production environment
     And the app has been processed
     And an asset writer for the app has been instantiated
     When I use the asset writer as follows
@@ -85,20 +86,22 @@ Feature: Writing assets
 
     Scenario: Writing assets in development mode
       Given these files exist
-        | input/a.css |
-        | input/b.css |
-      And the app is configured as follows
+        | input/styles/a.css |
+        | input/styles/b.css |
+      And the file ".assets.rb" contains
         """ruby
-        Pannier.build('development') do
-          input  'input'
-          output 'output'
+        input  'input'
+        output 'output'
 
-          package :foo do
-            assets '*.css'
-            host('production') { concat 'foo.min.css' }
+        package :foo do
+          input  'styles'
+          assets '*.css'
+          host 'production' do
+            concat 'foo.min.css'
           end
         end
         """
+      And the app is loaded
       And an asset writer for the app has been instantiated
       When I use the asset writer as follows
         """ruby
@@ -106,6 +109,6 @@ Feature: Writing assets
         """
       Then the following HTML should be written to the page
         """html
-        <link href="/a.css" rel="stylesheet" type="text/css" />
-        <link href="/b.css" rel="stylesheet" type="text/css" />
+        <link href="/styles/a.css" rel="stylesheet" type="text/css" />
+        <link href="/styles/b.css" rel="stylesheet" type="text/css" />
         """
