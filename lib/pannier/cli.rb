@@ -12,17 +12,17 @@ module Pannier
     end
 
     def process(*opts)
-      opts = Slop.parse(opts, :help => true) do
+      opts = Slop.parse(opts, :help => true, :ignore_case => true) do
         banner 'Usage: pannier process [options]'
-        on :c, :config,      'Config file',      :argument => :optional, :default => '.assets.rb'
-        on :e, :environment, 'Host environment', :argument => :optional, :default => 'development'
-        on :a, :assets,      'Asset paths',      :argument => :optional, :as => Array
+        on :c, :config,  'Config file',      :argument => :optional, :default => '.assets.rb'
+        on :e, :env,     'Host environment', :argument => :optional, :default => 'development'
+        on :a, :assets,  'Asset paths',      :argument => :optional, :as => Array
       end
 
       config_path = File.expand_path(opts[:config])
       err(no_config_msg(config_path)) && abort unless File.exists?(config_path)
 
-      app = Pannier.build_from(config_path, opts[:environment])
+      app = Pannier.build_from(config_path, opts[:env])
 
       if opts.assets?
         paths = opts[:assets].map { |path| File.expand_path(path) }

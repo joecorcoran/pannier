@@ -42,7 +42,7 @@ Feature: Command line interface
         host('production')  { output 'prd' }
       end
       """
-    When I run `pannier process --environment production`
+    When I run `pannier process --env production`
     Then these files should exist
       | output/prd/foo.js |
     And these files should not exist
