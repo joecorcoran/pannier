@@ -3,12 +3,22 @@
 This directory contains a minimal example of integrating Pannier into a Sinatra
 application.
 
-To start the app, run:
+## Development
+
+Start the app. Assets are served from the `assets` directory.
+
 ```
 rackup
 ```
 
-To start the app in production mode (with concatenated stylesheets), run:
+## Production
+
+Process the assets.
+```
+pannier process -E production
+```
+
+Start the app. Assets are served from the `public` directory.
 ```
 rackup -E production
 ```

@@ -1,7 +1,7 @@
-root '/pannier'
+root   '/assets'
 
-input  'assets/input'
-output 'assets/output'
+input  'assets'
+output 'public'
 
 package :styles do
   assets '*.css'

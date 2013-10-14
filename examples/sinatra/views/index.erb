@@ -1,1 +1,9 @@
-<%= asset_writer.write :css, :styles %>
+<html>
+  <head>
+    <%= asset_writer.write :css, :styles %>
+  </head>
+  <body>
+    <h1>Pannier example app</h1>
+    <p>Environment: <%= settings.environment %></p>
+  </body>
+</html>
