@@ -1,5 +1,6 @@
 require 'rack/test'
 require 'spec_helper'
+require 'pannier/api'
 
 describe Pannier::API::Handler do
   include Rack::Test::Methods

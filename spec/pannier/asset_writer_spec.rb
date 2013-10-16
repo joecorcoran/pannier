@@ -1,4 +1,7 @@
 require 'spec_helper'
+require 'pannier/app'
+require 'pannier/asset_writer'
+require 'pannier/package'
 
 describe Pannier::AssetWriter do
 

@@ -1,4 +1,7 @@
 require 'spec_helper'
+require 'pannier/asset'
+require 'pannier/concatenator'
+require 'pannier/package'
 
 describe Pannier::Package do
   let(:app) { mock('App') }

@@ -18,4 +18,10 @@ module FileHelper
     Dir.chdir(fixture_path, &block)
   end
 
+  def mkdir(dir)
+    in_fixtures do
+      Dir.mkdir(dir)
+    end
+  end
+
 end

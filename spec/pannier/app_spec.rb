@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pannier/app'
 
 describe Pannier::App do
   let(:app) { Pannier::App.new }

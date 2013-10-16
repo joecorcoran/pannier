@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pannier/asset'
 
 describe Pannier::Asset do
   let(:package) { mock('Package') }
