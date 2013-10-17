@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'pannier/rotator'
 
 describe Pannier::Rotator do
-
   let(:rotator) { Pannier::Rotator.new(fixture_path, 5) }
 
   before do
@@ -12,23 +11,46 @@ describe Pannier::Rotator do
   end
   after { remove_fixtures! }
 
-  describe('#rotate!') do
-    before { rotator.rotate!(Time.new(2000)) }
-    it('creates new timestamped directory') do
-      in_fixtures do
-        expect(Dir['*'].sort.last).to eq '946684800'
+  describe('#rotate') do
+    context('always') do
+      before { rotator.rotate(Time.new(2000)) }
+      it('creates new timestamped directory') do
+        in_fixtures { expect(Dir['*'].sort.last).to eq '946684800' }
+      end
+
+      it('removes oldest timestamped directory') do
+        in_fixtures { expect(Dir['*'].sort.first).to eq '441763201' }
       end
     end
-    it('removes oldest timestamped directory') do
-      in_fixtures do
-        expect(Dir['*'].sort.first).to eq '441763201'
+
+    context('with block') do
+      it('yields newly pushed directory path') do
+        rotator.rotate(Time.new(2000)) do |latest|
+          expect(latest).to match /\/946684800$/
+        end
+      end
+
+      it('rolls back changes if block raises error') do
+        begin
+          rotator.rotate(Time.new(2000)) { |latest| raise RuntimeError }
+        rescue RuntimeError
+        end
+        in_fixtures { expect(Dir['*'].length).to eq 5 }
+      end
+
+      it('raises error if block raises error') do
+        expect {
+          rotator.rotate(Time.new(2000)) { |latest| raise 'Something happened' }
+        }.to raise_error(RuntimeError, 'Something happened')
       end
     end
   end
 
   describe('#directory_paths') do
     it('returns timestamped directory paths sorted in reverse') do
-      basenames = rotator.directory_paths.map { |path| Pathname.new(path).basename.to_s }
+      basenames = rotator.directory_paths.map do |path|
+        Pathname.new(path).basename.to_s
+      end
       expect(basenames).to eq [
         '441763204',
         '441763203',
@@ -38,5 +60,4 @@ describe Pannier::Rotator do
       ]
     end
   end
-
 end

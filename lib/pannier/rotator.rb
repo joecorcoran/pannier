@@ -13,12 +13,15 @@ module Pannier
       select_timestamped_directories(paths)
     end
 
-    def rotate!(time = Time.now)
-      if directory_paths.length >= @limit
-        FileUtils.rm_r(directory_paths.last)
+    def rotate(time = Time.now, &block)
+      latest = push(time)
+      begin
+        block.call(latest) if block_given?
+      rescue StandardError => error
+        rollback
+        raise error
       end
-      made = FileUtils.mkdir(File.join(@path, time.to_i.to_s))
-      made.first
+      pop
     end
 
     private
@@ -29,6 +32,21 @@ module Pannier
           pathname.directory? && pathname.basename.to_s =~ /^\d+$/
         end
         selected.sort.reverse
+      end
+
+      def push(time)
+        created = FileUtils.mkdir(File.join(@path, time.to_i.to_s))
+        created.first
+      end
+
+      def rollback
+        FileUtils.rm_r(directory_paths.first)
+      end
+
+      def pop
+        if directory_paths.length >= @limit
+          FileUtils.rm_r(directory_paths.last)
+        end  
       end
 
   end
