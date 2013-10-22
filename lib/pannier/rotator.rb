@@ -35,7 +35,7 @@ module Pannier
       end
 
       def push(time)
-        created = FileUtils.mkdir(File.join(@path, time.to_i.to_s))
+        created = FileUtils.mkdir_p(File.join(@path, time.to_i.to_s))
         created.first
       end
 

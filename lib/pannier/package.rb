@@ -48,8 +48,7 @@ module Pannier
 
     def build_assets_from_paths(paths)
       paths.map do |path|
-        pathname = Pathname.new(path)
-        Asset.new(pathname.basename.to_s, pathname.dirname.to_s, self)
+        Asset.new(self, path)
       end
     end
 
@@ -86,15 +85,15 @@ module Pannier
     end
 
     def owns_any?(*paths)
-      @input_assets.any? { |a| paths.include?(a.path) }
+      @input_assets.any? { |a| paths.include?(a.input_path) }
     end
 
-    def process!
+    def process!(timestamped_output_path = nil)
       copy!
       !@processors.empty? && @processors.each do |instructions|
         send(*instructions)
       end
-      write_files!
+      write_files!(timestamped_output_path)
     end
 
     def modify!(modifier)
@@ -104,20 +103,22 @@ module Pannier
     end
 
     def concat!(concat_name, concatenator)
-      asset = Asset.new(concat_name, full_output_path, self)
-      asset.content = concatenator.call(@output_assets.map(&:content))
+      asset = Asset.new(self)
+      asset.content  = concatenator.call(@output_assets.map(&:content))
+      asset.basename = concat_name
       @output_assets.replace([asset])
     end
 
     def copy!
-      assets = @input_assets.map do |asset|
-        asset.copy_to(full_output_path)
-      end
+      assets = @input_assets.map(&:dup)
       @output_assets.replace(assets)
     end
 
-    def write_files!
-      @output_assets.each(&:write_file!)
+    def write_files!(timestamped_output_path = nil)
+      real_output_path = timestamped_output_path || full_output_path
+      @output_assets.each do |asset|
+        asset.write_file!(real_output_path)
+      end
     end
 
     def build_handler_path(handler_path)

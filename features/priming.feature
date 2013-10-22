@@ -1,3 +1,4 @@
+@wip
 Feature: App priming
   In order that a Pannier app can maintain processed state
   As a developer

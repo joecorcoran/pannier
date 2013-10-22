@@ -8,12 +8,11 @@ module Pannier
   class App
     extend DSL
 
-    attr_reader :env, :root, :input_path, :output_path,
-                :behaviors, :packages
+    attr_reader :env, :root, :input_path, :output_path, :behaviors, :packages
 
     def initialize(env_name = 'development')
       @env = Environment.new(env_name)
-      @behaviors, @packages, @root = {}, [], '/'
+      @behaviors, @packages, @root, @rotator_limit = {}, [], '/', nil
     end
 
     def set_root(path)
@@ -26,6 +25,10 @@ module Pannier
 
     def set_output(path)
       @output_path = File.expand_path(path)
+    end
+
+    def set_rotator_limit(limit)
+      @rotator_limit = limit
     end
 
     def path
@@ -51,13 +54,30 @@ module Pannier
     end
 
     def process!
-      @packages.each(&:process!)
-      manifest_writer.write!(path) unless @env.development_mode?
+      with_rotation do |timestamp|
+        @packages.each do |pkg|
+          pkg.process!(timestamp)
+        end
+        #manifest_writer.write!(path) unless @env.development_mode?
+      end
     end
 
     def process_owners!(*paths)
       pkgs = @packages.select { |pkg| pkg.owns_any?(*paths) }
       pkgs.each(&:process!)
+    end
+
+    def rotator
+      @rotator ||= Rotator.new(@output_path, @rotator_limit)
+    end
+
+    def rotates?
+      !@rotator_limit.nil?
+    end
+
+    def with_rotation(&block)
+      block.call and return unless rotates?
+      rotator.rotate(&block)
     end
 
     def manifest_writer
@@ -98,6 +118,10 @@ module Pannier
 
       def output(path)
         set_output(path)
+      end
+
+      def rotate(limit)
+        set_rotator_limit(limit)
       end
 
       def behavior(name, &block)

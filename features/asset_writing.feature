@@ -1,3 +1,4 @@
+@wip
 Feature: Writing assets
   In order to use my assets in a site
   As a developer

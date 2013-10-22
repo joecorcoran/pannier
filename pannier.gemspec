@@ -28,6 +28,7 @@ txt
   s.add_development_dependency 'aruba',            '~> 0.5.3'
   s.add_development_dependency 'rack-test',        '~> 0.6.2'
   s.add_development_dependency 'json_expressions', '~> 0.8.2'
+  s.add_development_dependency 'timecop',          '~> 0.6.3'
 
   s.files        = Dir['lib/**/*.rb'] + ['README.md', 'LICENSE.txt']
   s.require_path = 'lib'

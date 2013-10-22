@@ -8,6 +8,7 @@ require 'aruba/cucumber'
 require 'aruba/jruby'
 require 'rack/test'
 require 'json_expressions/rspec'
+require 'timecop'
 require_relative './file_helper'
 
 module TestApp

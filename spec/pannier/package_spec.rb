@@ -82,16 +82,16 @@ describe Pannier::Package do
   describe('#add_input_assets') do
     it('adds assets to input_assets') do
       assets = [
-        Pannier::Asset.new('foo.js', '.', package),
-        Pannier::Asset.new('bar.js', '.', package)
+        Pannier::Asset.new(package, '/foo.js'),
+        Pannier::Asset.new(package, '/bar.js')
       ]
       package.add_input_assets(assets)
       expect(package.input_assets.length).to eq 2
     end
     it('discards assets with same path') do
       assets = [
-        Pannier::Asset.new('foo.js', '.', package),
-        Pannier::Asset.new('foo.js', '.', package)
+        Pannier::Asset.new(package, '/foo.js'),
+        Pannier::Asset.new(package, '/foo.js')
       ]
       package.add_input_assets(assets)
       expect(package.input_assets.length).to eq 1
@@ -101,16 +101,16 @@ describe Pannier::Package do
   describe('#add_output_assets') do
     it('adds assets to output_assets') do
       assets = [
-        Pannier::Asset.new('foo.js', '.', package),
-        Pannier::Asset.new('bar.js', '.', package)
+        Pannier::Asset.new(package, '/foo.js'),
+        Pannier::Asset.new(package, '/bar.js')
       ]
       package.add_output_assets(assets)
       expect(package.output_assets.length).to eq 2
     end
     it('discards assets with same path') do
       assets = [
-        Pannier::Asset.new('foo.js', '.', package),
-        Pannier::Asset.new('foo.js', '.', package)
+        Pannier::Asset.new(package, '/bar.js'),
+        Pannier::Asset.new(package, '/bar.js')
       ]
       package.add_output_assets(assets)
       expect(package.output_assets.length).to eq 1
@@ -119,8 +119,8 @@ describe Pannier::Package do
 
   describe('#build_assets_from_paths') do
     it('constructs assets before adding') do
-      Pannier::Asset.expects(:new).with('bar.js', 'foo', package).once
-      package.build_assets_from_paths(['foo/bar.js'])
+      Pannier::Asset.expects(:new).with(package, '/foo/bar.js').once
+      package.build_assets_from_paths(['/foo/bar.js'])
     end
   end
 
@@ -167,7 +167,7 @@ describe Pannier::Package do
 
   describe('#owns_any?') do
     before do
-      asset = Pannier::Asset.new('baz.js', '/foo/bar', package)
+      asset = Pannier::Asset.new(package, '/foo/bar/baz.js')
       package.add_input_assets([asset])
     end
     it('returns true if package has asset which matches given input paths') do
@@ -179,7 +179,7 @@ describe Pannier::Package do
   end
 
   describe('processing') do
-    let(:asset) { Pannier::Asset.new('foo.css', '.', package) }
+    let(:asset) { Pannier::Asset.new(package, '/foo.css') }
     before(:each) do
       app.stubs(:output_path => '/foo/bar/output')
       package.add_input_assets([asset])
@@ -214,7 +214,7 @@ describe Pannier::Package do
     describe('#concat!') do
       let(:concatenator) { proc {} }
       before(:each) do
-        package.add_input_assets([Pannier::Asset.new('bar.css', '.', package)])
+        package.add_input_assets([Pannier::Asset.new(package, '/bar.css')])
         package.copy!
       end
       it('replaces all output assets with a single asset') do
@@ -233,17 +233,26 @@ describe Pannier::Package do
     end
     
     describe('#copy!') do
-      it('sends #copy_to with output path to each input asset') do
-        asset.expects(:copy_to).with('/foo/bar/output').once
+      it('copies input_assets to output_assets') do
         package.copy!
+        expect(package.output_assets).to eq package.input_assets
       end
     end
     
     describe('#write_files!') do
-      it('sends #write_file! to each output asset') do
+      it('sends #write_file! with full_output_path to each output asset') do
         package.copy!
-        package.output_assets.each { |a| a.expects(:write_file!).once }
+        package.output_assets.each do |asset|
+          asset.expects(:write_file!).with(package.full_output_path).once
+        end
         package.write_files!
+      end
+      it('sends #write_file! with other path if given to each output asset') do
+        package.copy!
+        package.output_assets.each do |asset|
+          asset.expects(:write_file!).with('/qux').once
+        end
+        package.write_files!('/qux')
       end
     end
   end

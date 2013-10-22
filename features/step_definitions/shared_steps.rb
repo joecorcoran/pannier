@@ -29,6 +29,13 @@ When(/^the app has been processed$/) do
   @app.process!
 end
 
+Given(/^the app was processed at (\d+):(\d+) on (\d+)\-(\d+)\-(\d+)$/) do |hh, mm, year, month, day|
+  datetime = DateTime.new(year.to_i, month.to_i, day.to_i, hh.to_i, mm.to_i, 0)
+  Timecop.freeze(datetime) do
+    @app.process!
+  end
+end
+
 Then(/^these files should exist$/) do |table|
   in_fixtures do
     table.raw.flatten.each do |file_path|
