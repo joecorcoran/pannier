@@ -1,4 +1,3 @@
-@wip
 Feature: Serving assets
   In order that I can use my assets
   As a developer

@@ -64,6 +64,10 @@ module Pannier
       output_assets
     end
 
+    def asset_paths
+      output_assets.map { |asset| File.join(full_path, asset.basename) }
+    end
+
     def add_modifiers(modifiers)
       @processors += modifiers.map { |m| [:modify!, m] }
     end
@@ -77,7 +81,7 @@ module Pannier
     end
 
     def handler
-      handler_with_middlewares(assets.map(&:path), full_path)
+      handler_with_middlewares(asset_paths, full_path)
     end
 
     def handler_path
@@ -181,6 +185,10 @@ module Pannier
         input_assets
       end
 
+      def asset_paths
+        input_assets.map { |asset| File.join(full_path, asset.basename) }
+      end
+
       def path
         input_path
       end
@@ -194,7 +202,7 @@ module Pannier
       end
 
       def handler
-        handler_with_middlewares(assets.map(&:path), full_path)
+        handler_with_middlewares(asset_paths, full_path)
       end
     end
   end
