@@ -7,7 +7,7 @@ describe Pannier::Rotator do
   before do
     create_fixtures!
     time = Time.new(1984).to_i
-    (0..4).each { |i| mkdir("#{time + i}") }
+    (0..3).each { |i| mkdir("#{time + i}") }
   end
   after { remove_fixtures! }
 
@@ -19,7 +19,12 @@ describe Pannier::Rotator do
       end
 
       it('removes oldest timestamped directory') do
-        in_fixtures { expect(Dir['*'].sort.first).to eq '441763201' }
+        in_fixtures { expect(Dir['*'].sort.first).to eq '441763200' }
+      end
+
+      it('maintains limited number of directories') do
+        rotator.rotate(Time.new(2001))
+        in_fixtures { expect(Dir['*'].length).to eq 5 }
       end
     end
 
@@ -35,7 +40,7 @@ describe Pannier::Rotator do
           rotator.rotate(Time.new(2000)) { |latest| raise RuntimeError }
         rescue RuntimeError
         end
-        in_fixtures { expect(Dir['*'].length).to eq 5 }
+        in_fixtures { expect(Dir['*'].length).to eq 4 }
       end
 
       it('raises error if block raises error') do
@@ -52,7 +57,6 @@ describe Pannier::Rotator do
         Pathname.new(path).basename.to_s
       end
       expect(basenames).to eq [
-        '441763204',
         '441763203',
         '441763202',
         '441763201',

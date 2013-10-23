@@ -44,7 +44,7 @@ module Pannier
       end
 
       def pop
-        if directory_paths.length >= @limit
+        if directory_paths.length > @limit
           FileUtils.rm_r(directory_paths.last)
         end  
       end

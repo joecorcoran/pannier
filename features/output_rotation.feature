@@ -3,22 +3,43 @@ Feature: Output directory rotation
   As a crazy fragment cache person
   I want processed assets to output into timestamped directories
 
-  Scenario: Files are output to timestamped directory
+  Background:
     Given these files exist
       | input/foo.js |
-      | input/bar.js |
     And the file ".assets.rb" contains
       """ruby
       input  'input'
       output 'output'
-      rotate 5
+      rotate 3
 
       package :js do
-        assets 'foo.js', 'bar.js'
+        assets '*.js'
       end
       """
     And the app is loaded in a production environment
-    And the app was processed at 09:30 on 2013-10-10
+
+  Scenario: Files are output to timestamped directory
+    Given the app was processed at 09:30 on 2013-10-10
     Then these files should exist
       | output/1381397400/foo.js |
-      | output/1381397400/bar.js |
+
+  Scenario: A timestamped directory is created each time the app is processed
+    Given the app was processed at 09:30 on 2013-10-10
+    And the app was processed at 09:35 on 2013-10-10
+    And the app was processed at 09:40 on 2013-10-10
+    Then these files should exist
+      | output/1381397400/foo.js |
+      | output/1381397700/foo.js |
+      | output/1381398000/foo.js |
+
+  Scenario: Oldest timestamped directory outside of limit is removed
+    Given the app was processed at 09:30 on 2013-10-10
+    And the app was processed at 09:35 on 2013-10-10
+    And the app was processed at 09:40 on 2013-10-10
+    And the app was processed at 09:45 on 2013-10-10
+    Then these files should exist
+      | output/1381397700/foo.js |
+      | output/1381398000/foo.js |
+      | output/1381398300/foo.js |
+    And these files should not exist
+      | output/1381397400/foo.js |
