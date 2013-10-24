@@ -1,6 +1,6 @@
 # Pannier
 
-[![Build Status](https://travis-ci.org/joecorcoran/pannier.png?branch=master)](https://travis-ci.org/joecorcoran/pannier)
+[![Build Status](https://travis-ci.org/joecorcoran/pannier.png?branch=master)](https://travis-ci.org/joecorcoran/pannier) [![Code Climate](https://codeclimate.com/github/joecorcoran/pannier.png)](https://codeclimate.com/github/joecorcoran/pannier)
 
 *Not yet released. Master branch may be unstable.*
 
