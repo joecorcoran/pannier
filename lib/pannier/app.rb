@@ -32,7 +32,7 @@ module Pannier
     end
 
     def path
-      @env.development_mode? ? @input_path : @output_path
+      @env.development_mode? ? input_path : output_path
     end
 
     def add_package(package)
@@ -129,7 +129,7 @@ module Pannier
       end
 
       def package(name, &block)
-        add_package(Package.build(name, self, &block))
+        add_package(Package.build(name, __getobj__, &block))
       end
 
       private

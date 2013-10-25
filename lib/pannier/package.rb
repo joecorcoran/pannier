@@ -68,6 +68,18 @@ module Pannier
       output_assets.map { |asset| File.join(full_path, asset.basename) }
     end
 
+    def server_path_for(asset)
+      full_server_path_for(full_path, asset)
+    end
+
+    def full_server_path_for(full_path, asset)
+      asset_path    = Pathname.new(File.join(full_path, asset.basename))
+      app_path      = Pathname.new(@app.path)
+      relative_path = asset_path.relative_path_from(app_path)
+      server_path   = Pathname.new(@app.root) + relative_path
+      server_path.cleanpath.to_s
+    end
+
     def add_modifiers(modifiers)
       @processors += modifiers.map { |m| [:modify!, m] }
     end
@@ -203,6 +215,10 @@ module Pannier
 
       def handler
         handler_with_middlewares(asset_paths, full_path)
+      end
+
+      def server_path_for(asset)
+        full_server_path_for(full_path, asset)
       end
     end
   end

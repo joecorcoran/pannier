@@ -36,12 +36,6 @@ module Pannier
       @basename ||= Pathname.new(input_path).basename.to_s
     end
 
-    #def serve_from(app)
-    #  asset_path, app_path = Pathname.new(path), Pathname.new(app.path)
-    #  relative_path = asset_path.relative_path_from(app_path)
-    #  File.join(app.root, relative_path.to_s)
-    #end
-
     def modify!(modifier)
       modified = modifier.call(content, basename)
       self.content, self.basename = modified
