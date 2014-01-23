@@ -63,10 +63,14 @@ describe Pannier::App do
     end
   end
 
-  describe('#process!') do
-    let(:package_1) { mock('Package') }
-    let(:package_2) { mock('Package') }
-    it('calls process! on each package') do
+  describe('#process!', :process) do
+    let(:package_1) { mock('Package 1') }
+    let(:package_2) { mock('Package 2') }
+    it('calls #process! on each package') do
+      app.set_output('output')
+      package_1.stubs(:process!)
+      package_2.stubs(:process!)
+      
       app.add_package(package_1)
       app.add_package(package_2)
 
@@ -79,7 +83,6 @@ describe Pannier::App do
       app.process!
     end
     it('writes manifest in non-development mode') do
-      pending
       app.env.stubs(:development_mode? => false)
       app.set_output('output')
       app.manifest_writer.expects(:write!).once

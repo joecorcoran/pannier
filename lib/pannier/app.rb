@@ -8,7 +8,7 @@ module Pannier
   class App
     extend DSL
 
-    attr_reader :env, :root, :input_path, :output_path, :behaviors, :packages
+    attr_reader :env, :root, :input_path, :behaviors, :packages
 
     def initialize(env_name = 'development')
       @env = Environment.new(env_name)
@@ -29,6 +29,11 @@ module Pannier
 
     def set_rotator_limit(limit)
       @rotator_limit = limit
+    end
+
+    def output_path
+      return File.join(@output_path, rotator.latest) if has_rotated?
+      @output_path
     end
 
     def path
@@ -58,7 +63,7 @@ module Pannier
         @packages.each do |pkg|
           pkg.process!(timestamp)
         end
-        #manifest_writer.write!(path) unless @env.development_mode?
+        manifest_writer.write!(path) unless @env.development_mode?
       end
     end
 
@@ -75,8 +80,12 @@ module Pannier
       !@rotator_limit.nil?
     end
 
+    def has_rotated?
+      rotates? && !rotator.latest.nil?
+    end
+
     def with_rotation(&block)
-      block.call and return unless rotates?
+      return block.call unless rotates?
       rotator.rotate(&block)
     end
 

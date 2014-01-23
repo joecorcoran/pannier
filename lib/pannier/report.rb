@@ -12,7 +12,7 @@ module Pannier
       @app.packages.each do |package|
         @tree[package.name] ||= []
         next if package.assets.empty?
-        @tree[package.name] = package.assets.map(&:path)
+        @tree[package.name] = package.asset_paths
       end
       self
     end

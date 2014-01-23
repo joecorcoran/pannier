@@ -13,6 +13,10 @@ module Pannier
       select_timestamped_directories(paths)
     end
 
+    def latest
+      directory_paths.first
+    end
+
     def rotate(time = Time.now, &block)
       latest = push(time)
       begin
