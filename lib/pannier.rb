@@ -2,7 +2,6 @@ require 'multi_json'
 require 'rack'
 
 require 'pannier/app'
-require 'pannier/asset_writer'
 require 'pannier/version'
 
 module Pannier

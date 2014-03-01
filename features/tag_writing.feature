@@ -19,10 +19,11 @@ Feature: Writing assets
       """
     And the app is loaded in a production environment
     And the app has been processed
-    And an asset writer for the app has been instantiated
-    When I use the asset writer as follows
+    When I write the tags as follows
       """ruby
-      @writer.write(:js, :scripts, :defer => 'defer')
+      require 'pannier/tags'
+      tags = Pannier::Tags.new(@app)
+      tags.write(:js, :scripts, :defer => 'defer')
       """
     Then the following HTML should be written to the page
       """html
@@ -46,10 +47,11 @@ Feature: Writing assets
       """
     And the app is loaded in a production environment
     And the app has been processed
-    And an asset writer for the app has been instantiated
-    When I use the asset writer as follows
+    When I write the tags as follows
       """ruby
-      @writer.write(:css, :styles, :media => 'screen')
+      require 'pannier/tags'
+      tags = Pannier::Tags.new(@app)
+      tags.write(:css, :styles, :media => 'screen')
       """
     Then the following HTML should be written to the page
       """html
@@ -74,10 +76,11 @@ Feature: Writing assets
       """
     And the app is loaded in a production environment
     And the app has been processed
-    And an asset writer for the app has been instantiated
-    When I use the asset writer as follows
+    When I write the tags as follows
       """ruby
-      @writer.write(:css, :styles)
+      require 'pannier/tags'
+      tags = Pannier::Tags.new(@app)
+      tags.write(:css, :styles)
       """
     Then the following HTML should be written to the page
       """html
@@ -102,10 +105,11 @@ Feature: Writing assets
         end
         """
       And the app is loaded
-      And an asset writer for the app has been instantiated
-      When I use the asset writer as follows
+      When I write the tags as follows
         """ruby
-        @writer.write(:css, :foo)
+        require 'pannier/tags'
+        tags = Pannier::Tags.new(@app)
+        tags.write(:css, :foo)
         """
       Then the following HTML should be written to the page
         """html

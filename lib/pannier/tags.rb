@@ -1,7 +1,7 @@
 require 'pannier/template'
 
 module Pannier
-  class AssetWriter
+  class Tags
 
     attr_reader :app, :templates
 

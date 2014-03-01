@@ -1,24 +1,24 @@
 require 'spec_helper'
 require 'pannier/app'
-require 'pannier/asset_writer'
+require 'pannier/tags'
 require 'pannier/package'
 
-describe Pannier::AssetWriter do
+describe Pannier::Tags do
 
-  let(:app)          { Pannier::App.new }
-  let(:asset_writer) { Pannier::AssetWriter.new(app) }
+  let(:app)  { Pannier::App.new }
+  let(:tags) { Pannier::Tags.new(app) }
 
   describe('#new') do
     it('adds default templates') do
-      expect(asset_writer.templates.keys).to eq [:js, :css]
+      expect(tags.templates.keys).to eq [:js, :css]
     end
   end
 
   describe('#add_template') do
     it('adds template') do
       tmpl = mock('Template')
-      asset_writer.add_template(:foo, tmpl)
-      expect(asset_writer.templates[:foo]).to be tmpl
+      tags.add_template(:foo, tmpl)
+      expect(tags.templates[:foo]).to be tmpl
     end
   end
 
@@ -29,8 +29,8 @@ describe Pannier::AssetWriter do
       package.stubs(:input_assets => assets)
       app.add_package(package)
       
-      asset_writer.templates[:js].expects(:call).twice
-      asset_writer.write(:js, :bar)
+      tags.templates[:js].expects(:call).twice
+      tags.write(:js, :bar)
     end
 
     it('uses input assets when env is in a non-development mode') do
@@ -38,8 +38,8 @@ describe Pannier::AssetWriter do
       app.env.stubs(:development_mode? => false)
       app.add_package(package)
 
-      asset_writer.templates[:js].expects(:call).twice
-      asset_writer.write(:js, :bar)
+      tags.templates[:js].expects(:call).twice
+      tags.write(:js, :bar)
     end
   end
 
