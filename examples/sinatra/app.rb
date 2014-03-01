@@ -1,9 +1,11 @@
 require 'sinatra'
+
 require 'pannier'
+require 'pannier/tags'
 
 helpers do
-  def asset_writer
-    @asset_writer ||= Pannier::AssetWriter.new(settings.assets)
+  def tags
+    @tags ||= Pannier::Tags.new(settings.assets)
   end
 end
 

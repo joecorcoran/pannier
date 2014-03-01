@@ -5,20 +5,14 @@ application.
 
 ## Development
 
-Start the app. Assets are served from the `assets` directory.
-
 ```
+pannier process
 rackup
 ```
 
-## Production
+## Other environments
 
-Process the assets.
 ```
 pannier process -E production
-```
-
-Start the app. Assets are served from the `public` directory.
-```
 rackup -E production
 ```
