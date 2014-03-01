@@ -1,3 +1,7 @@
+Given(/^this code has executed$/) do |string|
+  eval(string)
+end
+
 Given(/^the app is configured as follows$/) do |string|
   in_fixtures do
     @app = eval(string)

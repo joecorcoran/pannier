@@ -8,29 +8,18 @@ describe Pannier::Tags do
   let(:app)  { Pannier::App.new }
   let(:tags) { Pannier::Tags.new(app) }
 
-  describe('#new') do
-    it('adds default templates') do
-      expect(tags.templates.keys).to eq [:js, :css]
-    end
-  end
-
-  describe('#add_template') do
-    it('adds template') do
-      tmpl = mock('Template')
-      tags.add_template(:foo, tmpl)
-      expect(tags.templates[:foo]).to be tmpl
-    end
-  end
-
   describe('#write') do
-    let(:assets) { [stub_everything, stub_everything] }
-    let(:package) { Pannier::Package.new(:bar, app) }
     it('calls template once for each output asset in package') do
-      package.stubs(:output_assets => assets)
+      package  = Pannier::Package.new(:js, app)
+      package.stubs(:output_assets => [stub_everything, stub_everything])
       app.add_package(package)
+
+      template = mock('Pannier::Tags::JavaScript')
+      Pannier::Tags::JavaScript.stubs(:new => template)
       
-      tags.templates[:js].expects(:call).twice
-      tags.write(:js, :bar)
+      template.expects(:call).twice
+      
+      tags.write(:js, :as => Pannier::Tags::JavaScript)
     end
   end
 

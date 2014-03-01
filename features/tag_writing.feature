@@ -3,6 +3,12 @@ Feature: Writing assets
   As a developer
   I want to write the HTML that will include my assets on the page
 
+  Background:
+    Given this code has executed
+      """ruby
+      require 'pannier/tags'
+      """
+
   Scenario: Writing JavaScript assets in production
     Given these files exist
       | input/scripts/one.js |
@@ -21,9 +27,8 @@ Feature: Writing assets
     And the app has been processed
     When I write the tags as follows
       """ruby
-      require 'pannier/tags'
       tags = Pannier::Tags.new(@app)
-      tags.write(:js, :scripts, :defer => 'defer')
+      tags.write(:scripts, :as => Pannier::Tags::JavaScript, :defer => 'defer')
       """
     Then the following HTML should be written to the page
       """html
@@ -49,9 +54,8 @@ Feature: Writing assets
     And the app has been processed
     When I write the tags as follows
       """ruby
-      require 'pannier/tags'
       tags = Pannier::Tags.new(@app)
-      tags.write(:css, :styles, :media => 'screen')
+      tags.write(:styles, :as => Pannier::Tags::CSS, :media => 'screen')
       """
     Then the following HTML should be written to the page
       """html
@@ -78,9 +82,8 @@ Feature: Writing assets
     And the app has been processed
     When I write the tags as follows
       """ruby
-      require 'pannier/tags'
       tags = Pannier::Tags.new(@app)
-      tags.write(:css, :styles)
+      tags.write(:styles, :as => Pannier::Tags::CSS)
       """
     Then the following HTML should be written to the page
       """html
