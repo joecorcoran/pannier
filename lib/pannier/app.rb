@@ -98,7 +98,7 @@ module Pannier
       end
 
       def package(name, &block)
-        add_package(Package.build(name, self, &block))
+        add_package(Package.build(name, __getobj__, &block))
       end
 
       private
