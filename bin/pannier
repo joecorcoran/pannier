@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
-require 'pannier'
 require 'pannier/cli'
 
 Pannier::CLI.new(ARGV.dup).run!

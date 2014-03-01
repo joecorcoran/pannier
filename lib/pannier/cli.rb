@@ -1,5 +1,7 @@
 require 'slop'
 
+require 'pannier'
+
 module Pannier
   class CLI
     def initialize(args, stdin = $stdin, stdout = $stdout, stderr = $stderr)
@@ -22,7 +24,7 @@ module Pannier
       config_path = File.expand_path(opts[:config])
       err(no_config_msg(config_path)) && abort unless File.exists?(config_path)
 
-      app = Pannier.build_from(config_path, opts[:env])
+      app = Pannier.load(config_path, opts[:env])
 
       if opts.assets?
         paths = opts[:assets].map { |path| File.expand_path(path) }
