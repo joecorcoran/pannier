@@ -1,3 +1,5 @@
+require 'ostruct'
+
 require 'pannier/dsl'
 require 'pannier/environment'
 require 'pannier/manifest_writer'

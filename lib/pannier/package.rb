@@ -1,6 +1,7 @@
 require 'delegate'
-require 'set'
+require 'ostruct'
 require 'pathname'
+require 'set'
 
 require 'pannier/asset'
 require 'pannier/concatenator'
