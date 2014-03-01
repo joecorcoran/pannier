@@ -17,7 +17,7 @@ module Pannier
 
     def write(tmpl_name, package_name, attrs = {})
       tmpl = @templates[tmpl_name]
-      to_write = @app[package_name].assets.map do |asset|
+      to_write = @app[package_name].output_assets.map do |asset|
         tmpl.call(asset.serve_from(@app), attrs)
       end
       to_write.join("\n")

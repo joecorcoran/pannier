@@ -54,8 +54,8 @@ describe Pannier::App do
   end
 
   describe('#process!') do
-    let(:package_1) { stub('Package', :name => :foo, :assets => []) }
-    let(:package_2) { stub('Package', :name => :bar, :assets => []) }
+    let(:package_1) { stub('Package', :name => :foo, :output_assets => []) }
+    let(:package_2) { stub('Package', :name => :bar, :output_assets => []) }
     it('calls process! on each package') do
       app.add_package(package_1)
       app.add_package(package_2)

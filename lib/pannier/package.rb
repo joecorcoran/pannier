@@ -29,20 +29,12 @@ module Pannier
       @output_path = path
     end
 
-    def path
-      output_path
-    end
-
     def full_input_path
       File.expand_path(File.join(*[@app.input_path, @input_path].compact))
     end
 
     def full_output_path
       File.expand_path(File.join(*[@app.output_path, @output_path].compact))
-    end
-
-    def full_path
-      full_output_path
     end
 
     def build_assets_from_paths(paths)
@@ -60,10 +52,6 @@ module Pannier
       @output_assets.merge(assets)
     end
 
-    def assets
-      output_assets
-    end
-
     def add_modifiers(modifiers)
       @processors += modifiers.map { |m| [:modify!, m] }
     end
@@ -77,11 +65,11 @@ module Pannier
     end
 
     def handler
-      handler_with_middlewares(assets.map(&:path), full_path)
+      handler_with_middlewares(output_assets.map(&:path), full_output_path)
     end
 
     def handler_path
-      build_handler_path(path)
+      build_handler_path(output_path)
     end
 
     def owns_any?(*paths)

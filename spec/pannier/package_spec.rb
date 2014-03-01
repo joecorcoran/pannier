@@ -32,18 +32,6 @@ describe Pannier::Package do
     expect(package.full_output_path).to eq '/foo/bar/output/stylesheets'
   end
 
-  it('delegates assets to output assets') do
-    package.expects(:output_assets).once
-    package.assets
-  end
-  it('delegates path to output path') do
-    package.expects(:output_path).once
-    package.path
-  end
-  it('delegates full_path to full output path') do
-    package.expects(:full_output_path).once
-    package.full_path
-  end
   it('builds handler path from output path') do
     package.stubs(:output_path => 'qux')
     expect(package.handler_path).to eq '/qux'
