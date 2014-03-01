@@ -3,7 +3,7 @@ Feature: Asset copying
   As a developer
   I want to copy my assets from one directory to the other
 
-  Scenario: Assets copied from input  to output directory
+  Scenario: Assets copied from input to output directory
     Given these files exist
       | input/bar.js |
       | input/baz.js |
@@ -42,3 +42,38 @@ Feature: Asset copying
     Then these files should exist
       | output/baz/qux.js  |
       | output/baz/quux.js |
+
+  Scenario: Locals exposed to config
+    Given these files exist
+      | input/boom.js |
+    And the file ".assets.rb" contains
+      """ruby
+      input  'input'
+      output _.env
+
+      package :foo do
+        assets '*.js'
+      end
+      """
+    When the app is loaded
+    And the app has been processed
+    Then these files should exist
+      | development/boom.js |
+
+  Scenario: Locals exposed to package blocks
+    Given these files exist
+      | input/boom.js |
+    And the file ".assets.rb" contains
+      """ruby
+      input  'input'
+      output 'output'
+
+      package :foo do
+        output _.env
+        assets '*.js'
+      end
+      """
+    When the app is loaded
+    And the app has been processed
+    Then these files should exist
+      | output/development/boom.js |

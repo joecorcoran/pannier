@@ -120,6 +120,11 @@ module Pannier
     end
 
     dsl do
+
+      def _
+        @locals ||= OpenStruct.new(:env => app.env.name)
+      end
+
       def input(path)
         set_input(path)
       end
@@ -160,6 +165,8 @@ module Pannier
       def env(expression, &block)
         self.instance_eval(&block) if self.app.env.is?(expression)
       end
+
     end
+
   end
 end
