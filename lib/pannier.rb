@@ -33,13 +33,13 @@ module Pannier
     end
 
     def self.load_manifest(app, env_name)
-      path = File.join(app.output_path, ".assets.#{env_name}.json")
+      path = File.join(app.input_path, ".assets.#{env_name}.json")
       json = File.read(path)
       MultiJson.load(json, :symbolize_keys => true)
     end
 
     def self.manifest_exists?(app, env_name)
-      path = File.join(app.output_path, ".assets.#{env_name}.json")
+      path = File.join(app.input_path, ".assets.#{env_name}.json")
       File.exists?(path)
     end
 end

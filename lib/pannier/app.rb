@@ -46,7 +46,7 @@ module Pannier
 
     def process!
       @packages.each(&:process!)
-      manifest_writer.write!(@output_path)
+      manifest_writer.write!(@input_path)
     end
 
     def process_owners!(*paths)
