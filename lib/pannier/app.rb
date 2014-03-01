@@ -28,11 +28,10 @@ module Pannier
     end
 
     def path
-      @env.development_mode? ? @input_path : @output_path
+      @output_path
     end
 
     def add_package(package)
-      package = Package::Development.new(package) if @env.development_mode?
       @packages << package
     end
 
@@ -51,7 +50,7 @@ module Pannier
 
     def process!
       @packages.each(&:process!)
-      manifest_writer.write!(path) unless @env.development_mode?
+      manifest_writer.write!(path)
     end
 
     def process_owners!(*paths)

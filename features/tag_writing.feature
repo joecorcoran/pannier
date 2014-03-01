@@ -86,33 +86,3 @@ Feature: Writing assets
       """html
       <link href="/assets/foo.css" rel="stylesheet" type="text/css" />
       """
-
-    Scenario: Writing assets in development mode
-      Given these files exist
-        | input/styles/a.css |
-        | input/styles/b.css |
-      And the file ".assets.rb" contains
-        """ruby
-        input  'input'
-        output 'output'
-
-        package :foo do
-          input  'styles'
-          assets '*.css'
-          env 'production' do
-            concat 'foo.min.css'
-          end
-        end
-        """
-      And the app is loaded
-      When I write the tags as follows
-        """ruby
-        require 'pannier/tags'
-        tags = Pannier::Tags.new(@app)
-        tags.write(:css, :foo)
-        """
-      Then the following HTML should be written to the page
-        """html
-        <link href="/styles/a.css" rel="stylesheet" type="text/css" />
-        <link href="/styles/b.css" rel="stylesheet" type="text/css" />
-        """

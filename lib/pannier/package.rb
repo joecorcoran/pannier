@@ -173,27 +173,5 @@ module Pannier
         self.instance_eval(&block) if self.app.env.is?(expression)
       end
     end
-
-    class Development < SimpleDelegator
-      def assets
-        input_assets
-      end
-
-      def path
-        input_path
-      end
-
-      def full_path
-        full_input_path
-      end
-
-      def handler_path
-        build_handler_path(path)
-      end
-
-      def handler
-        handler_with_middlewares(assets.map(&:path), full_path)
-      end
-    end
   end
 end

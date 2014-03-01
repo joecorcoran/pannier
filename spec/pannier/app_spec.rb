@@ -20,27 +20,21 @@ describe Pannier::App do
     app.set_output('output')
     expect(app.output_path).to match /\/.+\/output/
   end
-  it('delegates path to input path') do
-    app.set_input('input')
-    expect(app.path).to match /\/.+\/input/
+  it('delegates path to output path by default') do
+    app.set_output('output')
+    expect(app.path).to match /\/.+\/output/
   end
 
   describe '#add_package' do
-    it('adds packages') do
-      package = mock('Package')
-      app.add_package(package)
-      expect(app.packages.first).to be_a Pannier::Package::Development
-    end
-    it('adds package in development mode') do
-      app.env.stubs(:development_mode? => false)
-      package = mock('Package')
+    it('adds package') do
+      package = stub('Package')
       app.add_package(package)
       expect(app.packages.first).to be package
     end
   end
 
   describe('#[]') do
-    let(:package) { mock('Package', :name => :foo) }
+    let(:package) { stub('Package', :name => :foo) }
     before        { app.add_package(package) }
     it('finds packages by name') do
       expect(app[:foo]).to eq package
@@ -51,7 +45,7 @@ describe Pannier::App do
   end
 
   describe('#prime!') do
-    let(:package) { mock('Package', :name => :qux) }
+    let(:package) { stub('Package', :name => :qux) }
     let(:paths)   { ['/output/bar.css', '/output/baz.css'] }
     before do
       app.add_package(package)
@@ -64,22 +58,18 @@ describe Pannier::App do
   end
 
   describe('#process!') do
-    let(:package_1) { mock('Package') }
-    let(:package_2) { mock('Package') }
+    let(:package_1) { stub('Package', :name => :foo, :assets => []) }
+    let(:package_2) { stub('Package', :name => :bar, :assets => []) }
     it('calls process! on each package') do
       app.add_package(package_1)
       app.add_package(package_2)
+      app.manifest_writer.stubs(:write!)
 
       package_1.expects(:process!).once
       package_2.expects(:process!).once
       app.process!
     end
-    it('does not write manifest in development mode') do
-      app.manifest_writer.expects(:write!).never
-      app.process!
-    end
-    it('writes manifest in non-development mode') do
-      app.env.stubs(:development_mode? => false)
+    it('writes manifest') do
       app.set_output('output')
       app.manifest_writer.expects(:write!).once
       app.process!
@@ -88,11 +78,11 @@ describe Pannier::App do
 
   describe('#process_owners!') do
     let(:package_1) do
-      pkg = mock('Package')
+      pkg = stub('Package')
       pkg.stubs(:owns_any?).with('/foo/bar.js').returns(true)
       pkg
     end
-    let(:package_2) { mock('Package', :owns_any? => false) }
+    let(:package_2) { stub('Package', :owns_any? => false) }
     before(:each) do
       app.add_package(package_1)
       app.add_package(package_2)
@@ -106,9 +96,9 @@ describe Pannier::App do
 
   describe('handler') do
     before(:each) do
-      ['foo', 'foo', 'bar'].each_with_index do |input, idx|
+      ['foo', 'foo', 'bar'].each_with_index do |output, idx|
         pkg = Pannier::Package.new(:"pkg-#{idx}", app)
-        pkg.set_input(input)
+        pkg.set_output(output)
         app.add_package(pkg)
       end
     end
@@ -124,21 +114,11 @@ describe Pannier::App do
 
     describe('#handler') do
       it('instantiates url map with #handler_map') do
-        map = mock('Hash')
+        map = {}
         app.stubs(:handler_map).returns(map)
         Rack::URLMap.expects(:new).with(map).once
         app.handler
       end
     end
   end
-
-  context('in a non-development mode') do
-    before { app.env.stubs(:development_mode? => false) }
-
-    it('delegates path to output path by default') do
-      app.set_output('output')
-      expect(app.path).to match /\/.+\/output/
-    end
-  end
-
 end

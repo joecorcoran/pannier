@@ -5,8 +5,8 @@ module Pannier
 
     attr_reader :app, :templates
 
-    def initialize(app, input_env = 'development')
-      @app, @input_env, @templates = app, input_env, {}
+    def initialize(app)
+      @app, @templates = app, {}
       add_template(:js, Template::Javascript.new)
       add_template(:css, Template::CSS.new)
     end
