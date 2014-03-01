@@ -1,4 +1,3 @@
-require 'pannier/api'
 require 'pannier/dsl'
 require 'pannier/environment'
 require 'pannier/manifest_writer'
@@ -73,13 +72,7 @@ module Pannier
     end
 
     def handler
-      Rack::Cascade.new(
-        [
-          API::Handler.new(self),
-          Rack::URLMap.new(handler_map)
-        ],
-        [500]
-      )
+      Rack::URLMap.new(handler_map)
     end
 
     def call(env)

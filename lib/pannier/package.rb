@@ -1,13 +1,12 @@
 require 'delegate'
 require 'set'
-
 require 'pathname'
+
 require 'pannier/asset'
 require 'pannier/concatenator'
 require 'pannier/dsl'
 require 'pannier/errors'
 require 'pannier/file_handler'
-require 'pannier/rotator'
 
 module Pannier
   class Package
