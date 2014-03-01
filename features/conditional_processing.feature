@@ -13,7 +13,7 @@ Feature: Conditional processing per host environment
       output 'output'
 
       package :foo do
-        host 'production' do
+        env 'production' do
           concat 'foo.js'
         end
       end

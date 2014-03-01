@@ -38,8 +38,8 @@ Feature: Command line interface
 
       package :foo do
         assets 'foo.js'
-        host('development') { output 'dev' }
-        host('production')  { output 'prd' }
+        env('development') { output 'dev' }
+        env('production')  { output 'prd' }
       end
       """
     When I run `pannier process --env production`

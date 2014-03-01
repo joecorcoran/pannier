@@ -169,7 +169,7 @@ module Pannier
         add_middleware(*args, &block) 
       end
 
-      def host(expression, &block)
+      def env(expression, &block)
         self.instance_eval(&block) if self.app.env.is?(expression)
       end
     end

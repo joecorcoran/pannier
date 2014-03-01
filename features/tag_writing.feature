@@ -99,7 +99,7 @@ Feature: Writing assets
         package :foo do
           input  'styles'
           assets '*.css'
-          host 'production' do
+          env 'production' do
             concat 'foo.min.css'
           end
         end
