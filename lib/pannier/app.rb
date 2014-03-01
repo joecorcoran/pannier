@@ -27,10 +27,6 @@ module Pannier
       @output_path = File.expand_path(path)
     end
 
-    def path
-      @output_path
-    end
-
     def add_package(package)
       @packages << package
     end
@@ -50,7 +46,7 @@ module Pannier
 
     def process!
       @packages.each(&:process!)
-      manifest_writer.write!(path)
+      manifest_writer.write!(@output_path)
     end
 
     def process_owners!(*paths)

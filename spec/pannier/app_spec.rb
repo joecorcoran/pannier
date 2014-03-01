@@ -20,10 +20,6 @@ describe Pannier::App do
     app.set_output('output')
     expect(app.output_path).to match /\/.+\/output/
   end
-  it('delegates path to output path by default') do
-    app.set_output('output')
-    expect(app.path).to match /\/.+\/output/
-  end
 
   describe '#add_package' do
     it('adds package') do
