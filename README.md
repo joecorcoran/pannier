@@ -27,7 +27,7 @@ easy too.
 The Rails asset pipeline essentially consists of [Sprockets][sprockets]
 and a bunch of inscrutable Rails coupling. You generate a new Rails app
 and everything is setup for you. We call this "convention over configuration".
-It's a fine idea, but as soon as you need to ditch one of more of those
+It's a fine idea, but as soon as you need to ditch one or more of those
 conventions you'll be frustrated.
 
 I have found the
