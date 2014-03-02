@@ -3,6 +3,10 @@
 This directory contains a minimal example of integrating Pannier into a Sinatra
 application.
 
+```bash
+$ gem install sinatra
+```
+
 To mount Pannier within a Rack application (to serve your assets, use
 middleware, include asset tags etc.) you need to require the mounted version as
 follows.

@@ -22,6 +22,6 @@ Feature: App priming
       end
       """
     And I run `pannier process --env production`
-    And the app is loaded in a production environment
+    And the app is primed in a production environment
     When I request "/foo.js"
     Then the response status should be 200
