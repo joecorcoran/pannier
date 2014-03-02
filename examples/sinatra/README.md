@@ -4,7 +4,7 @@ This directory contains a minimal example of integrating Pannier into a Sinatra
 application.
 
 ```bash
-$ gem install sinatra
+$ bundle install
 ```
 
 To mount Pannier within a Rack application (to serve your assets, use
