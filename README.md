@@ -6,6 +6,22 @@ Pannier is a general-purpose Ruby asset processing tool. Its goal is to
 work the same way in any Rack environment. No Rails glue, no mandatory
 JavaScript or CSS libraries, preprocessors or gems.
 
+The configuration DSL was inspired by &#8212; but is ultimately quite
+different from &#8212; [rake-pipeline][rp]. The config describes a Rack
+application that handles asset processing (modification of file contents
+and file names, file concatenation). No decisions about
+uglifiers/optimisers/preprocessors have been made; that part is up to you.
+
+The interface for plugging any asset processing library into Pannier is very
+basic and inspired by Rack. The lack of a plugin ecosystem that binds you to any
+particular preprocessor is considered a feature.
+
+Pannier can also act as a Rack application that
+can be mounted (mapped to a path) within another Rack application, so
+it can serve your assets too. In that case, there are helper methods for
+including your assets in the view layer. Adding your own view helpers is
+easy too.
+
 ## Why?
 
 The Rails asset pipeline essentially consists of [Sprockets][sprockets]
@@ -20,23 +36,6 @@ an *automagic* beginners' experience in the long run. This is especially
 true where asset processing in Rails is concerned. I want explicit control
 over my assets and I don't mind spending a small amount of time on
 configuration.
-
-## What does it do?
-
-The configuration DSL was inspired by &#8212; but is ultimately quite
-different from &#8212; [rake-pipeline][rp]. The config describes a Rack
-application that handles asset processing (modification of file contents
-and file names, file concatenation). No decisions about
-uglifiers/optimisers/preprocessors have been made; that part is up to you.
-The interface to plug any of these libraries into Pannier is very simple
-and inspired by Rack. The lack of a plugin ecosystem that binds you to any
-particular preprocessor is considered a feature.
-
-In some cases the above is all you'll need, but the application
-can also be mounted (mapped to a path) within another Rack application, so
-it can serve your assets too. In that case, there are helper methods for
-including your assets in the view layer. Adding your own view helpers is
-easy too.
 
 ## Getting started
 
@@ -63,6 +62,29 @@ end
 
 ```bash
 $ pannier process
+```
+
+Your stylesheets have now been quuxified and concatenated into
+`public/main.min.css`.
+
+Modifiers are just Ruby *callables*; blocks, procs, lambdas, objects that
+respond to `call`. They are executed in order of specification. Here's a
+typical use case.
+
+```ruby
+require 'digest'
+# ...
+
+package :styles do
+  # ...
+
+  modify { |content, _|  [foo(content), _] }
+  modify { |content, _|  [bar(content), _] }
+  concat 'main'
+  modify do |content, basename|
+    [content, "#{basename}-#{Digest::MD5.hexdigest(content)}.min.css"]
+  end
+end
 ```
 
 To understand further, you can [browse the current features on relish][relish].
