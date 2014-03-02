@@ -1,4 +1,4 @@
-root   '/assets'
+mount   '/assets'
 
 input  'assets'
 output 'public'

@@ -18,7 +18,7 @@ module Pannier
 
   def self.rackup(ru, path = './.assets.rb')
     app = prime(path, ENV['RACK_ENV'])
-    ru.map(app.root) { run(app) }
+    ru.map(app.mount_path) { run(app) }
     app
   end
 

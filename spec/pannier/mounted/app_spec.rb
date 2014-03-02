@@ -4,9 +4,9 @@ require 'pannier/mounted/app'
 describe Pannier::App do
   let(:app) { Pannier::App.new }
 
-  it('sets root') do
-    app.set_root('foo')
-    expect(app.root).to eq 'foo'
+  it('sets mount path') do
+    app.set_mount_path('foo')
+    expect(app.mount_path).to eq 'foo'
   end
 
   describe('#prime!') do

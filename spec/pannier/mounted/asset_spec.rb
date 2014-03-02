@@ -7,7 +7,7 @@ describe Pannier::Asset do
 
   describe('#serve_from') do
     it('returns path relative to given root') do
-      app = stub('App', :root => '/assets', :output_path => 'bar')
+      app = stub('App', :mount_path => '/assets', :output_path => 'bar')
       expect(asset.serve_from(app)).to eq '/assets/foo.css'
     end
   end

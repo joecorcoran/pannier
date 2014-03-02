@@ -3,10 +3,10 @@ require 'pannier/app'
 module Pannier
   class App
 
-    attr_reader :root
+    attr_reader :mount_path
 
-    def set_root(path)
-      @root = path
+    def set_mount_path(path)
+      @mount_path = path
     end
 
     def prime!(manifest)
@@ -36,8 +36,8 @@ module Pannier
 
     dsl do
 
-      def root(path)
-        set_root(path)
+      def mount(path)
+        set_mount_path(path)
       end
 
     end

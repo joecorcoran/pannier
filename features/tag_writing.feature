@@ -68,7 +68,7 @@ Feature: Writing assets
       | input/styles/foo.css |
     And the file ".assets.rb" contains
       """ruby
-      root   '/assets'
+      mount  '/assets'
       
       input  'input'
       output 'output'
