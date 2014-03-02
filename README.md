@@ -61,6 +61,10 @@ package :styles do
 end
 ```
 
+```bash
+$ pannier process
+```
+
 To understand further, you can [browse the current features on relish][relish].
 
 ## Contributing
