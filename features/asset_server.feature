@@ -4,7 +4,11 @@ Feature: Serving assets
   I want to a Rack server that can serve assets
 
   Background:
-    Given the file "input/styles/foo.css" contains
+    Given this code has executed
+      """ruby
+      require 'pannier/mounted'
+      """
+    And the file "input/styles/foo.css" contains
       """css
       html { color: red; }
       """

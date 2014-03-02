@@ -1,7 +1,8 @@
 require 'spec_helper'
-require 'pannier/app'
-require 'pannier/tags'
-require 'pannier/package'
+
+require 'pannier/mounted/app'
+require 'pannier/mounted/package'
+require 'pannier/mounted/tags'
 
 describe Pannier::Tags do
 

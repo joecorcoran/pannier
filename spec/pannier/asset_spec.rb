@@ -46,13 +46,6 @@ describe Pannier::Asset do
     end
   end
   
-  describe('#serve_from') do
-    it('returns path relative to given root') do
-      app = stub('App', :root => '/assets', :output_path => 'bar')
-      expect(asset.serve_from(app)).to eq '/assets/foo.css'
-    end
-  end
-  
   describe('#copy_to') do
     it('returns new asset') do
       copied = asset.copy_to('qux')

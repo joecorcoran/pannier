@@ -13,8 +13,13 @@ module Pannier
     end
 
     def dsl(&block)
-      delegator_klass = Class.new(SimpleDelegator, &block)
-      self.const_set('DSLDelegator', delegator_klass)
+      begin
+        delegator_klass = self.const_get('DSLDelegator')
+        delegator_klass.class_eval(&block)
+      rescue NameError
+        delegator_klass = Class.new(SimpleDelegator, &block)
+        self.const_set('DSLDelegator', delegator_klass)
+      end
     end
 
   end

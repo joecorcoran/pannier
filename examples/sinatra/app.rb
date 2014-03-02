@@ -1,7 +1,5 @@
 require 'sinatra'
-
-require 'pannier'
-require 'pannier/tags'
+require 'pannier/mounted'
 
 helpers do
   def tags

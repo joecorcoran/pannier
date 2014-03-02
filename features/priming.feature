@@ -3,6 +3,12 @@ Feature: App priming
   As a developer
   I want previously processed assets to be loaded from a manifest file
 
+  Background:
+    Given this code has executed
+      """ruby
+      require 'pannier/mounted'
+      """
+
   Scenario: The app is loaded after a manifest has been generated
     Given these files exist
       | input/foo.js |

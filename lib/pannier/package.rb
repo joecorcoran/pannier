@@ -7,7 +7,6 @@ require 'pannier/asset'
 require 'pannier/concatenator'
 require 'pannier/dsl'
 require 'pannier/errors'
-require 'pannier/file_handler'
 
 module Pannier
   class Package
@@ -61,18 +60,6 @@ module Pannier
       @processors << [:concat!, concat_name, concatenator]
     end
 
-    def add_middleware(middleware, *args, &block)
-      @middlewares << proc { |app| middleware.new(app, *args, &block) }
-    end
-
-    def handler
-      handler_with_middlewares(output_assets.map(&:path), full_output_path)
-    end
-
-    def handler_path
-      build_handler_path(output_path)
-    end
-
     def owns_any?(*paths)
       @input_assets.any? { |a| paths.include?(a.path) }
     end
@@ -106,18 +93,6 @@ module Pannier
 
     def write_files!
       @output_assets.each(&:write_file!)
-    end
-
-    def build_handler_path(handler_path)
-      hp = handler_path || '/'
-      hp.insert(0, '/') unless hp[0] == '/'
-      hp
-    end
-
-    def handler_with_middlewares(paths, full_path)
-      handler = FileHandler.new(paths, full_path)
-      return handler if @middlewares.empty?
-      @middlewares.reverse.reduce(handler) { |app, proc| proc.call(app) }
     end
 
     dsl do
@@ -157,10 +132,6 @@ module Pannier
 
       def concat(*args)
         add_concatenator(*args)
-      end
-
-      def use(*args, &block)
-        add_middleware(*args, &block) 
       end
 
       def env(expression, &block)

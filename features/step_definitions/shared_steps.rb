@@ -10,13 +10,13 @@ end
 
 Given(/^the app is loaded$/) do
   in_fixtures do
-    @app = Pannier.load('.assets.rb', 'development')
+    @app = Pannier.prime('.assets.rb', 'development')
   end
 end
 
 Given(/^the app is loaded in a (.+) environment$/) do |env_name|
   in_fixtures do
-    @app = Pannier.load('.assets.rb', env_name)
+    @app = Pannier.prime('.assets.rb', env_name)
   end
 end
 

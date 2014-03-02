@@ -37,13 +37,8 @@ module Pannier
       @packages.find { |pkg| pkg.name == package_name }
     end
 
-    def prime!(manifest)
-      manifest.each do |name, paths|
-        if (pkg = self[name])
-          assets = pkg.build_assets_from_paths(paths)
-          pkg.add_output_assets(assets)
-        end
-      end
+    def manifest_writer
+      @manifest_writer ||= ManifestWriter.new(self, @env)
     end
 
     def process!
@@ -54,26 +49,6 @@ module Pannier
     def process_owners!(*paths)
       pkgs = @packages.select { |pkg| pkg.owns_any?(*paths) }
       pkgs.each(&:process!)
-    end
-
-    def manifest_writer
-      @manifest_writer ||= ManifestWriter.new(self, @env)
-    end
-
-    def handler_map
-      @packages.reduce({}) do |hash, pkg|
-        hash[pkg.handler_path] ||= Rack::Cascade.new([])
-        hash[pkg.handler_path].add(pkg.handler)
-        hash
-      end
-    end
-
-    def handler
-      Rack::URLMap.new(handler_map)
-    end
-
-    def call(env)
-      handler.call(env)
     end
 
     dsl do

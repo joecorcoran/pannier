@@ -6,7 +6,7 @@ Feature: Writing assets
   Background:
     Given this code has executed
       """ruby
-      require 'pannier/tags'
+      require 'pannier/mounted'
       """
 
   Scenario: Writing JavaScript assets in production

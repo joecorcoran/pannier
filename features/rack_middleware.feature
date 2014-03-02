@@ -3,6 +3,12 @@ Feature: Rack middleware
   As a developer
   I want to serve my assets via Rack middleware
 
+  Background:
+    Given this code has executed
+      """ruby
+      require 'pannier/mounted'
+      """
+
   Scenario: Middleware is set per package
     Given these files exist
       | input/foo.css |
