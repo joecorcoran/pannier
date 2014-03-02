@@ -8,10 +8,6 @@ describe Pannier::App do
     Pannier::Environment.expects(:new).with('production').once
     Pannier::App.new('production')
   end
-  it('sets root') do
-    app.set_root('foo')
-    expect(app.root).to eq 'foo'
-  end
   it('sets input path') do
     app.set_input('input')
     expect(app.input_path).to match /\/.+\/input/

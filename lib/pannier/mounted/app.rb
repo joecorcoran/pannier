@@ -3,6 +3,12 @@ require 'pannier/app'
 module Pannier
   class App
 
+    attr_reader :root
+
+    def set_root(path)
+      @root = path
+    end
+
     def prime!(manifest)
       manifest.each do |name, paths|
         if (pkg = self[name])
@@ -26,6 +32,14 @@ module Pannier
 
     def call(env)
       handler.call(env)
+    end
+
+    dsl do
+
+      def root(path)
+        set_root(path)
+      end
+
     end
 
   end

@@ -9,16 +9,12 @@ module Pannier
   class App
     extend DSL
 
-    attr_reader :env, :root, :input_path, :output_path,
+    attr_reader :env, :input_path, :output_path,
                 :behaviors, :packages
 
     def initialize(env_name = 'development')
       @env = Environment.new(env_name)
       @behaviors, @packages, @root = {}, [], '/'
-    end
-
-    def set_root(path)
-      @root = path
     end
 
     def set_input(path)
@@ -55,10 +51,6 @@ module Pannier
 
       def _
         @locals ||= OpenStruct.new(:env => env.name)
-      end
-
-      def root(path)
-        set_root(path)
       end
 
       def input(path)

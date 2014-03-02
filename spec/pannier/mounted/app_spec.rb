@@ -4,6 +4,11 @@ require 'pannier/mounted/app'
 describe Pannier::App do
   let(:app) { Pannier::App.new }
 
+  it('sets root') do
+    app.set_root('foo')
+    expect(app.root).to eq 'foo'
+  end
+
   describe('#prime!') do
     let(:package) { stub('Package', :name => :qux) }
     let(:paths)   { ['/output/bar.css', '/output/baz.css'] }
