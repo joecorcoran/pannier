@@ -7,7 +7,6 @@ require 'multi_json'
 require 'aruba/cucumber'
 require 'aruba/jruby'
 require 'rack/test'
-require 'json_expressions/rspec'
 require_relative './file_helper'
 
 module TestApp
@@ -16,4 +15,4 @@ module TestApp
   end
 end
 
-World(Rack::Test::Methods, JsonExpressions::RSpec::Matchers, FileHelper, TestApp)
+World(Rack::Test::Methods, FileHelper, TestApp)

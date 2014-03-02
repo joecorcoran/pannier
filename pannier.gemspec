@@ -17,17 +17,16 @@ be used as a standalone asset organizer or mounted within any Rack-compatible
 application.
 txt
 
-  s.add_dependency             'rack',             '~> 1.5.2'
-  s.add_dependency             'multi_json',       '~> 1.7.9'
-  s.add_dependency             'slop',             '~> 3.4.6'
+  s.add_dependency             'rack',             '~> 1.5',  '>= 1.5.2'
+  s.add_dependency             'multi_json',       '~> 1.7',  '>= 1.7.9'
+  s.add_dependency             'slop',             '~> 3.4',  '>= 3.4.6'
 
-  s.add_development_dependency 'rake',             '~> 10.1.0'
-  s.add_development_dependency 'rspec',            '~> 2.14.1'
-  s.add_development_dependency 'mocha',            '~> 0.14.0'
-  s.add_development_dependency 'cucumber',         '~> 1.3.6'
-  s.add_development_dependency 'aruba',            '~> 0.5.3'
-  s.add_development_dependency 'rack-test',        '~> 0.6.2'
-  s.add_development_dependency 'json_expressions', '~> 0.8.2'
+  s.add_development_dependency 'rake',             '~> 10.1', '>= 10.1.0'
+  s.add_development_dependency 'rspec',            '~> 2.14', '>= 2.14.1'
+  s.add_development_dependency 'mocha',            '~> 0.14', '>= 0.14.0'
+  s.add_development_dependency 'cucumber',         '~> 1.3',  '>= 1.3.6'
+  s.add_development_dependency 'aruba',            '~> 0.5',  '>= 0.5.3'
+  s.add_development_dependency 'rack-test',        '~> 0.6',  '>= 0.6.2'
 
   s.files        = Dir['lib/**/*.rb'] + ['README.md', 'LICENSE.txt']
   s.require_path = 'lib'
