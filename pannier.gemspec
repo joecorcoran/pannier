@@ -12,9 +12,8 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.description = <<-txt
 Pannier is a Ruby tool for the processing of web assets like CSS
-and JavaScript files, both programatically and from the command line. It can
-be used as a standalone asset organizer or mounted within any Rack-compatible
-application.
+and JavaScript files. It can be used as a standalone asset organizer or mounted
+within any Rack-compatible application.
 txt
 
   s.add_dependency             'rack',             '~> 1.5',  '>= 1.5.2'
