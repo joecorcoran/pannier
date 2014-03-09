@@ -90,3 +90,7 @@ Then(/^the JSON file "(.*?)" should match$/) do |file_path, content|
     expect(MultiJson.load(json)).to match_json_expression(expected)
   end
 end
+
+Then(/^stdout should match$/) do |string|
+  expect(@_stdout.string).to match Regexp.new(string)
+end

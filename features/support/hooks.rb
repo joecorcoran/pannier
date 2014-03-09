@@ -1,3 +1,14 @@
+require 'stringio'
+
+Before('@io') do
+  @_original_stdout = $stdout
+  @_stdout = $stdout = StringIO.new
+end
+
+After('@io') do
+  @_stdout = @_original_stdout
+end
+
 Before do
   FileHelper.create_fixtures!
   @dirs = [FileHelper.fixture_path]

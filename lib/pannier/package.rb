@@ -64,6 +64,10 @@ module Pannier
     end
 
     def process!
+      @app.log("Package #{name.inspect}")
+      @app.log('Input', :indent => 2)
+      @app.log(@input_assets.map(&:path), :indent => 4)
+
       copy!
       !@processors.empty? && @processors.each do |instructions|
         send(*instructions)
@@ -91,6 +95,9 @@ module Pannier
     end
 
     def write_files!
+      @app.log('Output', :indent => 2)
+      @app.log(@output_assets.map(&:path), :indent => 4)
+
       @output_assets.each(&:write_file!)
     end
 

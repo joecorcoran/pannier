@@ -2,6 +2,7 @@ require 'ostruct'
 
 require 'pannier/dsl'
 require 'pannier/environment'
+require 'pannier/logger'
 require 'pannier/manifest_writer'
 require 'pannier/package'
 
@@ -25,6 +26,10 @@ module Pannier
       @output_path = File.expand_path(path)
     end
 
+    def set_logger(logger)
+      @logger = logger
+    end
+
     def add_package(package)
       @packages << package
     end
@@ -35,6 +40,16 @@ module Pannier
 
     def manifest_writer
       @manifest_writer ||= ManifestWriter.new(self, @env)
+    end
+
+    def log(messages, options = {})
+      return unless @logger
+      indent   = options.fetch(:indent) { 0 }
+      messages = Array(messages)
+      messages.each do |msg|
+        indent.times { msg.prepend(' ') }
+        @logger.debug(msg)
+      end
     end
 
     def process!
@@ -59,6 +74,10 @@ module Pannier
 
       def output(path)
         set_output(path)
+      end
+
+      def logger(logger = Pannier::Logger.new($stdout))
+        set_logger(logger)
       end
 
       def behavior(name, &block)

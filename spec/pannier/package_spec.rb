@@ -4,7 +4,7 @@ require 'pannier/concatenator'
 require 'pannier/package'
 
 describe Pannier::Package do
-  let(:app) { mock('App') }
+  let(:app)     { Pannier::App.new }
   let(:package) { Pannier::Package.new(:foo, app) }
 
   it('has name') do
