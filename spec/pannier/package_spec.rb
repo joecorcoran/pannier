@@ -125,6 +125,12 @@ describe Pannier::Package do
     end
 
     describe('#process!') do
+      it('logs') do
+        package_logger = mock
+        package.stubs(:package_logger => package_logger)
+        package_logger.expects(:wrap).once
+        package.process!
+      end
       it('copies and writes files when processors have not been added') do
         default_sequence = sequence('default sequence')
         package.expects(:copy!).in_sequence(default_sequence)

@@ -36,26 +36,6 @@ describe Pannier::App do
     end
   end
 
-  describe('#log') do
-    let(:stdout) { StringIO.new }
-    let(:logger) { Pannier::Logger.new(stdout) }
-
-    it('does not write messages if no logger is set') do
-      app.log(['Hello'])
-      expect(stdout.string).to be_empty
-    end
-    it('writes messages') do
-      app.set_logger(logger)
-      app.log(['Hello', 'World'])
-      expect(stdout.string).to eq "Hello\nWorld\n"
-    end
-    it('writes messages with indentation') do
-      app.set_logger(logger)
-      app.log(['Hello', 'World'], :indent => 2)
-      expect(stdout.string).to eq "  Hello\n  World\n"
-    end
-  end
-
   describe('#process!') do
     let(:package_1) { stub('Package', :name => :foo, :output_assets => []) }
     let(:package_2) { stub('Package', :name => :bar, :output_assets => []) }

@@ -23,11 +23,10 @@ Feature: Logging
     And the app has been processed
     Then stdout should match
       """
-        Package :foo
-          -> Input
-            /.+/input/bar.js
-            /.+/input/baz.js
-          -> Output
-            /.+/output/main.min.js
-
+      Package :foo
+        Input ->
+          /.+/input/bar.js
+          /.+/input/baz.js
+        Output ->
+          /.+/output/main.min.js
       """

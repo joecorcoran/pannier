@@ -6,6 +6,7 @@ require 'pannier/asset'
 require 'pannier/concatenator'
 require 'pannier/dsl'
 require 'pannier/errors'
+require 'pannier/logger/package_logger'
 
 module Pannier
   class Package
@@ -63,8 +64,12 @@ module Pannier
       @input_assets.any? { |a| paths.include?(a.path) }
     end
 
+    def package_logger
+      @package_logger ||= Logger::PackageLogger.new(@app.logger, self)
+    end
+
     def process!
-      process_with_logs! do
+      package_logger.wrap do
         copy!
         !@processors.empty? && @processors.each do |instructions|
           send(*instructions)
@@ -140,20 +145,5 @@ module Pannier
       end
 
     end
-
-    private
-
-      def process_with_logs!(&block)
-        @app.log("Package #{name.inspect}", :indent => 2)
-        @app.log('-> Input', :indent => 4)
-        @app.log(@input_assets.map(&:path), :indent => 6)
-        
-        block.call
-        
-        @app.log('-> Output', :indent => 4)
-        @app.log(@output_assets.map(&:path), :indent => 6)
-        @app.log("\n")
-      end
-
   end
 end

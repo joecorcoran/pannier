@@ -5,16 +5,10 @@ module Pannier
 
     def initialize(*args)
       super
-      @formatter = _formatter
-    end
-
-    private
-
-      def _formatter
-        proc do |severity, time, progname, msg|
-          msg + "\n"
-        end
+      @formatter = ->(_, _, _, message) do
+        message + "\n"
       end
+    end
 
   end
 end

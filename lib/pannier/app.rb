@@ -11,7 +11,7 @@ module Pannier
     extend DSL
 
     attr_reader :env, :input_path, :output_path,
-                :behaviors, :packages
+                :behaviors, :packages, :logger
 
     def initialize(env_name = 'development')
       @env = Environment.new(env_name)
@@ -40,16 +40,6 @@ module Pannier
 
     def manifest_writer
       @manifest_writer ||= ManifestWriter.new(self, @env)
-    end
-
-    def log(messages, options = {})
-      return unless @logger
-      indent   = options.fetch(:indent) { 0 }
-      messages = Array(messages)
-      messages.each do |msg|
-        indent.times { msg.prepend(' ') }
-        @logger.debug(msg)
-      end
     end
 
     def process!
