@@ -36,6 +36,20 @@ describe Pannier::App do
     end
   end
 
+  describe('#clobber!') do
+    let(:package_1) { stub('Package', :name => :foo, :output_assets => []) }
+    let(:package_2) { stub('Package', :name => :bar, :output_assets => []) }
+    it('calls clobber! on each package') do
+      app.add_package(package_1)
+      app.add_package(package_2)
+
+      package_1.expects(:clobber!).once
+      package_2.expects(:clobber!).once
+
+      app.clobber!
+    end
+  end
+
   describe('#process!') do
     let(:package_1) { stub('Package', :name => :foo, :output_assets => []) }
     let(:package_2) { stub('Package', :name => :bar, :output_assets => []) }

@@ -42,6 +42,11 @@ module Pannier
       @manifest_writer ||= ManifestWriter.new(self, @env)
     end
 
+    def clobber!
+      manifest_writer.clobber!(@input_path)
+      @packages.each(&:clobber!)
+    end
+
     def process!
       @packages.each(&:process!)
       manifest_writer.write!(@input_path)

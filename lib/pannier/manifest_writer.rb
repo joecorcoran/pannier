@@ -20,6 +20,11 @@ module Pannier
       MultiJson.dump(@report.tree)
     end
 
+    def clobber!(dir_path)
+      path = File.join(*[dir_path, basename].compact)
+      FileUtils.rm_f(path)
+    end
+
     def write!(dir_path)
       @report.build!
       FileUtils.mkdir_p(dir_path)

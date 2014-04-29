@@ -13,6 +13,18 @@ module Pannier
       public_send(command, *opts)
     end
 
+    def clobber(*opts)
+      opts = Slop.parse(opts, :help => true, :ignore_case => true) do
+        banner 'Usage: pannier clobber [options]'
+        on :c, :config,  'Config file',      :argument => :optional, :default => '.assets.rb'
+        on :e, :env,     'Host environment', :argument => :optional, :default => 'development'
+      end
+
+      app = load_app(opts)
+      app.clobber!
+      exit
+    end
+
     def process(*opts)
       opts = Slop.parse(opts, :help => true, :ignore_case => true) do
         banner 'Usage: pannier process [options]'
@@ -21,11 +33,7 @@ module Pannier
         on :a, :assets,  'Asset paths',      :argument => :optional, :as => Array
       end
 
-      config_path = File.expand_path(opts[:config])
-      err(no_config_msg(config_path)) && abort unless File.exists?(config_path)
-
-      app = Pannier.load(config_path, opts[:env])
-
+      app = load_app(opts)
       if opts.assets?
         paths = opts[:assets].map { |path| File.expand_path(path) }
         app.process_owners!(*paths)
@@ -50,6 +58,12 @@ module Pannier
 
     private
 
+      def load_app(opts)
+        config_path = File.expand_path(opts[:config])
+        err(no_config_msg(config_path)) && abort unless File.exists?(config_path)
+        Pannier.load(config_path, opts[:env])
+      end
+
       def no_config_msg(path)
         <<-txt
         Pannier config file not found at #{path}.
@@ -59,6 +73,7 @@ module Pannier
       def usage_msg
         <<-txt
         Available commands (run any command with --help for details):
+            pannier clobber        Remove processed assets
             pannier process        Process assets
             pannier usage          Show this list of commands
         txt

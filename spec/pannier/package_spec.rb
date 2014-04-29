@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pannier/app'
 require 'pannier/asset'
 require 'pannier/concatenator'
 require 'pannier/package'
@@ -114,6 +115,19 @@ describe Pannier::Package do
     end
     it('returns false if has no assets which match given input paths') do
       expect(package.owns_any?('/qux/quux.js', '/bibimbap.js')).to be_false
+    end
+  end
+
+  describe('#clobber!') do
+    before do
+      package.add_output_assets([
+        Pannier::Asset.new('qux.css', '/baz/output', package),
+        Pannier::Asset.new('quux.css', '/baz/output', package)
+      ])
+    end
+    it('calls #copy!') do
+      package.expects(:copy!).once
+      package.clobber!
     end
   end
 

@@ -1,23 +1,7 @@
-Feature: Command line interface
-  In order to process assets outside of a host application
+Feature: CLI: process command
+  In order to process assets from the command line
   As a developer
-  I want a command line interface
-
-  Scenario: Default command displays usage instructions
-    When I run `pannier`
-    Then the output should contain:
-      """
-      Available commands
-      """
-    And the exit status should be 0
-
-  Scenario: Viewing usage instructions
-    When I run `pannier usage`
-    Then the output should contain:
-      """
-      Available commands
-      """
-    And the exit status should be 0
+  I want a process command
 
   Scenario: Process command with default arguments
     Given the file ".assets.rb" contains

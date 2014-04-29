@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'ostruct'
 require 'pathname'
 require 'set'
@@ -66,6 +67,11 @@ module Pannier
 
     def package_logger
       @package_logger ||= Logger::PackageLogger.new(@app.logger, self)
+    end
+
+    def clobber!
+      copy!
+      FileUtils.rm_f(@output_assets.map(&:path))
     end
 
     def process!
