@@ -22,7 +22,7 @@ txt
 
   s.add_development_dependency 'rake',             '~> 10.1', '>= 10.1.0'
   s.add_development_dependency 'rspec',            '~> 2.14', '>= 2.14.1'
-  s.add_development_dependency 'mocha',            '~> 0.14', '>= 0.14.0'
+  s.add_development_dependency 'mocha',            '~> 1.0',  '>= 0.14.0'
   s.add_development_dependency 'cucumber',         '~> 1.3',  '>= 1.3.6'
   s.add_development_dependency 'aruba',            '~> 0.5',  '>= 0.5.3'
   s.add_development_dependency 'rack-test',        '~> 0.6',  '>= 0.6.2'
