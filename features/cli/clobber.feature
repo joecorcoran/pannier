@@ -6,7 +6,9 @@ Feature: CLI: clobber command
   Background:
     Given these files exist
       | input/foo.js |
-    And the file ".assets.rb" contains
+
+  Scenario: Clobbering everything in development
+    Given the file ".assets.rb" contains
       """ruby
       input  'input'
       output 'output'
@@ -14,9 +16,7 @@ Feature: CLI: clobber command
         assets 'foo.js'
       end
       """
-
-  Scenario: Clobbering everything in development
-    Given the app is loaded
+    And the app is loaded
     And the app has been processed
     And these files exist
       | input/.assets.development.json |
@@ -28,7 +28,15 @@ Feature: CLI: clobber command
     And the exit status should be 0
 
   Scenario: Clobbering everything with specified host environment
-    Given the app is loaded in a production environment
+    Given the file ".assets.rb" contains
+      """ruby
+      input  'input'
+      output 'output'
+      package :foo do
+        assets 'foo.js'
+      end
+      """
+    And the app is loaded in a production environment
     And the app has been processed
     And these files exist
       | input/.assets.production.json  |
@@ -47,3 +55,8 @@ Feature: CLI: clobber command
       """
     When I run `pannier clobber --config some/path/.asset_config`
     Then the exit status should be 0
+
+  Scenario: Missing config file
+    When I run `pannier clobber`
+    Then the output should match /^Pannier config file not found at .+\.assets.rb\.$/
+    And the exit status should be 1

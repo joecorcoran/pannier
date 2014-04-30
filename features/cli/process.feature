@@ -72,12 +72,3 @@ Feature: CLI: process command
     When I run `pannier process`
     Then the output should match /^Pannier config file not found at .+\.assets.rb\.$/
     And the exit status should be 1
-
-  Scenario: Incorrect command
-    When I run `pannier baz quux`
-    Then the output should contain:
-      """
-      You ran `pannier baz quux`.
-      Pannier has no command named "baz".
-      """
-    And the exit status should be 127
