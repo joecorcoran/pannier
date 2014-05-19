@@ -3,11 +3,11 @@ language: ruby
 rvm:
   - 1.9.3
   - 2.1
-  - rbx
+  - rbx-2
   - jruby-19mode
 
 script: "rake"
 
 matrix:
   allow_failures:
-    - rvm: rbx
+    - rvm: rbx-2
