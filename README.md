@@ -6,10 +6,8 @@ Pannier is a general-purpose Ruby asset processing tool. Its goal is to
 work the same way in any Rack environment. No Rails glue, no mandatory
 JavaScript or CSS libraries, preprocessors or gems.
 
-The configuration DSL was inspired by &#8212; but is ultimately quite
-different from &#8212; [rake-pipeline][rp]. The config describes a Rack
-application that handles asset processing (modification of file contents
-and file names, file concatenation). No decisions about
+The small config DSL describes asset processing: modification of file contents
+and file names, file concatenation. No decisions about
 uglifiers/optimisers/preprocessors have been made; that part is up to you.
 
 The interface for plugging any asset processing library into Pannier is very
@@ -27,7 +25,7 @@ easy too.
 The Rails asset pipeline essentially consists of [Sprockets][sprockets]
 and a bunch of inscrutable Rails coupling. You generate a new Rails app
 and everything is setup for you. We call this "convention over configuration".
-It's a fine idea, but as soon as you need to ditch one or more of those
+It's fine, but as soon as you need to ditch one or more of those
 conventions you'll be frustrated.
 
 I have found the
@@ -39,9 +37,11 @@ configuration.
 
 ## Getting started
 
-Create a config file in the root of your project named `.assets.rb`. The
-example below will simply take all of your stylesheets from one directory
-and concatenate them in another.
+Create a config file in the root of your project named `.assets.rb`.
+
+The example below would take all of your stylesheets from one directory,
+modify them and then concatenate them into a single file in another
+directory.
 
 
 ```ruby
@@ -64,22 +64,28 @@ end
 $ pannier process
 ```
 
-Your stylesheets have now been quuxified and concatenated into
-`public/main.min.css`.
+Your stylesheets from `assets/stylesheets` have now all been quuxified and
+concatenated into `public/main.min.css`.
+
+## Modifying assets
 
 Modifiers are just Ruby *callables*; blocks, procs, lambdas, objects that
 respond to `call`. They are executed in order of specification. Here's a
-typical use case.
+typical use case: assets are run through a couple of modifiers, then
+concatenated into one file, then finally that single file has a hash of
+its contents appended to its name.
 
 ```ruby
+require 'foo'
+require 'bar'
 require 'digest'
 # ...
 
 package :styles do
   # ...
 
-  modify { |content, _|  [foo(content), _] }
-  modify { |content, _|  [bar(content), _] }
+  modify { |content, basename|  [foo(content), basename] }
+  modify { |content, basename|  [bar(content), basename] }
   concat 'main'
   modify do |content, basename|
     [content, "#{basename}-#{Digest::MD5.hexdigest(content)}.min.css"]
@@ -95,12 +101,18 @@ Yes, please contribute! Fork this repo, then send a pull request with a
 note that clearly explains your changes. If you're unsure or you're
 asking for a big change, just open an issue and we can chat about it first.
 
+## Credits
+
+Built by [Joe Corcoran][joe]. Thanks to the authors of [rake-pipeline][rp],
+a project which tried to address a similar problem.
+
 ## License
 
 [MIT][license].
 
 [sprockets]: https://github.com/sstephenson/sprockets
 [pola]: http://en.wikipedia.org/wiki/Principle_of_least_astonishment
+[joe]: https://corcoran.io
 [rp]: https://github.com/livingsocial/rake-pipeline
 [relish]: https://www.relishapp.com/joecorcoran/pannier/docs
 [todo]: https://github.com/joecorcoran/pannier/wiki/Todo
