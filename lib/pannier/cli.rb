@@ -1,5 +1,4 @@
 require 'slop'
-
 require 'pannier'
 
 module Pannier
