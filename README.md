@@ -6,8 +6,8 @@ Pannier is a general-purpose Ruby asset processing tool. Its goal is to
 work the same way in any Rack environment. No Rails glue, no mandatory
 JavaScript or CSS libraries, preprocessors or gems.
 
-The small config DSL describes asset processing: modification of file contents
-and file names, file concatenation. No decisions about
+A small configuration DSL describes asset processing: modification of file
+contents and file names, file concatenation. No decisions about
 uglifiers/optimisers/preprocessors have been made; that part is up to you.
 
 The interface for plugging any asset processing library into Pannier is very
