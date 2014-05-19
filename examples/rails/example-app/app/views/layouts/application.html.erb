@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ExampleApp</title>
+  <%= asset_tags.write(:styles, :as => Pannier::Tags::CSS).html_safe %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>
