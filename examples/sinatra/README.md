@@ -15,6 +15,11 @@ follows.
 require 'pannier/mounted'
 ```
 
+Pannier is connected to your Sinatra app in **config.ru**, the rackup config
+file.
+
+Open **app.rb** to see how you can include assets in the page using Pannier.
+
 ## Development
 
 ```bash

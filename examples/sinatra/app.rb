@@ -2,8 +2,8 @@ require 'sinatra'
 require 'pannier/mounted'
 
 helpers do
-  def tags
-    @tags ||= Pannier::Tags.new(settings.assets)
+  def asset_tags
+    @asset_tags ||= Pannier::Tags.new(settings.assets)
   end
 end
 
