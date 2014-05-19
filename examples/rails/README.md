@@ -4,10 +4,11 @@ This directory contains a minimal example of integrating Pannier into a Rails
 application.
 
 ```bash
+$ cd example-app
 $ bundle install
 ```
 
-To mount Pannier within a Rack application (to serve your assets, use
+To mount Pannier within a Rails application (to serve your assets, use
 middleware, include asset tags etc.) you need to require the mounted version.
 See **Gemfile**.
 
