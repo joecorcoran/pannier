@@ -83,6 +83,10 @@ module Pannier
         add_package(Package.build(name, __getobj__, &block))
       end
 
+      def mount(*)
+        # see pannier/mounted/app
+      end
+
       private
 
         def add_behavior(name, &block)
