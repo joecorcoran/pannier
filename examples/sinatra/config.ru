@@ -1,4 +1,4 @@
 require './app'
 
-set :assets, Pannier.rackup(self)
+set :pannier, Pannier.rackup(self)
 run Sinatra::Application

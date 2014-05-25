@@ -3,7 +3,7 @@ require 'pannier/mounted'
 
 helpers do
   def asset_tags
-    @asset_tags ||= Pannier::Tags.new(settings.assets)
+    @asset_tags ||= Pannier::Tags.new(settings.pannier)
   end
 end
 
