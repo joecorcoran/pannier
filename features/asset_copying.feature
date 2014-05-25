@@ -49,7 +49,7 @@ Feature: Asset copying
     And the file ".assets.rb" contains
       """ruby
       input  'input'
-      output _.env
+      output env.name
 
       package :foo do
         assets '*.js'
@@ -69,7 +69,7 @@ Feature: Asset copying
       output 'output'
 
       package :foo do
-        output _.env
+        output env.name
         assets '*.js'
       end
       """

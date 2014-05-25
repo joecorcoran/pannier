@@ -59,8 +59,8 @@ module Pannier
 
     dsl do
 
-      def _
-        @locals ||= OpenStruct.new(:env => env.name)
+      def env
+        __getobj__.env
       end
 
       def input(path)

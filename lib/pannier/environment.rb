@@ -1,15 +1,9 @@
 module Pannier
-  class Environment
+  class Environment < Struct.new(:name)
 
-    attr_reader :name
-
-    def initialize(name)
-      @name = name
-    end
-
-    def is?(expression)
+    def matches?(expression)
       expression = Regexp.new(expression)
-      @name =~ expression
+      name =~ expression
     end
 
   end

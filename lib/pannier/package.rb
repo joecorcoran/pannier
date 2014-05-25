@@ -109,8 +109,12 @@ module Pannier
 
     dsl do
 
-      def _
-        @locals ||= OpenStruct.new(:env => app.env.name)
+      def env
+        self.app.env
+      end
+
+      def env?(expression, &block)
+        self.instance_eval(&block) if env.matches?(expression)
       end
 
       def input(path)
@@ -144,10 +148,6 @@ module Pannier
 
       def concat(*args)
         add_concatenator(*args)
-      end
-
-      def env(expression, &block)
-        self.instance_eval(&block) if self.app.env.is?(expression)
       end
 
     end

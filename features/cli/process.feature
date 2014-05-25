@@ -22,8 +22,8 @@ Feature: CLI: process command
 
       package :foo do
         assets 'foo.js'
-        env('development') { output 'dev' }
-        env('production')  { output 'prd' }
+        env?('development') { output 'dev' }
+        env?('production')  { output 'prd' }
       end
       """
     When I run `pannier process --env production`
