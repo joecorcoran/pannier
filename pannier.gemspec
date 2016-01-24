@@ -24,7 +24,7 @@ txt
   s.add_development_dependency 'rspec',            '~> 2.14'
   s.add_development_dependency 'mocha',            '~> 1.0'
   s.add_development_dependency 'cucumber',         '~> 1.3'
-  s.add_development_dependency 'aruba',            '~> 0.5',  '>= 0.5.3'
+  s.add_development_dependency 'aruba',            '~> 0.5.4'
   s.add_development_dependency 'rack-test',        '~> 0.6',  '>= 0.6.2'
 
   s.files        = Dir['lib/**/*.rb'] + ['README.md', 'LICENSE.txt']
