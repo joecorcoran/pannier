@@ -6,4 +6,4 @@ rvm:
   
 before_install: gem install bundler
 
-script: rake
+script: bundle exec rake
