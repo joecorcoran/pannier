@@ -21,7 +21,7 @@ txt
   s.add_dependency             'slop',             '~> 3.4'
 
   s.add_development_dependency 'pry'
-  s.add_development_dependency 'rake',             '~> 10.3'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec',            '~> 3'
   s.add_development_dependency 'mocha',            '~> 1.0'
   s.add_development_dependency 'cucumber',         '~> 2'
