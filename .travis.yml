@@ -2,7 +2,7 @@ language: ruby
 
 rvm:
   - 2.4
-  - jruby-19mode
+  - jruby-head
   
 before_install: gem install bundler
 
