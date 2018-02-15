@@ -25,11 +25,11 @@ describe Pannier::Asset do
   describe('#eql?') do
     it('returns true when paths are the same') do
       other = stub(:path => 'bar/foo.css')
-      expect(asset.eql?(other)).to be_true
+      expect(asset.eql?(other)).to be true
     end
     it('returns false when paths are different') do
       other = stub(:path => 'xyz')
-      expect(asset.eql?(other)).to be_false
+      expect(asset.eql?(other)).to be false
     end
   end
   
@@ -41,8 +41,8 @@ describe Pannier::Asset do
   
   describe('#<=>') do
     specify do
-      expect { asset > stub(:path => 'a/foo.css') }.to be_true
-      expect { asset < stub(:path => 'c/foo.css') }.to be_true
+      expect(asset > stub(:path => 'a/foo.css')).to be true
+      expect(asset < stub(:path => 'c/foo.css')).to be true
     end
   end
   

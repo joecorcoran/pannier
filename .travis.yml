@@ -1,16 +1,9 @@
 language: ruby
 
 rvm:
-  - 1.9.3
-  - 2.1
-  - rbx-2
+  - 2.4
   - jruby-19mode
   
-before_install:
-  - "gem install bundler"
+before_install: gem install bundler
 
-script: "rake"
-
-matrix:
-  allow_failures:
-    - rvm: rbx-2
+script: rake

@@ -20,11 +20,12 @@ txt
   s.add_dependency             'multi_json',       '~> 1.7'
   s.add_dependency             'slop',             '~> 3.4'
 
+  s.add_development_dependency 'pry'
   s.add_development_dependency 'rake',             '~> 10.3'
-  s.add_development_dependency 'rspec',            '~> 2.14'
+  s.add_development_dependency 'rspec',            '~> 3'
   s.add_development_dependency 'mocha',            '~> 1.0'
-  s.add_development_dependency 'cucumber',         '~> 1.3'
-  s.add_development_dependency 'aruba',            '~> 0.5.4'
+  s.add_development_dependency 'cucumber',         '~> 2'
+  s.add_development_dependency 'aruba',            '~> 1.0.0.pre.alpha2'
   s.add_development_dependency 'rack-test',        '~> 0.6',  '>= 0.6.2'
 
   s.files        = Dir['lib/**/*.rb'] + ['README.md', 'LICENSE.txt']

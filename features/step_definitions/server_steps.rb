@@ -23,7 +23,7 @@ end
 Then(/^I should not see these headers$/) do |table|
   unwanted = table.raw.flatten
   unwanted.each do |u|
-    expect(last_response.headers.keys.include?(u)).to be_false
+    expect(last_response.headers.keys.include?(u)).to be false
   end
 end
 

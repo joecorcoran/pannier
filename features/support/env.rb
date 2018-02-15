@@ -9,6 +9,10 @@ require 'aruba/jruby'
 require 'rack/test'
 require_relative './file_helper'
 
+Aruba.configure do |config|
+  config.working_directory = 'fixtures'
+end
+
 module TestApp
   def app
     @app

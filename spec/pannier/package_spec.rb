@@ -111,10 +111,10 @@ describe Pannier::Package do
       package.add_input_assets([asset])
     end
     it('returns true if package has asset which matches given input paths') do
-      expect(package.owns_any?('/foo/bar/baz.js')).to be_true
+      expect(package.owns_any?('/foo/bar/baz.js')).to be true
     end
     it('returns false if has no assets which match given input paths') do
-      expect(package.owns_any?('/qux/quux.js', '/bibimbap.js')).to be_false
+      expect(package.owns_any?('/qux/quux.js', '/bibimbap.js')).to be false
     end
   end
 
